@@ -1,0 +1,32 @@
+{
+  "name": "yourscore",
+  "version": "1.0.0",
+  "description": "A PWA that gamifies daily habit tracking through a scoring system",
+  "type": "module",
+  "scripts": {
+    "dev": "serve src -l 3000",
+    "build": "echo 'No build step needed - vanilla JS'",
+    "test": "playwright test",
+    "test:unit": "playwright test tests/unit/",
+    "test:e2e": "playwright test tests/e2e/",
+    "test:visual": "playwright test tests/visual/",
+    "test:watch": "playwright test --watch",
+    "test:visual:ai": "node tools/visual-test-runner.js",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0",
+    "serve": "^14.2.0",
+    "openai": "^4.24.0"
+  },
+  "keywords": [
+    "pwa",
+    "habit-tracker",
+    "gamification"
+  ],
+  "author": "",
+  "license": "MIT"
+}

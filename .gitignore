@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test outputs
+test-results/
+playwright-report/
+tests/visual/screenshots/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Build output (if any)
+dist/
+build/
+out/
+
+# Caches
+.cache/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.vite/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.sublime-project
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local tooling artifacts
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
