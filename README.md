@@ -4,8 +4,8 @@ Turn daily habits into points, streaks, and achievements with a PWA that works o
 
 ## Screenshots
 
-![Daily view](docs/screenshots/daily-view.png)
-![Dashboard](docs/screenshots/dashboard-view.png)
+<img src="docs/screenshots/daily-view.png" alt="Daily view" width="25%">
+<img src="docs/screenshots/dashboard-view.png" alt="Dashboard" width="25%">
 
 ## Why YourScore
 
