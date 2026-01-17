@@ -6,6 +6,7 @@
 import { SettingsModel } from '../models/settings.js';
 import { ScoreModel } from '../models/score.js';
 import { getLocalDateString, daysSinceLastActive } from '../utils/date.js';
+import { t, tPlural, formatNumber } from '../i18n/i18n.js';
 
 /**
  * Calculate decay for missed days
@@ -37,7 +38,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: true,
-      message: 'Welcome! No decay on your first day.'
+      message: t('decay.firstDayWelcome')
     };
   }
 
@@ -56,7 +57,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: true,
-      message: 'No decay on your first day.'
+      message: t('decay.firstDay')
     };
   }
 
@@ -67,7 +68,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: false,
-      message: 'Already active today, no additional decay.'
+      message: t('decay.alreadyActive')
     };
   }
 
@@ -81,7 +82,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: false,
-      message: 'No decay needed.'
+      message: t('decay.noneNeeded')
     };
   }
 
@@ -107,8 +108,15 @@ async function checkAndApplyDecay() {
     previousScore: previousScore,
     newScore: newScore,
     message: daysAway === 1
-      ? `Daily decay of ${totalDecay} points applied.`
-      : `${daysAway} days away: ${totalDecay} points decay applied.`
+      ? t('decay.appliedSingle', {
+        points: formatNumber(totalDecay),
+        pointsLabel: tPlural('units.pointsLong', totalDecay)
+      })
+      : t('decay.appliedMultiple', {
+        days: formatNumber(daysAway),
+        points: formatNumber(totalDecay),
+        pointsLabel: tPlural('units.pointsLong', totalDecay)
+      })
   };
 }
 
@@ -132,7 +140,7 @@ async function previewDecay() {
       wouldApply: false,
       decay: 0,
       daysAway: 0,
-      reason: 'First day - no decay'
+      reason: t('decay.previewFirstDay')
     };
   }
 
@@ -142,7 +150,7 @@ async function previewDecay() {
       wouldApply: false,
       decay: 0,
       daysAway: 0,
-      reason: 'Already active today'
+      reason: t('decay.previewAlreadyActive')
     };
   }
 
@@ -153,7 +161,9 @@ async function previewDecay() {
     wouldApply: daysAway > 0,
     decay: totalDecay,
     daysAway: daysAway,
-    reason: daysAway > 0 ? `${daysAway} days since last active` : 'No decay needed'
+    reason: daysAway > 0
+      ? t('decay.previewDaysAway', { days: formatNumber(daysAway) })
+      : t('decay.previewNone')
   };
 }
 
@@ -172,7 +182,7 @@ async function getDecayAmount() {
  */
 async function setDecayAmount(amount) {
   if (amount < 0) {
-    throw new Error('Decay amount cannot be negative');
+    throw new Error(t('errors.decayNegative'));
   }
   await SettingsModel.setDecayAmount(amount);
 }

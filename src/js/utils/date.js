@@ -4,6 +4,8 @@
  * Dates are stored as YYYY-MM-DD strings to avoid timezone issues
  */
 
+import { t, tPlural, getLocale, formatNumber } from '../i18n/i18n.js';
+
 /**
  * Get current date as YYYY-MM-DD string in local timezone
  * @returns {string} Date string in YYYY-MM-DD format
@@ -138,17 +140,19 @@ function formatDate(dateStr, format = 'short') {
   const date = parseLocalDate(dateStr);
 
   if (format === 'relative') {
-    if (isToday(dateStr)) {return 'Today';}
-    if (isYesterday(dateStr)) {return 'Yesterday';}
+    if (isToday(dateStr)) {return t('date.today');}
+    if (isYesterday(dateStr)) {return t('date.yesterday');}
     const days = daysBetween(dateStr, getLocalDateString());
-    if (days > 0 && days <= 7) {return `${days} days ago`;}
+    if (days > 0 && days <= 7) {
+      return tPlural('date.daysAgo', days, { count: formatNumber(days) });
+    }
   }
 
   const options = format === 'long'
     ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
     : { month: 'short', day: 'numeric' };
 
-  return date.toLocaleDateString(undefined, options);
+  return date.toLocaleDateString(getLocale(), options);
 }
 
 /**
@@ -159,7 +163,8 @@ function formatDate(dateStr, format = 'short') {
 function formatTimestamp(isoString) {
   if (!isoString) {return '';}
   const date = new Date(isoString);
-  return `Completed ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  const time = date.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' });
+  return t('date.completedAt', { time });
 }
 
 export {

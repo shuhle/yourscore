@@ -5,6 +5,7 @@
 
 import { db, generateId } from '../storage/db.js';
 import { getLocalDateString, getTimestamp } from '../utils/date.js';
+import { t } from '../i18n/i18n.js';
 
 const STORE_NAME = 'completions';
 
@@ -21,7 +22,7 @@ class CompletionModel {
    */
   static async create(data) {
     if (!data.activityId) {
-      throw new Error('Activity ID is required');
+      throw new Error(t('errors.completionActivityRequired'));
     }
 
     const date = data.date || getLocalDateString();
@@ -29,7 +30,7 @@ class CompletionModel {
     // Check if already completed today
     const existing = await this.findByActivityAndDate(data.activityId, date);
     if (existing) {
-      throw new Error('Activity already completed for this date');
+      throw new Error(t('errors.completionAlready'));
     }
 
     const completion = {

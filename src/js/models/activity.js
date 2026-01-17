@@ -6,6 +6,7 @@
 import { db, generateId } from '../storage/db.js';
 import { getTimestamp } from '../utils/date.js';
 import { UNCATEGORIZED_ID } from './category.js';
+import { t } from '../i18n/i18n.js';
 
 const STORE_NAME = 'activities';
 
@@ -17,26 +18,31 @@ class ActivityModel {
    * Create a new activity
    * @param {Object} data - Activity data
    * @param {string} data.name - Activity name
-   * @param {string} [data.description] - Activity description
    * @param {number} data.points - Points earned when completed
    * @param {string} [data.categoryId] - Category ID (defaults to Uncategorized)
    * @returns {Promise<Object>} Created activity with id
    */
   static async create(data) {
     if (!data.name || data.name.trim() === '') {
-      throw new Error('Activity name is required');
+      throw new Error(t('errors.activityNameRequired'));
     }
 
     if (!data.points || data.points < 1) {
-      throw new Error('Points must be a positive number');
+      throw new Error(t('errors.activityPointsPositive'));
     }
+
+    const categoryId = data.categoryId || UNCATEGORIZED_ID;
+    const siblings = await db.getByIndex(STORE_NAME, 'categoryId', categoryId);
+    const maxOrder = siblings.reduce((max, activityItem) => {
+      return Number.isFinite(activityItem.order) ? Math.max(max, activityItem.order) : max;
+    }, -1);
 
     const activity = {
       id: generateId(),
       name: data.name.trim(),
-      description: data.description?.trim() || '',
       points: Math.floor(data.points),
-      categoryId: data.categoryId || UNCATEGORIZED_ID,
+      categoryId,
+      order: data.order !== undefined ? data.order : maxOrder + 1,
       archived: false,
       createdAt: getTimestamp()
     };
@@ -60,7 +66,7 @@ class ActivityModel {
    */
   static async getAll() {
     const activities = await db.getAll(STORE_NAME);
-    return activities.filter(a => !a.archived);
+    return this.sortActivities(activities.filter(a => !a.archived));
   }
 
   /**
@@ -78,7 +84,7 @@ class ActivityModel {
    */
   static async getByCategory(categoryId) {
     const activities = await db.getByIndex(STORE_NAME, 'categoryId', categoryId);
-    return activities.filter(a => !a.archived);
+    return this.sortActivities(activities.filter(a => !a.archived));
   }
 
   /**
@@ -97,6 +103,10 @@ class ActivityModel {
       grouped[categoryId].push(activity);
     }
 
+    for (const categoryId of Object.keys(grouped)) {
+      grouped[categoryId] = this.sortActivities(grouped[categoryId]);
+    }
+
     return grouped;
   }
 
@@ -109,12 +119,21 @@ class ActivityModel {
   static async update(id, data) {
     const activity = await this.getById(id);
     if (!activity) {
-      throw new Error(`Activity not found: ${id}`);
+      throw new Error(t('errors.activityNotFound'));
     }
 
     // Validate if points is being updated
     if (data.points !== undefined && data.points < 1) {
-      throw new Error('Points must be a positive number');
+      throw new Error(t('errors.activityPointsPositive'));
+    }
+
+    let nextOrder = activity.order;
+    if (data.categoryId && data.categoryId !== activity.categoryId) {
+      const siblings = await db.getByIndex(STORE_NAME, 'categoryId', data.categoryId);
+      const maxOrder = siblings.reduce((max, activityItem) => {
+        return Number.isFinite(activityItem.order) ? Math.max(max, activityItem.order) : max;
+      }, -1);
+      nextOrder = maxOrder + 1;
     }
 
     const updated = {
@@ -122,8 +141,8 @@ class ActivityModel {
       ...data,
       id, // Ensure ID cannot be changed
       name: data.name?.trim() || activity.name,
-      description: data.description !== undefined ? data.description.trim() : activity.description,
-      points: data.points !== undefined ? Math.floor(data.points) : activity.points
+      points: data.points !== undefined ? Math.floor(data.points) : activity.points,
+      order: data.order !== undefined ? data.order : nextOrder
     };
 
     await db.put(STORE_NAME, updated);
@@ -155,7 +174,7 @@ class ActivityModel {
   static async getArchived() {
     // Note: Boolean indexes don't work reliably across browsers, so we filter manually
     const activities = await db.getAll(STORE_NAME);
-    return activities.filter(a => a.archived === true);
+    return this.sortActivities(activities.filter(a => a.archived === true));
   }
 
   /**
@@ -181,10 +200,19 @@ class ActivityModel {
       return 0;
     }
 
-    const updates = activities.map(a => ({
-      ...a,
-      categoryId: toCategoryId
-    }));
+    const destination = await db.getByIndex(STORE_NAME, 'categoryId', toCategoryId);
+    let maxOrder = destination.reduce((max, activityItem) => {
+      return Number.isFinite(activityItem.order) ? Math.max(max, activityItem.order) : max;
+    }, -1);
+
+    const updates = activities.map(a => {
+      maxOrder += 1;
+      return {
+        ...a,
+        categoryId: toCategoryId,
+        order: maxOrder
+      };
+    });
 
     await db.putMany(STORE_NAME, updates);
     return updates.length;
@@ -214,6 +242,49 @@ class ActivityModel {
    */
   static async clear() {
     await db.clear(STORE_NAME);
+  }
+
+  /**
+   * Reorder activities within a category
+   * @param {string} categoryId - Category ID
+   * @param {string[]} orderedIds - Array of activity IDs in desired order
+   * @returns {Promise<void>}
+   */
+  static async reorder(categoryId, orderedIds) {
+    const activities = await db.getByIndex(STORE_NAME, 'categoryId', categoryId);
+    const updates = [];
+
+    for (let i = 0; i < orderedIds.length; i++) {
+      const activity = activities.find(item => item.id === orderedIds[i]);
+      if (activity && activity.order !== i) {
+        updates.push({ ...activity, order: i });
+      }
+    }
+
+    if (updates.length > 0) {
+      await db.putMany(STORE_NAME, updates);
+    }
+  }
+
+  /**
+   * Sort activities by order with stable fallbacks
+   * @param {Array} activities - Activities to sort
+   * @returns {Array} Sorted activities
+   */
+  static sortActivities(activities) {
+    return [...activities].sort((a, b) => {
+      const aOrder = Number.isFinite(a.order) ? a.order : Number.MAX_SAFE_INTEGER;
+      const bOrder = Number.isFinite(b.order) ? b.order : Number.MAX_SAFE_INTEGER;
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+      const aCreated = a.createdAt || '';
+      const bCreated = b.createdAt || '';
+      if (aCreated !== bCreated) {
+        return aCreated.localeCompare(bCreated);
+      }
+      return (a.name || '').localeCompare(b.name || '');
+    });
   }
 }
 

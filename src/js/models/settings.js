@@ -15,7 +15,8 @@ const DEFAULTS = {
   decayAmount: 10,
   theme: 'light',
   uiScale: 1,
-  mainScore: 0
+  mainScore: 0,
+  language: 'auto'
 };
 
 /**
@@ -159,6 +160,23 @@ class SettingsModel {
    */
   static async setMainScore(score) {
     return this.set('mainScore', score);
+  }
+
+  /**
+   * Get the UI language setting
+   * @returns {Promise<string>}
+   */
+  static async getLanguage() {
+    return this.get('language', DEFAULTS.language);
+  }
+
+  /**
+   * Set the UI language setting
+   * @param {string} language
+   * @returns {Promise<void>}
+   */
+  static async setLanguage(language) {
+    return this.set('language', language);
   }
 
   /**

@@ -11,6 +11,7 @@ import { renderActivitiesView } from './views/activities.js';
 import { renderCategoriesView } from './views/categories.js';
 import { renderSettingsView } from './views/settings.js';
 import { renderDashboardView } from './views/dashboard.js';
+import { t, setLocale, detectLocale, getLocale } from './i18n/i18n.js';
 
 // Register service worker for PWA functionality
 if (!window.__TEST_MODE__ && 'serviceWorker' in navigator) {
@@ -38,6 +39,7 @@ class App {
     console.log('YourScore initializing...');
 
     await db.init();
+    await this.applyLanguage();
     await CategoryModel.getUncategorized();
 
     this.decayInfo = await DecayService.checkAndApplyDecay();
@@ -121,6 +123,45 @@ class App {
     document.documentElement.style.setProperty('--ui-scale', String(savedScale ?? 1));
   }
 
+  async applyLanguage() {
+    const languageSetting = await SettingsModel.getLanguage();
+    const locale = languageSetting === 'auto' ? detectLocale() : languageSetting;
+    setLocale(locale);
+    document.documentElement.lang = getLocale();
+    this.updateStaticText();
+    await CategoryModel.updateUncategorizedName(t('common.uncategorized'));
+  }
+
+  updateStaticText() {
+    const title = t('app.name');
+    document.title = title;
+    document.querySelector('#app-header h1')?.replaceChildren(document.createTextNode(title));
+
+    const description = t('app.description');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', title);
+
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) {
+      skipLink.textContent = t('common.skipToContent');
+    }
+
+    const banner = document.getElementById('install-banner');
+    if (banner) {
+      const message = banner.querySelector('span');
+      if (message) {
+        message.textContent = t('install.prompt');
+      }
+      banner.querySelector('[data-action="install"]')?.replaceChildren(document.createTextNode(t('install.install')));
+      banner.querySelector('[data-action="dismiss"]')?.replaceChildren(document.createTextNode(t('install.dismiss')));
+    }
+
+    const nav = document.getElementById('app-nav');
+    if (nav) {
+      nav.setAttribute('aria-label', t('nav.primaryLabel'));
+    }
+  }
+
   renderNav() {
     const nav = document.getElementById('app-nav');
     if (!nav) {return;}
@@ -128,23 +169,23 @@ class App {
     nav.innerHTML = `
       <a href="#" class="nav-item ${this.currentView === 'daily' ? 'active' : ''}" data-view="daily" ${this.currentView === 'daily' ? 'aria-current="page"' : ''}>
         <span class="nav-icon">📋</span>
-        <span>Today</span>
+        <span>${t('nav.today')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'activities' ? 'active' : ''}" data-view="activities" ${this.currentView === 'activities' ? 'aria-current="page"' : ''}>
         <span class="nav-icon">⚡</span>
-        <span>Activities</span>
+        <span>${t('nav.activities')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'categories' ? 'active' : ''}" data-view="categories" ${this.currentView === 'categories' ? 'aria-current="page"' : ''}>
         <span class="nav-icon">🧩</span>
-        <span>Categories</span>
+        <span>${t('nav.categories')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'dashboard' ? 'active' : ''}" data-view="dashboard" ${this.currentView === 'dashboard' ? 'aria-current="page"' : ''}>
         <span class="nav-icon">📊</span>
-        <span>Stats</span>
+        <span>${t('nav.stats')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'settings' ? 'active' : ''}" data-view="settings" ${this.currentView === 'settings' ? 'aria-current="page"' : ''}>
         <span class="nav-icon">⚙️</span>
-        <span>Settings</span>
+        <span>${t('nav.settings')}</span>
       </a>
     `;
 
@@ -184,7 +225,7 @@ class App {
         main.innerHTML = `
           <section class="placeholder-view">
             <h2>${this.currentView[0].toUpperCase() + this.currentView.slice(1)}</h2>
-            <p>Coming soon.</p>
+            <p>${t('common.comingSoon')}</p>
           </section>
         `;
       }

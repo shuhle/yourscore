@@ -6,7 +6,7 @@
 import { runMigrations } from './migrations.js';
 
 const DB_NAME = 'yourscore';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 /**
  * Object store configurations
@@ -27,6 +27,7 @@ const STORES = {
     keyPath: 'id',
     indexes: [
       { name: 'categoryId', keyPath: 'categoryId', options: { unique: false } },
+      { name: 'order', keyPath: 'order', options: { unique: false } },
       { name: 'archived', keyPath: 'archived', options: { unique: false } }
     ]
   },

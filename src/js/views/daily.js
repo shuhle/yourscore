@@ -15,6 +15,7 @@ import { showToast } from '../components/toast.js';
 import { checkForNewAchievements, getAchievementById } from '../services/achievements.js';
 import { showAchievementNotification } from '../components/achievement-badge.js';
 import { animateScoreChange, animateActivityCompletion } from '../utils/celebrations.js';
+import { t, tPlural, formatNumber } from '../i18n/i18n.js';
 
 async function renderDailyView(container, { decayInfo } = {}) {
   container.innerHTML = '';
@@ -56,8 +57,8 @@ async function renderDailyView(container, { decayInfo } = {}) {
   const activities = await ActivityModel.getAll();
   if (activities.length === 0) {
     activitiesSection.appendChild(createEmptyState({
-      title: 'No activities yet',
-      message: 'Add activities from the Activities tab to start tracking your day.'
+      title: t('daily.emptyTitle'),
+      message: t('daily.emptyMessage')
     }));
   } else {
     const grouped = await ActivityModel.getGroupedByCategory();
@@ -68,7 +69,7 @@ async function renderDailyView(container, { decayInfo } = {}) {
 
     for (const categoryId of Object.keys(grouped)) {
       if (!categoryMap.has(categoryId)) {
-        categoryMap.set(categoryId, { id: categoryId, name: 'Uncategorized' });
+        categoryMap.set(categoryId, { id: categoryId, name: t('common.uncategorized') });
       }
     }
 
@@ -119,12 +120,19 @@ async function renderDailyView(container, { decayInfo } = {}) {
 function createBreakEvenIndicator(status) {
   const wrapper = document.createElement('div');
   wrapper.className = `break-even-indicator ${status.breakEven ? 'achieved' : 'needs-more'}`;
+  const pointsLabel = tPlural('units.pointsLong', status.breakEven ? status.surplus : status.remaining);
 
   const message = document.createElement('div');
   message.className = 'break-even-message';
   message.textContent = status.breakEven
-    ? `Break-even achieved! +${status.surplus} pts today.`
-    : `${status.remaining} pts needed to break even.`;
+    ? t('daily.breakEvenAchieved', {
+      points: formatNumber(status.surplus),
+      pointsLabel
+    })
+    : t('daily.breakEvenRemaining', {
+      points: formatNumber(status.remaining),
+      pointsLabel
+    });
 
   const progress = document.createElement('div');
   progress.className = 'break-even-progress';
@@ -132,10 +140,13 @@ function createBreakEvenIndicator(status) {
   progress.setAttribute('aria-valuemin', '0');
   progress.setAttribute('aria-valuemax', '100');
   progress.setAttribute('aria-valuenow', String(status.percent));
-  progress.setAttribute('aria-label', 'Break-even progress');
+  progress.setAttribute('aria-label', t('daily.breakEvenProgressLabel'));
   progress.setAttribute('aria-valuetext', status.breakEven
-    ? 'Break-even achieved'
-    : `${status.remaining} points remaining`);
+    ? t('daily.breakEvenAchievedAria')
+    : t('daily.breakEvenRemainingAria', {
+      points: formatNumber(status.remaining),
+      pointsLabel
+    }));
 
   const fill = document.createElement('div');
   fill.className = 'break-even-progress-fill';
@@ -167,7 +178,7 @@ async function toggleCompletion({ activity, completionMap, cardParts, breakEvenI
     cardParts.checkbox.textContent = '';
     cardParts.timestamp.textContent = '';
 
-    showToast(`Undid ${activity.name}`, 'warning');
+    showToast(t('toasts.activityUndone', { name: activity.name }), 'warning');
   } else {
     const completion = await CompletionModel.create({ activityId: activity.id, date: today });
     completionMap.set(activity.id, completion);
@@ -179,7 +190,7 @@ async function toggleCompletion({ activity, completionMap, cardParts, breakEvenI
     cardParts.checkbox.textContent = '✓';
     cardParts.timestamp.textContent = formatTimestamp(completion.completedAt);
 
-    showToast(`Completed ${activity.name}`, 'success');
+    showToast(t('toasts.activityCompleted', { name: activity.name }), 'success');
   }
 
   const updatedScore = await ScoreModel.getScore();
@@ -191,21 +202,33 @@ async function toggleCompletion({ activity, completionMap, cardParts, breakEvenI
   const pointChange = existing ? -activity.points : activity.points;
   animateScoreChange(scoreValueEl, pointChange);
 
-  scoreValueEl.textContent = updatedScore;
+  scoreValueEl.textContent = formatNumber(updatedScore);
   scoreValueEl.className = `score-value ${updatedScore > 0 ? 'score-positive' : updatedScore < 0 ? 'score-negative' : 'score-neutral'}`;
   scoreDisplay.wrapper.querySelector('.score-meta').innerHTML = `
-    <span>Today: <strong>${updatedBreakEven.earned}</strong></span>
-    <span>Decay: <strong>${decayAmount}</strong></span>
+    <span>${t('score.todayLabel')}: <strong>${formatNumber(updatedBreakEven.earned)}</strong></span>
+    <span>${t('score.decayLabel')}: <strong>${formatNumber(decayAmount)}</strong></span>
   `;
 
+  const pointsLabel = tPlural('units.pointsLong', updatedBreakEven.breakEven
+    ? updatedBreakEven.surplus
+    : updatedBreakEven.remaining);
   breakEvenIndicator.message.textContent = updatedBreakEven.breakEven
-    ? `Break-even achieved! +${updatedBreakEven.surplus} pts today.`
-    : `${updatedBreakEven.remaining} pts needed to break even.`;
+    ? t('daily.breakEvenAchieved', {
+      points: formatNumber(updatedBreakEven.surplus),
+      pointsLabel
+    })
+    : t('daily.breakEvenRemaining', {
+      points: formatNumber(updatedBreakEven.remaining),
+      pointsLabel
+    });
   breakEvenIndicator.fill.style.width = updatedBreakEven.percent + '%';
   breakEvenIndicator.progress.setAttribute('aria-valuenow', String(updatedBreakEven.percent));
   breakEvenIndicator.progress.setAttribute('aria-valuetext', updatedBreakEven.breakEven
-    ? 'Break-even achieved'
-    : `${updatedBreakEven.remaining} points remaining`);
+    ? t('daily.breakEvenAchievedAria')
+    : t('daily.breakEvenRemainingAria', {
+      points: formatNumber(updatedBreakEven.remaining),
+      pointsLabel
+    }));
   breakEvenIndicator.wrapper.className = `break-even-indicator ${updatedBreakEven.breakEven ? 'achieved' : 'needs-more'}`;
 
   // Check for new achievements (only on completion, not undo)

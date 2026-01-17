@@ -11,6 +11,7 @@ import {
   importFromFile,
   resetAllData
 } from '../services/export.js';
+import { t, formatNumber, getSupportedLocales, getLocaleLabel } from '../i18n/i18n.js';
 
 async function renderSettingsView(container) {
   container.innerHTML = '';
@@ -21,8 +22,8 @@ async function renderSettingsView(container) {
   const header = document.createElement('div');
   header.className = 'view-header';
   header.innerHTML = `
-    <h2>Settings</h2>
-    <p>Adjust decay, score, and appearance preferences.</p>
+    <h2>${t('settings.title')}</h2>
+    <p>${t('settings.subtitle')}</p>
   `;
 
   const settingsCard = document.createElement('div');
@@ -30,28 +31,35 @@ async function renderSettingsView(container) {
   settingsCard.innerHTML = `
     <form class="settings-form" data-testid="settings-form" novalidate>
       <div class="settings-section">
-        <h3>Score & Decay</h3>
+        <h3>${t('settings.sections.scoreDecay')}</h3>
         <div class="form-group">
-          <label class="form-label" for="settings-decay">Daily decay amount</label>
+          <label class="form-label" for="settings-decay">${t('settings.fields.dailyDecay')}</label>
           <input class="form-input" id="settings-decay" name="decayAmount" type="number" min="0" step="1" />
         </div>
         <div class="form-group">
-          <label class="form-label" for="settings-score">Main score</label>
+          <label class="form-label" for="settings-score">${t('settings.fields.mainScore')}</label>
           <input class="form-input" id="settings-score" name="mainScore" type="number" step="1" />
         </div>
       </div>
 
       <div class="settings-section">
-        <h3>Appearance</h3>
+        <h3>${t('settings.sections.appearance')}</h3>
         <div class="form-group">
-          <label class="form-label" for="settings-theme">Theme</label>
+          <label class="form-label" for="settings-theme">${t('settings.fields.theme')}</label>
           <select class="form-input" id="settings-theme" name="theme">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
+            <option value="light">${t('settings.fields.themeLight')}</option>
+            <option value="dark">${t('settings.fields.themeDark')}</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="settings-scale">UI scale</label>
+          <label class="form-label" for="settings-language">${t('settings.fields.language')}</label>
+          <select class="form-input" id="settings-language" name="language">
+            <option value="auto">${t('settings.fields.languageAuto')}</option>
+            ${getSupportedLocales().map(locale => `<option value="${locale}">${getLocaleLabel(locale)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="settings-scale">${t('settings.fields.uiScale')}</label>
           <div class="range-field">
             <input class="form-input" id="settings-scale" name="uiScale" type="range" min="0.8" max="1.4" step="0.05" />
             <span class="range-value" data-testid="settings-scale-value"></span>
@@ -61,7 +69,7 @@ async function renderSettingsView(container) {
 
       <div class="form-error" data-testid="settings-error" aria-live="polite"></div>
       <div class="form-actions">
-        <button class="btn btn-primary" type="submit" data-testid="settings-save">Save Settings</button>
+        <button class="btn btn-primary" type="submit" data-testid="settings-save">${t('settings.saveButton')}</button>
       </div>
     </form>
   `;
@@ -70,37 +78,37 @@ async function renderSettingsView(container) {
   dataCard.className = 'card settings-card data-management-card';
   dataCard.innerHTML = `
     <div class="settings-section">
-      <h3>Data Management</h3>
+      <h3>${t('settings.sections.data')}</h3>
 
       <div class="data-section">
-        <h4>Export</h4>
-        <p class="data-description">Download your data for backup or transfer.</p>
+        <h4>${t('settings.data.exportTitle')}</h4>
+        <p class="data-description">${t('settings.data.exportDescription')}</p>
         <div class="button-row">
-          <button class="btn btn-secondary" type="button" data-testid="export-json">Export JSON</button>
-          <button class="btn btn-secondary" type="button" data-testid="export-csv">Export CSV</button>
+          <button class="btn btn-secondary" type="button" data-testid="export-json">${t('settings.data.exportJson')}</button>
+          <button class="btn btn-secondary" type="button" data-testid="export-csv">${t('settings.data.exportCsv')}</button>
         </div>
       </div>
 
       <div class="data-section">
-        <h4>Import</h4>
-        <p class="data-description">Restore data from a JSON backup file.</p>
+        <h4>${t('settings.data.importTitle')}</h4>
+        <p class="data-description">${t('settings.data.importDescription')}</p>
         <div class="import-controls">
           <label class="checkbox-label">
             <input type="checkbox" data-testid="import-merge" />
-            <span>Merge with existing data</span>
+            <span>${t('settings.data.importMerge')}</span>
           </label>
           <div class="file-input-wrapper">
             <input type="file" accept=".json" data-testid="import-file" class="file-input" />
-            <button class="btn btn-secondary" type="button" data-testid="import-btn">Import JSON</button>
+            <button class="btn btn-secondary" type="button" data-testid="import-btn">${t('settings.data.importJson')}</button>
           </div>
         </div>
         <div class="import-status" data-testid="import-status" aria-live="polite"></div>
       </div>
 
       <div class="data-section data-section-danger">
-        <h4>Reset Data</h4>
-        <p class="data-description">Permanently delete all your data. This cannot be undone.</p>
-        <button class="btn btn-danger" type="button" data-testid="reset-data">Reset All Data</button>
+        <h4>${t('settings.data.resetTitle')}</h4>
+        <p class="data-description">${t('settings.data.resetDescription')}</p>
+        <button class="btn btn-danger" type="button" data-testid="reset-data">${t('settings.data.resetButton')}</button>
       </div>
     </div>
   `;
@@ -114,21 +122,24 @@ async function renderSettingsView(container) {
   const errorField = view.querySelector('[data-testid="settings-error"]');
   const scaleInput = view.querySelector('#settings-scale');
   const scaleValue = view.querySelector('[data-testid="settings-scale-value"]');
+  const languageSelect = view.querySelector('#settings-language');
 
   const currentDecay = await SettingsModel.getDecayAmount();
   const currentScore = await ScoreModel.getScore();
   const currentTheme = await SettingsModel.getTheme();
   const currentScale = await SettingsModel.getUIScale();
+  const currentLanguage = await SettingsModel.getLanguage();
 
   form.elements.decayAmount.value = String(currentDecay);
   form.elements.mainScore.value = String(currentScore);
   form.elements.theme.value = currentTheme || 'light';
+  languageSelect.value = currentLanguage || 'auto';
   scaleInput.value = String(currentScale ?? 1);
-  scaleValue.textContent = `${Number(scaleInput.value).toFixed(2)}x`;
+  scaleValue.textContent = `${formatNumber(Number(scaleInput.value), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x`;
 
   const applyScale = async () => {
     const scale = Number(scaleInput.value);
-    scaleValue.textContent = `${scale.toFixed(2)}x`;
+    scaleValue.textContent = `${formatNumber(scale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x`;
     await SettingsModel.setUIScale(scale);
     document.documentElement.style.setProperty('--ui-scale', String(scale));
   };
@@ -139,10 +150,21 @@ async function renderSettingsView(container) {
     document.documentElement.setAttribute('data-theme', theme);
   };
 
+  const applyLanguage = async () => {
+    const language = form.elements.language.value;
+    await SettingsModel.setLanguage(language);
+    if (window.app) {
+      await window.app.applyLanguage();
+      window.app.renderNav();
+      await window.app.renderCurrentView();
+    }
+  };
+
   scaleInput.addEventListener('input', applyScale);
   scaleInput.addEventListener('change', applyScale);
   form.elements.theme.addEventListener('change', applyTheme);
   form.elements.theme.addEventListener('input', applyTheme);
+  form.elements.language.addEventListener('change', applyLanguage);
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
@@ -152,12 +174,12 @@ async function renderSettingsView(container) {
     const mainScore = Number.parseInt(form.elements.mainScore.value, 10);
 
     if (!Number.isFinite(decayAmount) || decayAmount < 0) {
-      errorField.textContent = 'Decay amount must be 0 or more.';
+      errorField.textContent = t('settings.errors.decayNonNegative');
       return;
     }
 
     if (!Number.isFinite(mainScore)) {
-      errorField.textContent = 'Main score must be a number.';
+      errorField.textContent = t('settings.errors.mainScoreNumber');
       return;
     }
 
@@ -165,7 +187,7 @@ async function renderSettingsView(container) {
       await SettingsModel.setDecayAmount(decayAmount);
       await ScoreModel.setScore(mainScore);
       await ScoreModel.updateTodayHistory({ score: mainScore });
-      showToast('Settings saved', 'success');
+      showToast(t('toasts.settingsSaved'), 'success');
     } catch (error) {
       errorField.textContent = error.message;
     }
@@ -183,18 +205,18 @@ async function renderSettingsView(container) {
   exportJSONBtn.addEventListener('click', async () => {
     try {
       await downloadJSON();
-      showToast('JSON backup downloaded', 'success');
+      showToast(t('toasts.exportJsonDownloaded'), 'success');
     } catch (error) {
-      showToast(`Export failed: ${error.message}`, 'error');
+      showToast(t('toasts.exportFailed', { error: error.message }), 'error');
     }
   });
 
   exportCSVBtn.addEventListener('click', async () => {
     try {
       await downloadCSV();
-      showToast('CSV export downloaded', 'success');
+      showToast(t('toasts.exportCsvDownloaded'), 'success');
     } catch (error) {
-      showToast(`Export failed: ${error.message}`, 'error');
+      showToast(t('toasts.exportFailed', { error: error.message }), 'error');
     }
   });
 
@@ -208,21 +230,27 @@ async function renderSettingsView(container) {
       return;
     }
 
-    importStatus.textContent = 'Importing...';
+    importStatus.textContent = t('settings.import.importing');
     importStatus.className = 'import-status';
 
     const merge = importMergeCheckbox.checked;
     const result = await importFromFile(file, { merge });
 
     if (result.success) {
+      const storeLabels = t('import.storeLabels') || {};
       const counts = Object.entries(result.imported)
         .filter(([_, count]) => count > 0)
-        .map(([store, count]) => `${store}: ${count}`)
+        .map(([store, count]) => t('settings.import.countItem', {
+          store: storeLabels[store] || store,
+          count: formatNumber(count)
+        }))
         .join(', ');
 
-      importStatus.textContent = `Import successful! ${counts || 'No records imported'}`;
+      importStatus.textContent = t('settings.import.success', {
+        summary: counts || t('settings.import.noRecords')
+      });
       importStatus.className = 'import-status import-success';
-      showToast('Data imported successfully', 'success');
+      showToast(t('toasts.importSuccess'), 'success');
 
       // Reload the page to reflect imported data
       setTimeout(() => {
@@ -231,7 +259,7 @@ async function renderSettingsView(container) {
     } else {
       importStatus.textContent = result.errors.join('; ');
       importStatus.className = 'import-status import-error';
-      showToast('Import failed', 'error');
+      showToast(t('toasts.importFailed'), 'error');
     }
 
     // Reset file input
@@ -239,21 +267,14 @@ async function renderSettingsView(container) {
   });
 
   resetDataBtn.addEventListener('click', async () => {
-    const confirmed = confirm(
-      'Are you sure you want to delete ALL your data?\n\n' +
-      'This includes all activities, completions, score history, and settings.\n\n' +
-      'This action CANNOT be undone!'
-    );
+    const confirmed = confirm(t('settings.confirm.resetPrimary'));
 
     if (!confirmed) {
       return;
     }
 
     // Double confirmation for safety
-    const doubleConfirmed = confirm(
-      'Please confirm again.\n\n' +
-      'All your YourScore data will be permanently deleted.'
-    );
+    const doubleConfirmed = confirm(t('settings.confirm.resetSecondary'));
 
     if (!doubleConfirmed) {
       return;
@@ -261,13 +282,13 @@ async function renderSettingsView(container) {
 
     try {
       await resetAllData();
-      showToast('All data has been reset', 'success');
+      showToast(t('toasts.resetSuccess'), 'success');
       // Reload the page to start fresh
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } catch (error) {
-      showToast(`Reset failed: ${error.message}`, 'error');
+      showToast(t('toasts.resetFailed', { error: error.message }), 'error');
     }
   });
 

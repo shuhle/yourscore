@@ -24,7 +24,6 @@ test.describe('Activity Model', () => {
 
       const activity = await ActivityModel.create({
         name: 'Morning Run',
-        description: 'Run for 30 minutes',
         points: 15,
         categoryId: 'health'
       });
@@ -34,7 +33,6 @@ test.describe('Activity Model', () => {
 
     expect(result.id).toBeDefined();
     expect(result.name).toBe('Morning Run');
-    expect(result.description).toBe('Run for 30 minutes');
     expect(result.points).toBe(15);
     expect(result.categoryId).toBe('health');
     expect(result.archived).toBe(false);
@@ -110,13 +108,11 @@ test.describe('Activity Model', () => {
 
       const activity = await ActivityModel.create({
         name: 'Original',
-        description: 'Original desc',
         points: 10
       });
 
       const updated = await ActivityModel.update(activity.id, {
         name: 'Updated',
-        description: 'Updated desc',
         points: 20
       });
 
@@ -124,7 +120,6 @@ test.describe('Activity Model', () => {
     });
 
     expect(result.updated.name).toBe('Updated');
-    expect(result.updated.description).toBe('Updated desc');
     expect(result.updated.points).toBe(20);
     expect(result.updated.id).toBe(result.original.id); // ID should not change
   });
@@ -245,6 +240,133 @@ test.describe('Activity Model', () => {
     });
 
     expect(result).toBe(50);
+  });
+
+  test('should get activity by ID', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      const created = await ActivityModel.create({ name: 'Test Activity', points: 10 });
+      const found = await ActivityModel.getById(created.id);
+      const notFound = await ActivityModel.getById('nonexistent-id');
+
+      return {
+        found: !!found,
+        matchesName: found?.name === 'Test Activity',
+        notFound: notFound === undefined
+      };
+    });
+
+    expect(result.found).toBe(true);
+    expect(result.matchesName).toBe(true);
+    expect(result.notFound).toBe(true);
+  });
+
+  test('should delete activity permanently', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      const activity = await ActivityModel.create({ name: 'To Delete', points: 10 });
+      const beforeDelete = await ActivityModel.getAllIncludingArchived();
+
+      await ActivityModel.delete(activity.id);
+
+      const afterDelete = await ActivityModel.getAllIncludingArchived();
+      const findDeleted = await ActivityModel.getById(activity.id);
+
+      return {
+        beforeCount: beforeDelete.length,
+        afterCount: afterDelete.length,
+        findDeleted: findDeleted === undefined
+      };
+    });
+
+    expect(result.beforeCount).toBe(1);
+    expect(result.afterCount).toBe(0);
+    expect(result.findDeleted).toBe(true);
+  });
+
+  test('should count active activities', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      await ActivityModel.create({ name: 'A1', points: 10 });
+      await ActivityModel.create({ name: 'A2', points: 10 });
+      const toArchive = await ActivityModel.create({ name: 'A3', points: 10 });
+      await ActivityModel.archive(toArchive.id);
+
+      const count = await ActivityModel.count();
+      return count;
+    });
+
+    expect(result).toBe(2); // Only active activities
+  });
+
+  test('should clear all activities', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      await ActivityModel.create({ name: 'A1', points: 10 });
+      await ActivityModel.create({ name: 'A2', points: 10 });
+
+      const beforeClear = await ActivityModel.getAllIncludingArchived();
+      await ActivityModel.clear();
+      const afterClear = await ActivityModel.getAllIncludingArchived();
+
+      return {
+        beforeCount: beforeClear.length,
+        afterCount: afterClear.length
+      };
+    });
+
+    expect(result.beforeCount).toBe(2);
+    expect(result.afterCount).toBe(0);
+  });
+
+  test('should exclude archived from getByCategory', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      await ActivityModel.create({ name: 'Active', points: 10, categoryId: 'health' });
+      const toArchive = await ActivityModel.create({ name: 'Archived', points: 10, categoryId: 'health' });
+      await ActivityModel.archive(toArchive.id);
+
+      const healthActivities = await ActivityModel.getByCategory('health');
+      return {
+        count: healthActivities.length,
+        names: healthActivities.map(a => a.name)
+      };
+    });
+
+    expect(result.count).toBe(1);
+    expect(result.names).toContain('Active');
+    expect(result.names).not.toContain('Archived');
+  });
+
+  test('should exclude archived from getTotalPossiblePoints', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { ActivityModel } = await import('/js/models/activity.js');
+      await db.init();
+
+      await ActivityModel.create({ name: 'A1', points: 10 });
+      const toArchive = await ActivityModel.create({ name: 'A2', points: 20 });
+      await ActivityModel.archive(toArchive.id);
+
+      return await ActivityModel.getTotalPossiblePoints();
+    });
+
+    expect(result).toBe(10); // Only active activity points
   });
 
 });

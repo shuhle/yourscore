@@ -92,8 +92,7 @@ test.describe('Dashboard View', () => {
       const progress = page.locator('[data-testid="breakeven-progress"]');
       await expect(progress).toBeVisible();
       // Should be 50% (10/20)
-      const width = await progress.evaluate(el => el.style.width);
-      expect(width).toBe('50%');
+      await expect(progress).toHaveAttribute('style', /width:\s*50%/);
     });
 
     test('shows activity completion progress', async ({ page }) => {

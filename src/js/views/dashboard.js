@@ -15,6 +15,7 @@ import {
   getAchievementProgress,
   getAllAchievementsWithStatus
 } from '../services/achievements.js';
+import { t, tPlural, formatNumber } from '../i18n/i18n.js';
 
 async function renderDashboardView(container) {
   container.innerHTML = '';
@@ -25,8 +26,8 @@ async function renderDashboardView(container) {
   const header = document.createElement('div');
   header.className = 'view-header';
   header.innerHTML = `
-    <h2>Statistics</h2>
-    <p>Your progress and achievements at a glance.</p>
+    <h2>${t('dashboard.title')}</h2>
+    <p>${t('dashboard.subtitle')}</p>
   `;
   view.appendChild(header);
 
@@ -65,23 +66,23 @@ async function createScoreCard() {
   card.className = 'card dashboard-card score-card';
   card.innerHTML = `
     <div class="dashboard-score">
-      <div class="dashboard-score-label">Current Score</div>
+      <div class="dashboard-score-label">${t('dashboard.scoreCard.current')}</div>
       <div class="dashboard-score-value ${score > 0 ? 'score-positive' : score < 0 ? 'score-negative' : 'score-neutral'}" data-testid="dashboard-score">
-        ${score}
+        ${formatNumber(score)}
       </div>
     </div>
     <div class="dashboard-score-stats">
       <div class="stat-item">
-        <span class="stat-label">Highest</span>
-        <span class="stat-value score-positive" data-testid="highest-score">${highestScore}</span>
+        <span class="stat-label">${t('dashboard.scoreCard.highest')}</span>
+        <span class="stat-value score-positive" data-testid="highest-score">${formatNumber(highestScore)}</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">Lowest</span>
-        <span class="stat-value ${lowestScore < 0 ? 'score-negative' : ''}" data-testid="lowest-score">${lowestScore}</span>
+        <span class="stat-label">${t('dashboard.scoreCard.lowest')}</span>
+        <span class="stat-value ${lowestScore < 0 ? 'score-negative' : ''}" data-testid="lowest-score">${formatNumber(lowestScore)}</span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">Days Active</span>
-        <span class="stat-value" data-testid="days-active">${daysActive}</span>
+        <span class="stat-label">${t('dashboard.scoreCard.daysActive')}</span>
+        <span class="stat-value" data-testid="days-active">${formatNumber(daysActive)}</span>
       </div>
     </div>
   `;
@@ -104,39 +105,40 @@ async function createTodayProgressCard() {
     ? Math.round((completionsToday / totalActivities) * 100)
     : 0;
 
+  const remainingPointsLabel = tPlural('units.pointsLong', breakEven.remaining);
   const card = document.createElement('div');
   card.className = 'card dashboard-card';
   card.innerHTML = `
-    <h3 class="dashboard-card-title">Today's Progress</h3>
+    <h3 class="dashboard-card-title">${t('dashboard.todayProgress')}</h3>
     <div class="progress-section">
       <div class="progress-row">
         <div class="progress-info">
-          <span class="progress-label">Break-even</span>
-          <span class="progress-detail">${breakEven.earned} / ${decayAmount} pts</span>
+          <span class="progress-label">${t('dashboard.progress.breakEvenLabel')}</span>
+          <span class="progress-detail">${formatNumber(breakEven.earned)} / ${formatNumber(decayAmount)} ${t('units.pointsShort')}</span>
         </div>
         <div class="progress-bar-container">
-          <div class="progress-bar" role="progressbar" aria-label="Break-even progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progressPercent}" aria-valuetext="${breakEven.breakEven ? 'Break-even achieved' : `${breakEven.remaining} points remaining`}">
+          <div class="progress-bar" role="progressbar" aria-label="${t('dashboard.progress.breakEvenAria')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progressPercent}" aria-valuetext="${breakEven.breakEven ? t('dashboard.progress.breakEvenAchievedAria') : t('dashboard.progress.breakEvenRemainingAria', { points: formatNumber(breakEven.remaining), pointsLabel: remainingPointsLabel })}">
             <div class="progress-bar-fill ${breakEven.breakEven ? 'progress-success' : 'progress-warning'}"
                  style="width: ${progressPercent}%" data-testid="breakeven-progress"></div>
           </div>
         </div>
         <span class="progress-status ${breakEven.breakEven ? 'status-success' : 'status-warning'}">
-          ${breakEven.breakEven ? '✓ Done' : `${breakEven.remaining} left`}
+          ${breakEven.breakEven ? t('dashboard.progress.breakEvenStatusDone') : t('dashboard.progress.breakEvenStatusLeft', { count: formatNumber(breakEven.remaining) })}
         </span>
       </div>
       <div class="progress-row">
         <div class="progress-info">
-          <span class="progress-label">Activities</span>
-          <span class="progress-detail">${completionsToday} / ${totalActivities}</span>
+          <span class="progress-label">${t('dashboard.progress.activitiesLabel')}</span>
+          <span class="progress-detail">${formatNumber(completionsToday)} / ${formatNumber(totalActivities)}</span>
         </div>
         <div class="progress-bar-container">
-          <div class="progress-bar" role="progressbar" aria-label="Activity completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completionPercent}" aria-valuetext="${completionPercent}% complete">
+          <div class="progress-bar" role="progressbar" aria-label="${t('dashboard.progress.activitiesAria')}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${completionPercent}" aria-valuetext="${t('dashboard.progress.percentComplete', { percent: formatNumber(completionPercent) })}">
             <div class="progress-bar-fill ${completionPercent === 100 ? 'progress-success' : 'progress-primary'}"
                  style="width: ${completionPercent}%" data-testid="activity-progress"></div>
           </div>
         </div>
         <span class="progress-status">
-          ${completionPercent}%
+          ${formatNumber(completionPercent)}%
         </span>
       </div>
     </div>
@@ -153,25 +155,25 @@ async function createStreaksCard() {
   const card = document.createElement('div');
   card.className = 'card dashboard-card';
   card.innerHTML = `
-    <h3 class="dashboard-card-title">Streaks</h3>
+    <h3 class="dashboard-card-title">${t('dashboard.streaksTitle')}</h3>
     <div class="streaks-grid">
       <div class="streak-item">
         <span class="streak-icon">🔥</span>
-        <span class="streak-value" data-testid="success-streak">${successStreak}</span>
-        <span class="streak-label">Successful Days</span>
-        <span class="streak-hint">Earned ≥ decay</span>
+        <span class="streak-value" data-testid="success-streak">${formatNumber(successStreak)}</span>
+        <span class="streak-label">${t('dashboard.streaks.successfulDays')}</span>
+        <span class="streak-hint">${t('dashboard.streaks.successfulHint')}</span>
       </div>
       <div class="streak-item">
         <span class="streak-icon">⭐</span>
-        <span class="streak-value" data-testid="perfect-streak">${perfectStreak}</span>
-        <span class="streak-label">Perfect Days</span>
-        <span class="streak-hint">All activities done</span>
+        <span class="streak-value" data-testid="perfect-streak">${formatNumber(perfectStreak)}</span>
+        <span class="streak-label">${t('dashboard.streaks.perfectDays')}</span>
+        <span class="streak-hint">${t('dashboard.streaks.perfectHint')}</span>
       </div>
       <div class="streak-item">
         <span class="streak-icon">📅</span>
-        <span class="streak-value" data-testid="completion-streak">${completionStreak}</span>
-        <span class="streak-label">Active Days</span>
-        <span class="streak-hint">At least 1 activity</span>
+        <span class="streak-value" data-testid="completion-streak">${formatNumber(completionStreak)}</span>
+        <span class="streak-label">${t('dashboard.streaks.activeDays')}</span>
+        <span class="streak-hint">${t('dashboard.streaks.activeHint')}</span>
       </div>
     </div>
   `;
@@ -203,10 +205,10 @@ async function createActivityStatsCard() {
   const card = document.createElement('div');
   card.className = 'card dashboard-card';
 
-  let content = '<h3 class="dashboard-card-title">Activity Stats (30 Days)</h3>';
+  let content = `<h3 class="dashboard-card-title">${t('dashboard.activityStatsTitle', { days: formatNumber(30) })}</h3>`;
 
   if (activities.length === 0) {
-    content += '<p class="empty-message">No activities yet. Add activities to see stats.</p>';
+    content += `<p class="empty-message">${t('dashboard.activityStatsEmpty')}</p>`;
   } else {
     content += '<div class="activity-stats-sections">';
 
@@ -214,12 +216,12 @@ async function createActivityStatsCard() {
     if (mostCompleted.length > 0 && mostCompleted[0].completions > 0) {
       content += `
         <div class="stats-section">
-          <h4 class="stats-section-title">Most Completed</h4>
+          <h4 class="stats-section-title">${t('dashboard.stats.mostCompleted')}</h4>
           <ul class="stats-list" data-testid="most-completed">
             ${mostCompleted.filter(a => a.completions > 0).map(a => `
               <li class="stats-list-item">
                 <span class="stats-item-name">${escapeHtml(a.name)}</span>
-                <span class="stats-item-count">${a.completions}×</span>
+                <span class="stats-item-count">${formatNumber(a.completions)}×</span>
               </li>
             `).join('')}
           </ul>
@@ -231,12 +233,12 @@ async function createActivityStatsCard() {
     if (leastCompleted.length > 0 && leastCompleted.some(a => a.completions > 0)) {
       content += `
         <div class="stats-section">
-          <h4 class="stats-section-title">Least Completed</h4>
+          <h4 class="stats-section-title">${t('dashboard.stats.leastCompleted')}</h4>
           <ul class="stats-list" data-testid="least-completed">
             ${leastCompleted.filter(a => a.completions > 0).map(a => `
               <li class="stats-list-item">
                 <span class="stats-item-name">${escapeHtml(a.name)}</span>
-                <span class="stats-item-count">${a.completions}×</span>
+                <span class="stats-item-count">${formatNumber(a.completions)}×</span>
               </li>
             `).join('')}
           </ul>
@@ -248,7 +250,7 @@ async function createActivityStatsCard() {
     if (neverCompleted.length > 0) {
       content += `
         <div class="stats-section stats-section-warning">
-          <h4 class="stats-section-title">Not Completed Yet</h4>
+          <h4 class="stats-section-title">${t('dashboard.stats.notCompletedYet')}</h4>
           <ul class="stats-list stats-list-muted" data-testid="never-completed">
             ${neverCompleted.slice(0, 3).map(a => `
               <li class="stats-list-item">
@@ -256,7 +258,7 @@ async function createActivityStatsCard() {
                 <span class="stats-item-count">0×</span>
               </li>
             `).join('')}
-            ${neverCompleted.length > 3 ? `<li class="stats-more">+${neverCompleted.length - 3} more</li>` : ''}
+            ${neverCompleted.length > 3 ? `<li class="stats-more">${t('dashboard.stats.more', { count: formatNumber(neverCompleted.length - 3) })}</li>` : ''}
           </ul>
         </div>
       `;
@@ -281,17 +283,17 @@ async function createAchievementsCard() {
   card.className = 'card dashboard-card';
 
   let content = `
-    <h3 class="dashboard-card-title">Achievements</h3>
+    <h3 class="dashboard-card-title">${t('dashboard.achievementsTitle')}</h3>
     <div class="achievement-summary">
-      <span class="achievement-count" data-testid="achievement-count">${progress.unlockedCount} / ${progress.totalCount}</span>
-      <span class="achievement-label">unlocked</span>
+      <span class="achievement-count" data-testid="achievement-count">${formatNumber(progress.unlockedCount)} / ${formatNumber(progress.totalCount)}</span>
+      <span class="achievement-label">${t('dashboard.achievementsUnlocked')}</span>
     </div>
   `;
 
   if (recentUnlocked.length > 0) {
     content += `
       <div class="recent-achievements">
-        <h4 class="stats-section-title">Recently Unlocked</h4>
+        <h4 class="stats-section-title">${t('dashboard.achievementsRecent')}</h4>
         <div class="achievement-badges">
           ${recentUnlocked.map(a => `
             <div class="dashboard-achievement-badge" title="${escapeHtml(a.description)}">
@@ -309,20 +311,20 @@ async function createAchievementsCard() {
   if (progress.score.nextAchievement) {
     nextAchievements.push({
       ...progress.score.nextAchievement,
-      progress: `${progress.score.current} / ${progress.score.next}`
+      progress: `${formatNumber(progress.score.current)} / ${formatNumber(progress.score.next)}`
     });
   }
   if (progress.streak.nextAchievement) {
     nextAchievements.push({
       ...progress.streak.nextAchievement,
-      progress: `${progress.streak.current} / ${progress.streak.next}`
+      progress: `${formatNumber(progress.streak.current)} / ${formatNumber(progress.streak.next)}`
     });
   }
 
   if (nextAchievements.length > 0) {
     content += `
       <div class="next-achievements">
-        <h4 class="stats-section-title">Next Goals</h4>
+        <h4 class="stats-section-title">${t('dashboard.achievementsNext')}</h4>
         <ul class="next-achievement-list">
           ${nextAchievements.slice(0, 2).map(a => `
             <li class="next-achievement-item">

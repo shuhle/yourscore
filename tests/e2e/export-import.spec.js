@@ -36,7 +36,6 @@ test.describe('Export/Import Functionality', () => {
       // Create an activity
       const activity = await ActivityModel.create({
         name: 'Test Activity',
-        description: 'Test Description',
         points: 25,
         categoryId: category.id
       });
@@ -114,7 +113,6 @@ test.describe('Export/Import Functionality', () => {
 
         const activity = await ActivityModel.create({
           name: 'Uncategorized Activity',
-          description: '',
           points: 10,
           categoryId: 'nonexistent'
         });
@@ -155,7 +153,7 @@ test.describe('Export/Import Functionality', () => {
               { id: 'new-cat-1', name: 'Imported Category', order: 0, createdAt: new Date().toISOString() }
             ],
             activities: [
-              { id: 'new-act-1', name: 'Imported Activity', description: '', points: 50, categoryId: 'new-cat-1', archived: false, createdAt: new Date().toISOString() }
+              { id: 'new-act-1', name: 'Imported Activity', points: 50, categoryId: 'new-cat-1', archived: false, createdAt: new Date().toISOString() }
             ],
             completions: [],
             scoreHistory: [],
@@ -200,7 +198,7 @@ test.describe('Export/Import Functionality', () => {
               { id: 'merge-cat-1', name: 'Merged Category', order: 100, createdAt: new Date().toISOString() }
             ],
             activities: [
-              { id: 'merge-act-1', name: 'Merged Activity', description: '', points: 75, categoryId: 'merge-cat-1', archived: false, createdAt: new Date().toISOString() }
+              { id: 'merge-act-1', name: 'Merged Activity', points: 75, categoryId: 'merge-cat-1', archived: false, createdAt: new Date().toISOString() }
             ],
             completions: [],
             scoreHistory: [],

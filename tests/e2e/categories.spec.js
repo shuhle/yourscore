@@ -45,12 +45,14 @@ test.describe('Categories View', () => {
     await openCategories(page);
 
     await page.fill('#category-name', 'Alpha');
-    await page.locator('[data-testid="category-submit"]').dispatchEvent('click');
+    await page.locator('[data-testid="category-submit"]').click();
+    await expect(page.locator('[data-testid="category-list"]')).toContainText('Alpha');
     await page.fill('#category-name', 'Beta');
-    await page.locator('[data-testid="category-submit"]').dispatchEvent('click');
+    await page.locator('[data-testid="category-submit"]').click();
+    await expect(page.locator('[data-testid="category-list"]')).toContainText('Beta');
 
     const betaRow = page.locator('.category-row', { hasText: 'Beta' });
-    await betaRow.locator('[data-testid="category-move-up"]').dispatchEvent('click');
+    await betaRow.locator('[data-testid="category-move-up"]').click();
 
     const order = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('.category-row-title')).map(el => el.textContent.trim());
@@ -71,7 +73,9 @@ test.describe('Categories View', () => {
     await page.fill('#activity-points', '5');
     await page.selectOption('#activity-category', { label: 'Fitness' });
     await page.locator('[data-testid="activity-submit"]').click();
-    await expect(page.locator('.activity-row', { hasText: 'Stretch' })).toContainText('Fitness');
+    // Activity should appear under the Fitness category group
+    const fitnessGroup = page.locator('.category-group', { has: page.locator('.category-header', { hasText: 'Fitness' }) });
+    await expect(fitnessGroup.locator('.activity-row', { hasText: 'Stretch' })).toBeVisible();
 
     await openCategories(page);
     const fitnessRow = page.locator('.category-row', { hasText: 'Fitness' });
@@ -79,6 +83,8 @@ test.describe('Categories View', () => {
     await expect(page.locator('[data-testid="category-list"]')).not.toContainText('Fitness');
 
     await openActivities(page);
-    await expect(page.locator('.activity-row', { hasText: 'Stretch' })).toContainText('Uncategorized');
+    // Activity should now appear under the Uncategorized category group
+    const uncategorizedGroup = page.locator('.category-group', { has: page.locator('.category-header', { hasText: 'Uncategorized' }) });
+    await expect(uncategorizedGroup.locator('.activity-row', { hasText: 'Stretch' })).toBeVisible();
   });
 });

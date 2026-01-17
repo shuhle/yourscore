@@ -5,6 +5,7 @@
 import { CategoryModel, UNCATEGORIZED_ID } from '../models/category.js';
 import { showToast } from '../components/toast.js';
 import { escapeHtml } from '../utils/dom.js';
+import { t } from '../i18n/i18n.js';
 
 async function renderCategoriesView(container) {
   container.innerHTML = '';
@@ -18,15 +19,15 @@ async function renderCategoriesView(container) {
   const header = document.createElement('div');
   header.className = 'view-header';
   header.innerHTML = `
-    <h2>Categories</h2>
-    <p>Organize activities into groups. Uncategorized stays at the bottom.</p>
+    <h2>${t('categories.title')}</h2>
+    <p>${t('categories.subtitle')}</p>
   `;
 
   const formCard = document.createElement('div');
   formCard.className = 'card category-form-card';
 
   const formTitle = document.createElement('h3');
-  formTitle.textContent = 'Add Category';
+  formTitle.textContent = t('categories.form.addTitle');
 
   const form = document.createElement('form');
   form.className = 'category-form';
@@ -34,13 +35,13 @@ async function renderCategoriesView(container) {
   form.noValidate = true;
   form.innerHTML = `
     <div class="form-group">
-      <label class="form-label" for="category-name">Name</label>
-      <input class="form-input" id="category-name" name="name" type="text" placeholder="e.g. Focus" required />
+      <label class="form-label" for="category-name">${t('categories.form.nameLabel')}</label>
+      <input class="form-input" id="category-name" name="name" type="text" placeholder="${t('categories.form.namePlaceholder')}" required />
     </div>
     <div class="form-error" data-testid="category-form-error" aria-live="polite"></div>
     <div class="form-actions">
-      <button class="btn btn-primary" type="submit" data-testid="category-submit">Add Category</button>
-      <button class="btn btn-secondary" type="button" data-testid="category-cancel" hidden>Cancel</button>
+      <button class="btn btn-primary" type="submit" data-testid="category-submit">${t('categories.form.addButton')}</button>
+      <button class="btn btn-secondary" type="button" data-testid="category-cancel" hidden>${t('categories.form.cancelButton')}</button>
     </div>
   `;
 
@@ -51,8 +52,8 @@ async function renderCategoriesView(container) {
   listSection.className = 'category-list-section';
   listSection.innerHTML = `
     <div class="section-title">
-      <h3>Categories</h3>
-      <p>Drag to reorder or use the arrows.</p>
+      <h3>${t('categories.list.title')}</h3>
+      <p>${t('categories.list.subtitle')}</p>
     </div>
   `;
 
@@ -78,17 +79,17 @@ async function renderCategoriesView(container) {
     const name = formData.get('name').toString().trim();
 
     if (!name) {
-      formError.textContent = 'Category name is required.';
+      formError.textContent = t('categories.errors.nameRequired');
       return;
     }
 
     try {
       if (editingId) {
         await CategoryModel.update(editingId, { name });
-        showToast('Category updated', 'success');
+        showToast(t('toasts.categoryUpdated'), 'success');
       } else {
         await CategoryModel.create({ name });
-        showToast('Category added', 'success');
+        showToast(t('toasts.categoryAdded'), 'success');
       }
 
       resetForm();
@@ -105,8 +106,8 @@ async function renderCategoriesView(container) {
   function resetForm() {
     editingId = null;
     form.reset();
-    formTitle.textContent = 'Add Category';
-    form.querySelector('[data-testid="category-submit"]').textContent = 'Add Category';
+    formTitle.textContent = t('categories.form.addTitle');
+    form.querySelector('[data-testid="category-submit"]').textContent = t('categories.form.addButton');
     cancelButton.hidden = true;
     formError.textContent = '';
   }
@@ -114,8 +115,8 @@ async function renderCategoriesView(container) {
   function setEditMode(category) {
     if (category.id === UNCATEGORIZED_ID) {return;}
     editingId = category.id;
-    formTitle.textContent = 'Edit Category';
-    form.querySelector('[data-testid="category-submit"]').textContent = 'Save Changes';
+    formTitle.textContent = t('categories.form.editTitle');
+    form.querySelector('[data-testid="category-submit"]').textContent = t('categories.form.saveButton');
     cancelButton.hidden = false;
     form.elements.name.value = category.name;
     formError.textContent = '';
@@ -152,14 +153,26 @@ async function renderCategoriesView(container) {
           <span class="category-handle" aria-hidden="true">⋮⋮</span>
           <div class="category-row-text">
             <div class="category-row-title">${escapeHtml(category.name)}</div>
-            ${isUncategorized ? '<div class="category-row-note">Always available</div>' : ''}
+            ${isUncategorized ? `<div class="category-row-note">${t('categories.row.alwaysAvailable')}</div>` : ''}
           </div>
         </div>
         <div class="category-row-actions">
-          <button class="btn btn-secondary" type="button" data-testid="category-move-up" ${isUncategorized ? 'disabled' : ''}>Up</button>
-          <button class="btn btn-secondary" type="button" data-testid="category-move-down" ${isUncategorized ? 'disabled' : ''}>Down</button>
-          <button class="btn btn-secondary" type="button" data-testid="category-edit" ${isUncategorized ? 'disabled' : ''}>Edit</button>
-          <button class="btn btn-danger" type="button" data-testid="category-delete" ${isUncategorized ? 'disabled' : ''}>Delete</button>
+          <button class="btn btn-secondary icon-button" type="button" data-testid="category-move-up" aria-label="${t('categories.row.up')}" ${isUncategorized ? 'disabled' : ''}>
+            ${CATEGORY_ACTION_ICONS.up}
+            <span class="visually-hidden">${t('categories.row.up')}</span>
+          </button>
+          <button class="btn btn-secondary icon-button" type="button" data-testid="category-move-down" aria-label="${t('categories.row.down')}" ${isUncategorized ? 'disabled' : ''}>
+            ${CATEGORY_ACTION_ICONS.down}
+            <span class="visually-hidden">${t('categories.row.down')}</span>
+          </button>
+          <button class="btn btn-secondary icon-button" type="button" data-testid="category-edit" aria-label="${t('categories.row.edit')}" ${isUncategorized ? 'disabled' : ''}>
+            ${CATEGORY_ACTION_ICONS.edit}
+            <span class="visually-hidden">${t('categories.row.edit')}</span>
+          </button>
+          <button class="btn btn-danger icon-button" type="button" data-testid="category-delete" aria-label="${t('categories.row.delete')}" ${isUncategorized ? 'disabled' : ''}>
+            ${CATEGORY_ACTION_ICONS.delete}
+            <span class="visually-hidden">${t('categories.row.delete')}</span>
+          </button>
         </div>
       `;
 
@@ -168,7 +181,7 @@ async function renderCategoriesView(container) {
         row.querySelector('[data-testid="category-delete"]').addEventListener('click', async () => {
           try {
             await CategoryModel.delete(category.id);
-            showToast('Category deleted', 'warning');
+            showToast(t('toasts.categoryDeleted'), 'warning');
             await refreshList();
           } catch (error) {
             showToast(error.message, 'error');
@@ -223,5 +236,29 @@ async function renderCategoriesView(container) {
   await refreshList();
   view.dataset.ready = 'true';
 }
+
+const CATEGORY_ACTION_ICONS = {
+  up: `
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M10 4l6 6h-4v6H8v-6H4l6-6z"></path>
+    </svg>
+  `,
+  down: `
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M10 16l-6-6h4V4h4v6h4l-6 6z"></path>
+    </svg>
+  `,
+  edit: `
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M14.69 3.86l1.45 1.45a2 2 0 010 2.83l-7.8 7.8-3.53.39.39-3.53 7.8-7.8a2 2 0 012.83 0z"></path>
+      <path d="M3 17h14v2H3z"></path>
+    </svg>
+  `,
+  delete: `
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M6 6h8l-1 11H7L6 6zm1-3h6l1 2H6l1-2zm2 4v6h2V7H9z"></path>
+    </svg>
+  `
+};
 
 export { renderCategoriesView };

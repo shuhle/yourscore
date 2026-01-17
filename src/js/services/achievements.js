@@ -8,6 +8,7 @@ import { ScoreModel } from '../models/score.js';
 import { CompletionModel } from '../models/completion.js';
 import { ActivityModel } from '../models/activity.js';
 import { getLocalDateString } from '../utils/date.js';
+import { t } from '../i18n/i18n.js';
 
 const STORE_NAME = 'achievements';
 
@@ -24,24 +25,24 @@ const ACHIEVEMENTS = {
   // Score milestones
   score_100: {
     id: 'score_100',
-    name: 'Century',
-    description: 'Reach 100 points',
+    nameKey: 'achievements.list.score_100.name',
+    descriptionKey: 'achievements.list.score_100.description',
     icon: '💯',
     type: 'score_milestone',
     threshold: 100
   },
   score_500: {
     id: 'score_500',
-    name: 'High Achiever',
-    description: 'Reach 500 points',
+    nameKey: 'achievements.list.score_500.name',
+    descriptionKey: 'achievements.list.score_500.description',
     icon: '⭐',
     type: 'score_milestone',
     threshold: 500
   },
   score_1000: {
     id: 'score_1000',
-    name: 'Thousand Club',
-    description: 'Reach 1,000 points',
+    nameKey: 'achievements.list.score_1000.name',
+    descriptionKey: 'achievements.list.score_1000.description',
     icon: '🏆',
     type: 'score_milestone',
     threshold: 1000
@@ -50,32 +51,32 @@ const ACHIEVEMENTS = {
   // Streak achievements (consecutive successful days where earned >= decay)
   streak_3: {
     id: 'streak_3',
-    name: 'Getting Started',
-    description: 'Complete 3 successful days in a row',
+    nameKey: 'achievements.list.streak_3.name',
+    descriptionKey: 'achievements.list.streak_3.description',
     icon: '🔥',
     type: 'streak',
     threshold: 3
   },
   streak_7: {
     id: 'streak_7',
-    name: 'Week Warrior',
-    description: 'Complete 7 successful days in a row',
+    nameKey: 'achievements.list.streak_7.name',
+    descriptionKey: 'achievements.list.streak_7.description',
     icon: '🔥',
     type: 'streak',
     threshold: 7
   },
   streak_14: {
     id: 'streak_14',
-    name: 'Fortnight Fighter',
-    description: 'Complete 14 successful days in a row',
+    nameKey: 'achievements.list.streak_14.name',
+    descriptionKey: 'achievements.list.streak_14.description',
     icon: '🔥',
     type: 'streak',
     threshold: 14
   },
   streak_30: {
     id: 'streak_30',
-    name: 'Monthly Master',
-    description: 'Complete 30 successful days in a row',
+    nameKey: 'achievements.list.streak_30.name',
+    descriptionKey: 'achievements.list.streak_30.description',
     icon: '🔥',
     type: 'streak',
     threshold: 30
@@ -84,8 +85,8 @@ const ACHIEVEMENTS = {
   // Perfect week (all activities completed every day for 7 consecutive days)
   perfect_week: {
     id: 'perfect_week',
-    name: 'Perfect Week',
-    description: 'Complete all activities every day for 7 consecutive days',
+    nameKey: 'achievements.list.perfect_week.name',
+    descriptionKey: 'achievements.list.perfect_week.description',
     icon: '🌟',
     type: 'perfect_week',
     threshold: 7
@@ -94,8 +95,8 @@ const ACHIEVEMENTS = {
   // Recovery achievement (bounce back from negative to positive)
   recovery: {
     id: 'recovery',
-    name: 'Comeback Kid',
-    description: 'Recover from a negative score to positive',
+    nameKey: 'achievements.list.recovery.name',
+    descriptionKey: 'achievements.list.recovery.description',
     icon: '🚀',
     type: 'recovery',
     threshold: 0
@@ -104,8 +105,8 @@ const ACHIEVEMENTS = {
   // First completion
   first_completion: {
     id: 'first_completion',
-    name: 'First Step',
-    description: 'Complete your first activity',
+    nameKey: 'achievements.list.first_completion.name',
+    descriptionKey: 'achievements.list.first_completion.description',
     icon: '👣',
     type: 'first_completion',
     threshold: 1
@@ -114,24 +115,24 @@ const ACHIEVEMENTS = {
   // Activity count milestones
   activities_50: {
     id: 'activities_50',
-    name: 'Half Century',
-    description: 'Complete 50 activities total',
+    nameKey: 'achievements.list.activities_50.name',
+    descriptionKey: 'achievements.list.activities_50.description',
     icon: '📊',
     type: 'activity_count',
     threshold: 50
   },
   activities_100: {
     id: 'activities_100',
-    name: 'Activity Centurion',
-    description: 'Complete 100 activities total',
+    nameKey: 'achievements.list.activities_100.name',
+    descriptionKey: 'achievements.list.activities_100.description',
     icon: '📊',
     type: 'activity_count',
     threshold: 100
   },
   activities_500: {
     id: 'activities_500',
-    name: 'Habit Hero',
-    description: 'Complete 500 activities total',
+    nameKey: 'achievements.list.activities_500.name',
+    descriptionKey: 'achievements.list.activities_500.description',
     icon: '🦸',
     type: 'activity_count',
     threshold: 500
@@ -143,7 +144,9 @@ const ACHIEVEMENTS = {
  * @returns {Object} Achievement definitions
  */
 function getAchievementDefinitions() {
-  return ACHIEVEMENTS;
+  return Object.fromEntries(
+    Object.entries(ACHIEVEMENTS).map(([id, achievement]) => [id, localizeAchievement(achievement)])
+  );
 }
 
 /**
@@ -152,7 +155,16 @@ function getAchievementDefinitions() {
  * @returns {Object|undefined} Achievement definition
  */
 function getAchievementById(id) {
-  return ACHIEVEMENTS[id];
+  const achievement = ACHIEVEMENTS[id];
+  return achievement ? localizeAchievement(achievement) : undefined;
+}
+
+function localizeAchievement(achievement) {
+  return {
+    ...achievement,
+    name: t(achievement.nameKey),
+    description: t(achievement.descriptionKey)
+  };
 }
 
 /**
@@ -396,12 +408,12 @@ async function getAchievementProgress() {
     score: {
       current: currentScore,
       next: nextScoreMilestone?.threshold,
-      nextAchievement: nextScoreMilestone
+      nextAchievement: nextScoreMilestone ? localizeAchievement(nextScoreMilestone) : null
     },
     streak: {
       current: streak,
       next: nextStreakMilestone?.threshold,
-      nextAchievement: nextStreakMilestone
+      nextAchievement: nextStreakMilestone ? localizeAchievement(nextStreakMilestone) : null
     },
     perfectStreak: {
       current: perfectStreak,
@@ -411,7 +423,7 @@ async function getAchievementProgress() {
     completions: {
       current: completionCount,
       next: nextActivityMilestone?.threshold,
-      nextAchievement: nextActivityMilestone
+      nextAchievement: nextActivityMilestone ? localizeAchievement(nextActivityMilestone) : null
     },
     unlockedCount: unlockedList.length,
     totalCount: Object.keys(ACHIEVEMENTS).length,
@@ -428,7 +440,7 @@ async function getAllAchievementsWithStatus() {
   const unlockedMap = new Map(unlockedList.map(a => [a.id, a]));
 
   return Object.values(ACHIEVEMENTS).map(achievement => ({
-    ...achievement,
+    ...localizeAchievement(achievement),
     unlocked: unlockedMap.has(achievement.id),
     unlockedAt: unlockedMap.get(achievement.id)?.unlockedAt
   }));

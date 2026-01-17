@@ -5,6 +5,7 @@
 
 import { getAchievementById } from '../services/achievements.js';
 import { showConfetti } from '../utils/celebrations.js';
+import { t, getLocale } from '../i18n/i18n.js';
 
 /**
  * Create an achievement badge element
@@ -65,7 +66,7 @@ function createAchievementCard(achievement) {
   }
 
   const unlockedDate = achievement.unlockedAt
-    ? new Date(achievement.unlockedAt).toLocaleDateString()
+    ? new Date(achievement.unlockedAt).toLocaleDateString(getLocale())
     : '';
 
   card.innerHTML = `
@@ -73,7 +74,7 @@ function createAchievementCard(achievement) {
     <div class="achievement-card__content">
       <div class="achievement-card__name">${achievement.name}</div>
       <div class="achievement-card__desc">${achievement.description}</div>
-      ${achievement.unlocked && unlockedDate ? `<div class="achievement-card__date">Unlocked ${unlockedDate}</div>` : ''}
+      ${achievement.unlocked && unlockedDate ? `<div class="achievement-card__date">${t('date.unlockedOn', { date: unlockedDate })}</div>` : ''}
     </div>
     <div class="achievement-card__status">
       ${achievement.unlocked ? '✓' : '🔒'}
@@ -102,7 +103,7 @@ function createAchievementNotification(achievementId) {
   notification.setAttribute('aria-atomic', 'true');
 
   notification.innerHTML = `
-    <div class="achievement-notification__header">Achievement Unlocked!</div>
+    <div class="achievement-notification__header">${t('achievements.notificationTitle')}</div>
     <div class="achievement-notification__badge">
       <span class="achievement-notification__icon">${achievement.icon}</span>
       <div class="achievement-notification__info">

@@ -3,6 +3,7 @@
  */
 
 import { formatTimestamp } from '../utils/date.js';
+import { t, formatNumber } from '../i18n/i18n.js';
 
 function createActivityCard(activity, completion) {
   const card = document.createElement('button');
@@ -27,7 +28,7 @@ function createActivityCard(activity, completion) {
 
   const points = document.createElement('div');
   points.className = 'activity-card-points';
-  points.textContent = `+${activity.points} pts`;
+  points.textContent = `+${formatNumber(activity.points)} ${t('units.pointsShort')}`;
 
   const timestamp = document.createElement('div');
   timestamp.className = 'activity-card-timestamp';

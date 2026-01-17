@@ -227,4 +227,175 @@ test.describe('Completion Model', () => {
     expect(result.streakFromJan15).toBe(3);
     expect(result.streakFromJan17).toBe(1);
   });
+
+  test('should get completion by ID', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      const created = await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+      const found = await CompletionModel.getById(created.id);
+      const notFound = await CompletionModel.getById('nonexistent-id');
+
+      return {
+        found: !!found,
+        matchesCreated: found?.id === created.id,
+        notFound: notFound === undefined
+      };
+    });
+
+    expect(result.found).toBe(true);
+    expect(result.matchesCreated).toBe(true);
+    expect(result.notFound).toBe(true);
+  });
+
+  test('should find completion by activity and date', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+
+      const found = await CompletionModel.findByActivityAndDate('act-1', '2024-01-15');
+      const notFoundActivity = await CompletionModel.findByActivityAndDate('act-2', '2024-01-15');
+      const notFoundDate = await CompletionModel.findByActivityAndDate('act-1', '2024-01-16');
+
+      return {
+        found: !!found,
+        notFoundActivity: notFoundActivity === undefined,
+        notFoundDate: notFoundDate === undefined
+      };
+    });
+
+    expect(result.found).toBe(true);
+    expect(result.notFoundActivity).toBe(true);
+    expect(result.notFoundDate).toBe(true);
+  });
+
+  test('should get completions by activity', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-16' });
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-17' });
+      await CompletionModel.create({ activityId: 'act-2', date: '2024-01-15' });
+
+      const act1Completions = await CompletionModel.getByActivity('act-1');
+      const act2Completions = await CompletionModel.getByActivity('act-2');
+      const act3Completions = await CompletionModel.getByActivity('act-3');
+
+      return {
+        act1Count: act1Completions.length,
+        act2Count: act2Completions.length,
+        act3Count: act3Completions.length
+      };
+    });
+
+    expect(result.act1Count).toBe(3);
+    expect(result.act2Count).toBe(1);
+    expect(result.act3Count).toBe(0);
+  });
+
+  test('should delete completion by activity and date', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+
+      const deletedExisting = await CompletionModel.deleteByActivityAndDate('act-1', '2024-01-15');
+      const deletedNonExisting = await CompletionModel.deleteByActivityAndDate('act-1', '2024-01-15');
+      const isCompleted = await CompletionModel.isCompleted('act-1', '2024-01-15');
+
+      return {
+        deletedExisting,
+        deletedNonExisting,
+        isCompleted
+      };
+    });
+
+    expect(result.deletedExisting).toBe(true);
+    expect(result.deletedNonExisting).toBe(false);
+    expect(result.isCompleted).toBe(false);
+  });
+
+  test('should count completions by date', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-2', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-3', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-16' });
+
+      const jan15Count = await CompletionModel.countByDate('2024-01-15');
+      const jan16Count = await CompletionModel.countByDate('2024-01-16');
+      const jan17Count = await CompletionModel.countByDate('2024-01-17');
+
+      return { jan15Count, jan16Count, jan17Count };
+    });
+
+    expect(result.jan15Count).toBe(3);
+    expect(result.jan16Count).toBe(1);
+    expect(result.jan17Count).toBe(0);
+  });
+
+  test('should get dates with completions', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-10' });
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-2', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-20' });
+
+      const dates = await CompletionModel.getDatesWithCompletions('2024-01-01', '2024-01-31');
+      return {
+        size: dates.size,
+        hasJan10: dates.has('2024-01-10'),
+        hasJan15: dates.has('2024-01-15'),
+        hasJan20: dates.has('2024-01-20'),
+        hasJan25: dates.has('2024-01-25')
+      };
+    });
+
+    expect(result.size).toBe(3);
+    expect(result.hasJan10).toBe(true);
+    expect(result.hasJan15).toBe(true);
+    expect(result.hasJan20).toBe(true);
+    expect(result.hasJan25).toBe(false);
+  });
+
+  test('should clear all completions', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+      const { db } = await import('/js/storage/db.js');
+      const { CompletionModel } = await import('/js/models/completion.js');
+      await db.init();
+
+      await CompletionModel.create({ activityId: 'act-1', date: '2024-01-15' });
+      await CompletionModel.create({ activityId: 'act-2', date: '2024-01-16' });
+
+      const beforeClear = await CompletionModel.getAll();
+      await CompletionModel.clear();
+      const afterClear = await CompletionModel.getAll();
+
+      return {
+        beforeCount: beforeClear.length,
+        afterCount: afterClear.length
+      };
+    });
+
+    expect(result.beforeCount).toBe(2);
+    expect(result.afterCount).toBe(0);
+  });
 });

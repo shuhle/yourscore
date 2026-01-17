@@ -3,6 +3,8 @@
  * Provides visual celebration effects for achievements and milestones
  */
 
+import { t, tPlural, formatNumber } from '../i18n/i18n.js';
+
 const CONFETTI_COLORS = [
   '#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#ff9ff3',
   '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43', '#10ac84'
@@ -81,7 +83,9 @@ function animateScoreChange(scoreElement, change) {
   // Create floating indicator
   const indicator = document.createElement('div');
   indicator.className = `score-change-indicator ${change > 0 ? 'score-change-indicator--positive' : 'score-change-indicator--negative'}`;
-  indicator.textContent = change > 0 ? `+${change}` : `${change}`;
+  const absChange = Math.abs(change);
+  const formattedChange = formatNumber(absChange);
+  indicator.textContent = change > 0 ? `+${formattedChange}` : `-${formattedChange}`;
 
   // Position relative to score element
   const rect = scoreElement.getBoundingClientRect();
@@ -155,7 +159,7 @@ function showMilestoneCelebration(options) {
         <div class="milestone-celebration__icon">${icon}</div>
         <div class="milestone-celebration__title">${title}</div>
         <div class="milestone-celebration__subtitle">${subtitle}</div>
-        <button class="btn btn-primary milestone-celebration__dismiss">Continue</button>
+        <button class="btn btn-primary milestone-celebration__dismiss">${t('celebrations.continue')}</button>
       </div>
     `;
 
@@ -201,8 +205,11 @@ function showMilestoneCelebration(options) {
 async function celebrateScoreMilestone(score) {
   await showMilestoneCelebration({
     icon: score >= 1000 ? '🏆' : score >= 500 ? '⭐' : '💯',
-    title: `${score.toLocaleString()} Points!`,
-    subtitle: 'Amazing achievement! Keep up the great work!',
+    title: t('celebrations.scoreMilestoneTitle', {
+      score: formatNumber(score),
+      pointsLabel: tPlural('units.pointsLong', score)
+    }),
+    subtitle: t('celebrations.scoreMilestoneSubtitle'),
     confetti: true
   });
 }
@@ -221,8 +228,8 @@ async function celebrateStreak(days) {
 
   await showMilestoneCelebration({
     icon: icons[days] || '🔥',
-    title: `${days} Day Streak!`,
-    subtitle: `You've maintained your momentum for ${days} days straight!`,
+    title: t('celebrations.streakTitle', { days: formatNumber(days) }),
+    subtitle: t('celebrations.streakSubtitle', { days: formatNumber(days) }),
     confetti: true
   });
 }
@@ -233,8 +240,8 @@ async function celebrateStreak(days) {
 async function celebratePerfectWeek() {
   await showMilestoneCelebration({
     icon: '🌟',
-    title: 'Perfect Week!',
-    subtitle: 'You completed every activity for 7 days straight!',
+    title: t('celebrations.perfectWeekTitle'),
+    subtitle: t('celebrations.perfectWeekSubtitle'),
     confetti: true
   });
 }
@@ -245,8 +252,8 @@ async function celebratePerfectWeek() {
 async function celebrateRecovery() {
   await showMilestoneCelebration({
     icon: '🚀',
-    title: 'Comeback Complete!',
-    subtitle: 'You bounced back from negative to positive!',
+    title: t('celebrations.recoveryTitle'),
+    subtitle: t('celebrations.recoverySubtitle'),
     confetti: true
   });
 }

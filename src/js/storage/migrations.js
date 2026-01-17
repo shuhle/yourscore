@@ -18,6 +18,51 @@ const migrations = {
     // Initial schema is created by db.js
     // This is here for documentation and future reference
     console.log('Migration v1: Initial schema created by db.js');
+  },
+  /**
+   * Version 2: Add activity ordering
+   * Adds order index and assigns order within each category
+   */
+  2: (db, transaction) => {
+    if (!db.objectStoreNames.contains('activities')) {
+      return;
+    }
+
+    const store = transaction.objectStore('activities');
+    if (!store.indexNames.contains('order')) {
+      store.createIndex('order', 'order', { unique: false });
+    }
+
+    const request = store.getAll();
+    request.onsuccess = () => {
+      const activities = request.result || [];
+      const grouped = new Map();
+
+      for (const activity of activities) {
+        const categoryId = activity.categoryId || 'uncategorized';
+        if (!grouped.has(categoryId)) {
+          grouped.set(categoryId, []);
+        }
+        grouped.get(categoryId).push(activity);
+      }
+
+      for (const group of grouped.values()) {
+        group.sort((a, b) => {
+          const aCreated = a.createdAt || '';
+          const bCreated = b.createdAt || '';
+          if (aCreated !== bCreated) {
+            return aCreated.localeCompare(bCreated);
+          }
+          return (a.name || '').localeCompare(b.name || '');
+        });
+
+        group.forEach((activity, index) => {
+          if (activity.order !== index) {
+            store.put({ ...activity, order: index });
+          }
+        });
+      }
+    };
   }
 
   // Future migrations will be added here as:

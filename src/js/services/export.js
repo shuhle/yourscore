@@ -5,6 +5,7 @@
 
 import { db } from '../storage/db.js';
 import { getLocalDateString, getTimestamp } from '../utils/date.js';
+import { t, formatNumber } from '../i18n/i18n.js';
 
 const EXPORT_VERSION = 1;
 const APP_NAME = 'YourScore';
@@ -30,7 +31,15 @@ const SCHEMA = {
   },
   activities: {
     required: ['id', 'name', 'points', 'categoryId', 'archived', 'createdAt'],
-    types: { id: 'string', name: 'string', points: 'number', categoryId: 'string', archived: 'boolean', createdAt: 'string' }
+    types: {
+      id: 'string',
+      name: 'string',
+      points: 'number',
+      categoryId: 'string',
+      archived: 'boolean',
+      createdAt: 'string',
+      order: 'number'
+    }
   },
   completions: {
     required: ['id', 'activityId', 'date', 'completedAt'],
@@ -92,7 +101,8 @@ async function exportToCSV() {
   const categoryMap = new Map(categories.map(c => [c.id, c]));
 
   // CSV header
-  const lines = ['Date,Activity,Category,Points,Completed At'];
+  const headers = t('export.csvHeaders');
+  const lines = [Array.isArray(headers) ? headers.join(',') : String(headers)];
 
   // Sort completions by date (newest first)
   const sortedCompletions = [...completions].sort((a, b) => {
@@ -104,10 +114,10 @@ async function exportToCSV() {
 
   for (const completion of sortedCompletions) {
     const activity = activityMap.get(completion.activityId);
-    const activityName = activity ? activity.name : 'Unknown';
+    const activityName = activity ? activity.name : t('common.unknown');
     const points = activity ? activity.points : 0;
     const category = activity ? categoryMap.get(activity.categoryId) : null;
-    const categoryName = category ? category.name : 'Uncategorized';
+    const categoryName = category ? category.name : t('common.uncategorized');
 
     // Escape CSV fields
     const escapedActivityName = escapeCSVField(activityName);
@@ -150,20 +160,20 @@ function validateImportData(data) {
 
   // Check top-level structure
   if (!data || typeof data !== 'object') {
-    errors.push('Invalid data format: expected an object');
+    errors.push(t('errors.importInvalidFormat'));
     return { valid: false, errors };
   }
 
   if (data.app !== APP_NAME) {
-    errors.push(`Invalid app identifier: expected "${APP_NAME}", got "${data.app}"`);
+    errors.push(t('errors.importInvalidApp', { expected: APP_NAME, actual: data.app }));
   }
 
   if (typeof data.version !== 'number' || data.version < 1) {
-    errors.push('Invalid or missing version number');
+    errors.push(t('errors.importInvalidVersion'));
   }
 
   if (!data.data || typeof data.data !== 'object') {
-    errors.push('Missing or invalid data section');
+    errors.push(t('errors.importMissingData'));
     return { valid: false, errors };
   }
 
@@ -176,7 +186,7 @@ function validateImportData(data) {
     }
 
     if (!Array.isArray(storeData)) {
-      errors.push(`Invalid data for store "${storeName}": expected array`);
+      errors.push(t('errors.importStoreInvalid', { store: storeName }));
       continue;
     }
 
@@ -191,20 +201,25 @@ function validateImportData(data) {
       const record = storeData[i];
 
       if (!record || typeof record !== 'object') {
-        errors.push(`Invalid record at ${storeName}[${i}]: expected object`);
+        errors.push(t('errors.importRecordInvalid', { store: storeName, index: i }));
         continue;
       }
 
       for (const field of schema.required) {
         if (record[field] === undefined) {
-          errors.push(`Missing required field "${field}" at ${storeName}[${i}]`);
+          errors.push(t('errors.importMissingField', { field, store: storeName, index: i }));
         }
       }
 
       if (schema.types) {
         for (const [field, expectedType] of Object.entries(schema.types)) {
           if (record[field] !== undefined && typeof record[field] !== expectedType) {
-            errors.push(`Invalid type for "${field}" at ${storeName}[${i}]: expected ${expectedType}`);
+            errors.push(t('errors.importInvalidType', {
+              field,
+              store: storeName,
+              index: i,
+              expected: expectedType
+            }));
           }
         }
       }
@@ -212,7 +227,7 @@ function validateImportData(data) {
   }
 
   if (totalRecords > MAX_IMPORT_RECORDS) {
-    errors.push(`Import exceeds maximum record limit (${MAX_IMPORT_RECORDS})`);
+    errors.push(t('errors.importTooManyRecords', { max: formatNumber(MAX_IMPORT_RECORDS) }));
   }
 
   return { valid: errors.length === 0, errors };
@@ -263,7 +278,7 @@ async function importFromJSON(data, options = { merge: false }) {
 
     return { success: true, imported, errors: [] };
   } catch (error) {
-    errors.push(`Import failed: ${error.message}`);
+    errors.push(t('errors.importFailed', { error: error.message }));
     return { success: false, imported, errors };
   }
 }
@@ -276,14 +291,14 @@ async function importFromJSON(data, options = { merge: false }) {
  */
 async function importFromJSONString(jsonString, options = { merge: false }) {
   if (jsonString.length > MAX_IMPORT_BYTES) {
-    return { success: false, imported: {}, errors: ['Import file is too large'] };
+    return { success: false, imported: {}, errors: [t('errors.importFileTooLarge')] };
   }
   let data;
 
   try {
     data = JSON.parse(jsonString);
   } catch (error) {
-    return { success: false, imported: {}, errors: [`Invalid JSON: ${error.message}`] };
+    return { success: false, imported: {}, errors: [t('errors.importInvalidJson', { error: error.message })] };
   }
 
   return importFromJSON(data, options);
@@ -322,7 +337,7 @@ function downloadFile(content, filename, mimeType) {
 async function downloadJSON() {
   const content = await exportToJSONString();
   const date = getLocalDateString();
-  const filename = `yourscore-backup-${date}.json`;
+  const filename = t('export.filenameBackup', { date });
   downloadFile(content, filename, 'application/json');
 }
 
@@ -333,7 +348,7 @@ async function downloadJSON() {
 async function downloadCSV() {
   const content = await exportToCSV();
   const date = getLocalDateString();
-  const filename = `yourscore-completions-${date}.csv`;
+  const filename = t('export.filenameCsv', { date });
   downloadFile(content, filename, 'text/csv');
 }
 
@@ -346,7 +361,7 @@ function readFileAsText(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => reject(new Error(t('errors.fileReadFailed')));
     reader.readAsText(file);
   });
 }
@@ -359,22 +374,22 @@ function readFileAsText(file) {
  */
 async function importFromFile(file, options = { merge: false }) {
   if (!file) {
-    return { success: false, imported: {}, errors: ['No file provided'] };
+    return { success: false, imported: {}, errors: [t('errors.importNoFile')] };
   }
 
   if (!file.name.endsWith('.json')) {
-    return { success: false, imported: {}, errors: ['Invalid file type: expected .json'] };
+    return { success: false, imported: {}, errors: [t('errors.importInvalidFileType')] };
   }
 
   if (file.size > MAX_IMPORT_BYTES) {
-    return { success: false, imported: {}, errors: ['Import file is too large'] };
+    return { success: false, imported: {}, errors: [t('errors.importFileTooLarge')] };
   }
 
   try {
     const content = await readFileAsText(file);
     return importFromJSONString(content, options);
   } catch (error) {
-    return { success: false, imported: {}, errors: [`Failed to read file: ${error.message}`] };
+    return { success: false, imported: {}, errors: [t('errors.importReadFailed', { error: error.message })] };
   }
 }
 

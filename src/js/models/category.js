@@ -5,6 +5,7 @@
 
 import { db, generateId } from '../storage/db.js';
 import { getTimestamp } from '../utils/date.js';
+import { t } from '../i18n/i18n.js';
 
 const STORE_NAME = 'categories';
 
@@ -18,7 +19,7 @@ const UNCATEGORIZED_ORDER = 999;
  * Only Uncategorized is seeded by default.
  */
 const DEFAULT_CATEGORIES = [
-  { name: 'Uncategorized', order: UNCATEGORIZED_ORDER }
+  { name: t('common.uncategorized'), order: UNCATEGORIZED_ORDER }
 ];
 
 /**
@@ -85,12 +86,12 @@ class CategoryModel {
   static async update(id, data) {
     const category = await this.getById(id);
     if (!category) {
-      throw new Error(`Category not found: ${id}`);
+      throw new Error(t('errors.categoryNotFound'));
     }
 
     // Prevent renaming Uncategorized
-    if (id === UNCATEGORIZED_ID && data.name && data.name !== 'Uncategorized') {
-      throw new Error('Cannot rename Uncategorized category');
+    if (id === UNCATEGORIZED_ID && data.name) {
+      throw new Error(t('errors.categoryCannotRenameUncategorized'));
     }
 
     const updated = {
@@ -112,12 +113,12 @@ class CategoryModel {
   static async delete(id) {
     // Prevent deleting Uncategorized
     if (id === UNCATEGORIZED_ID) {
-      throw new Error('Cannot delete Uncategorized category');
+      throw new Error(t('errors.categoryCannotDeleteUncategorized'));
     }
 
     const category = await this.getById(id);
     if (!category) {
-      throw new Error(`Category not found: ${id}`);
+      throw new Error(t('errors.categoryNotFound'));
     }
 
     // Move activities to Uncategorized
@@ -165,7 +166,7 @@ class CategoryModel {
     if (!uncategorized) {
       uncategorized = {
         id: UNCATEGORIZED_ID,
-        name: 'Uncategorized',
+        name: t('common.uncategorized'),
         order: UNCATEGORIZED_ORDER,
         createdAt: getTimestamp()
       };
@@ -173,6 +174,23 @@ class CategoryModel {
     }
 
     return uncategorized;
+  }
+
+  /**
+   * Update the Uncategorized name (used for i18n)
+   * @param {string} name - Localized name
+   * @returns {Promise<Object>} Updated Uncategorized category
+   */
+  static async updateUncategorizedName(name) {
+    const uncategorized = await this.getById(UNCATEGORIZED_ID);
+    const updated = {
+      id: UNCATEGORIZED_ID,
+      name: name || t('common.uncategorized'),
+      order: UNCATEGORIZED_ORDER,
+      createdAt: uncategorized?.createdAt || getTimestamp()
+    };
+    await db.put(STORE_NAME, updated);
+    return updated;
   }
 
   /**
