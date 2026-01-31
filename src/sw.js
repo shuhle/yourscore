@@ -3,10 +3,11 @@
  * Provides offline functionality and caching
  */
 
-const CACHE_NAME = 'yourscore-v3';
+const CACHE_NAME = 'yourscore-v4';
 
 const ASSET_PATHS = [
-  'index.html',
+  './',           // Root URL (how iOS opens the PWA)
+  'index.html',   // Also cache by filename
   'manifest.json',
   'css/main.css',
   'css/themes.css',
@@ -75,29 +76,54 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - cache-first strategy for static assets
+// Fetch event - cache-first strategy for offline reliability (especially iOS)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') {return;}
 
+  // Navigation requests (opening the app, page loads)
+  // Use CACHE-FIRST for reliability on iOS where SW can be killed after hours of inactivity
   if (event.request.mode === 'navigate') {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      const cachedOffline = await cache.match(OFFLINE_URL);
 
+      // Try cache first - critical for iOS offline reliability
+      const cachedResponse = await cache.match(event.request) || await cache.match(OFFLINE_URL);
+
+      if (cachedResponse) {
+        // Return cached version immediately, but update cache in background
+        event.waitUntil((async () => {
+          try {
+            const networkResponse = await fetch(event.request);
+            if (networkResponse && networkResponse.ok) {
+              await cache.put(event.request, networkResponse.clone());
+              await cache.put(OFFLINE_URL, networkResponse);
+            }
+          } catch (e) {
+            // Network failed, that's fine - we served from cache
+          }
+        })());
+        return cachedResponse;
+      }
+
+      // No cache - must try network
       try {
         const response = await fetch(event.request);
         if (response && response.ok) {
           cache.put(event.request, response.clone());
-          return response;
+          cache.put(OFFLINE_URL, response.clone());
         }
-        throw new Error('Navigation fetch failed');
+        return response;
       } catch (error) {
-        return cachedOffline || Response.error();
+        // Nothing in cache and network failed
+        return new Response('<!DOCTYPE html><html><body><h1>Offline</h1><p>Please connect to the internet and reload.</p></body></html>', {
+          headers: { 'Content-Type': 'text/html' }
+        });
       }
     })());
     return;
   }
 
+  // Static assets - cache-first with network fallback
   event.respondWith((async () => {
     const cachedResponse = await caches.match(event.request);
     if (cachedResponse) {
@@ -116,7 +142,7 @@ self.addEventListener('fetch', (event) => {
 
       return response;
     } catch (error) {
-      return cachedResponse || Response.error();
+      return Response.error();
     }
   })());
 });

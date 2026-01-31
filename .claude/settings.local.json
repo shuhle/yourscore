@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(git -C /workspaces/yourscore log --oneline -15)",
+      "Bash(npx lighthouse --version)",
+      "Bash(npm install:*)",
+      "Bash(npx lighthouse:*)",
+      "Bash(echo:*)",
+      "Bash(npm run test:visual:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(npm run lint:*)",
+      "Bash(curl:*)",
+      "Bash(node tools/ui-review.mjs:*)",
+      "Bash(node tools/test-nav.mjs:*)",
+      "Bash(pkill:*)",
+      "Bash(wc:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
