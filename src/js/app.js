@@ -17,8 +17,19 @@ import { t, setLocale, detectLocale, getLocale } from './i18n/i18n.js';
 if (!window.__TEST_MODE__ && 'serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      // Use relative path for consistent behavior across deployment locations
+      // This is critical for iOS where absolute paths can cause scope mismatches
+      const registration = await navigator.serviceWorker.register('./sw.js', {
+        scope: './'
+      });
       console.log('ServiceWorker registered:', registration.scope);
+
+      // Request persistent storage to prevent iOS from evicting our cache
+      // This is crucial for offline reliability on iOS
+      if (navigator.storage && navigator.storage.persist) {
+        const isPersisted = await navigator.storage.persist();
+        console.log('Persistent storage:', isPersisted ? 'granted' : 'denied');
+      }
     } catch (error) {
       console.log('ServiceWorker registration failed:', error);
     }
@@ -168,24 +179,24 @@ class App {
 
     nav.innerHTML = `
       <a href="#" class="nav-item ${this.currentView === 'daily' ? 'active' : ''}" data-view="daily" ${this.currentView === 'daily' ? 'aria-current="page"' : ''}>
-        <span class="nav-icon">📋</span>
-        <span>${t('nav.today')}</span>
+        <span class="nav-badge">T</span>
+        <span class="nav-label">${t('nav.today')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'activities' ? 'active' : ''}" data-view="activities" ${this.currentView === 'activities' ? 'aria-current="page"' : ''}>
-        <span class="nav-icon">⚡</span>
-        <span>${t('nav.activities')}</span>
+        <span class="nav-badge">A</span>
+        <span class="nav-label">${t('nav.activities')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'categories' ? 'active' : ''}" data-view="categories" ${this.currentView === 'categories' ? 'aria-current="page"' : ''}>
-        <span class="nav-icon">🧩</span>
-        <span>${t('nav.categories')}</span>
+        <span class="nav-badge">C</span>
+        <span class="nav-label">${t('nav.categories')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'dashboard' ? 'active' : ''}" data-view="dashboard" ${this.currentView === 'dashboard' ? 'aria-current="page"' : ''}>
-        <span class="nav-icon">📊</span>
-        <span>${t('nav.stats')}</span>
+        <span class="nav-badge">D</span>
+        <span class="nav-label">${t('nav.stats')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'settings' ? 'active' : ''}" data-view="settings" ${this.currentView === 'settings' ? 'aria-current="page"' : ''}>
-        <span class="nav-icon">⚙️</span>
-        <span>${t('nav.settings')}</span>
+        <span class="nav-badge">S</span>
+        <span class="nav-label">${t('nav.settings')}</span>
       </a>
     `;
 
