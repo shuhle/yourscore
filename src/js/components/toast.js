@@ -4,7 +4,9 @@
 
 function showToast(message, type = 'success', duration = 2500) {
   const container = document.getElementById('toast-container');
-  if (!container) {return;}
+  if (!container) {
+    return;
+  }
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
@@ -17,9 +19,13 @@ function showToast(message, type = 'success', duration = 2500) {
 
   const removeToast = () => {
     toast.classList.add('toast-out');
-    toast.addEventListener('animationend', () => {
-      toast.remove();
-    }, { once: true });
+    toast.addEventListener(
+      'animationend',
+      () => {
+        toast.remove();
+      },
+      { once: true }
+    );
   };
 
   setTimeout(removeToast, duration);

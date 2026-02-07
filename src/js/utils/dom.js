@@ -34,7 +34,28 @@ function createEmptyState({ title, message }) {
   return empty;
 }
 
-export {
-  escapeHtml,
-  createEmptyState
-};
+/**
+ * Validate an integer value with optional bounds
+ * @param {string|number} value - Value to validate
+ * @param {Object} [options] - Validation options
+ * @param {number} [options.min] - Minimum allowed value
+ * @param {number} [options.max] - Maximum allowed value
+ * @param {string} [options.fieldName] - Field name for error messages
+ * @param {string} [options.errorMessage] - Custom error message override
+ * @returns {{ valid: boolean, value?: number, error?: string }}
+ */
+function validateInteger(value, { min, max, fieldName, errorMessage } = {}) {
+  const num = Number.parseInt(value, 10);
+  if (!Number.isFinite(num)) {
+    return { valid: false, error: errorMessage || `${fieldName} must be a number` };
+  }
+  if (min !== undefined && num < min) {
+    return { valid: false, error: errorMessage || `${fieldName} must be at least ${min}` };
+  }
+  if (max !== undefined && num > max) {
+    return { valid: false, error: errorMessage || `${fieldName} must be at most ${max}` };
+  }
+  return { valid: true, value: num };
+}
+
+export { escapeHtml, createEmptyState, validateInteger };

@@ -16,7 +16,7 @@ const DEFAULTS = {
   theme: 'light',
   uiScale: 1,
   mainScore: 0,
-  language: 'auto'
+  language: 'auto',
 };
 
 /**
@@ -70,7 +70,7 @@ class SettingsModel {
   static async setMany(settings) {
     const records = Object.entries(settings).map(([key, value]) => ({
       key,
-      value
+      value,
     }));
     await db.putMany(STORE_NAME, records);
   }
@@ -227,7 +227,7 @@ class SettingsModel {
         firstUseDate: today,
         lastActiveDate: today,
         mainScore: DEFAULTS.mainScore,
-        decayAmount: DEFAULTS.decayAmount
+        decayAmount: DEFAULTS.decayAmount,
       });
       return true;
     }

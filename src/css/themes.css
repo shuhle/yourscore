@@ -1,57 +1,7 @@
 /* YourScore Theme Styles - Modern Design System */
 
-/* Light Theme (default) */
-:root,
-[data-theme="light"] {
-  /* Base colors - soft blue palette */
-  --color-base: #F0F7FF;
-  --color-surface: #F5FAFF;
-  --color-surface-alt: #E6F2FF;
-  --color-canvas: #D6EBFF;
-
-  /* Primary - soft blue */
-  --color-primary: #5B9BD5;
-  --color-primary-dark: #4A7BB8;
-  --color-primary-light: #7DB3E3;
-  --color-primary-pale: #D6EBFF;
-
-  /* Accent - complementary teal */
-  --color-accent: #2A9D8F;
-  --color-accent-dark: #1E7A6D;
-  --color-accent-light: #4DB8AA;
-
-  /* Semantic colors */
-  --color-success: #52B788;
-  --color-success-bg: #D8F3DC;
-  --color-danger: #E63946;
-  --color-danger-bg: #FFD6D9;
-  --color-warning: #F4A261;
-  --color-warning-bg: #FFE5CC;
-
-  /* Text colors */
-  --text-primary: #2B3A52;
-  --text-secondary: #5A6B7A;
-  --text-muted: #8D96A8;
-  --text-inverse: #FFFFFF;
-
-  /* Borders & dividers */
-  --border-light: #D6EBFF;
-  --border-medium: #C2DFFF;
-  --border-dark: #A8D0FF;
-
-  /* Shadows - soft and cool */
-  --shadow-xs: 0 1px 2px rgba(91, 155, 213, 0.08);
-  --shadow-sm: 0 2px 4px rgba(91, 155, 213, 0.1);
-  --shadow-md: 0 4px 8px rgba(91, 155, 213, 0.12);
-  --shadow-lg: 0 8px 16px rgba(91, 155, 213, 0.15);
-  --shadow-xl: 0 12px 24px rgba(91, 155, 213, 0.18);
-
-  /* Score colors */
-  --score-positive: #2A9D8F;
-  --score-negative: #E63946;
-  --score-neutral: #5A5D7A;
-
-  /* Legacy mappings for compatibility */
+/* Legacy variable mappings — defined once, resolve via semantic vars per theme */
+:root {
   --bg-primary: var(--color-surface);
   --bg-secondary: var(--color-surface-alt);
   --bg-tertiary: var(--color-canvas);
@@ -64,48 +14,97 @@
   --danger-bg: var(--color-danger-bg);
   --warning-color: var(--color-warning);
   --warning-bg: var(--color-warning-bg);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
+}
+
+/* Light Theme (default) */
+:root,
+[data-theme='light'] {
+  /* Base colors - soft grey palette */
+  --color-base: #f5f5f5;
+  --color-surface: #fafafa;
+  --color-surface-alt: #efefef;
+  --color-canvas: #e5e5e5;
+
+  /* Primary - soft grey */
+  --color-primary: #6b7280;
+  --color-primary-dark: #4b5563;
+  --color-primary-light: #9ca3af;
+  --color-primary-pale: #e5e7eb;
+
+  /* Accent - complementary teal */
+  --color-accent: #2a9d8f;
+  --color-accent-dark: #1e7a6d;
+  --color-accent-light: #4db8aa;
+
+  /* Semantic colors */
+  --color-success: #52b788;
+  --color-success-bg: #d8f3dc;
+  --color-danger: #e63946;
+  --color-danger-bg: #ffd6d9;
+  --color-warning: #f4a261;
+  --color-warning-bg: #ffe5cc;
+
+  /* Text colors */
+  --text-primary: #2b3a52;
+  --text-secondary: #5a6b7a;
+  --text-muted: #8d96a8;
+  --text-inverse: #ffffff;
+
+  /* Borders & dividers */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-dark: #9ca3af;
+
+  /* Shadows - soft and neutral */
+  --shadow-xs: 0 1px 2px rgba(107, 114, 128, 0.08);
+  --shadow-sm: 0 2px 4px rgba(107, 114, 128, 0.1);
+  --shadow-md: 0 4px 8px rgba(107, 114, 128, 0.12);
+  --shadow-lg: 0 8px 16px rgba(107, 114, 128, 0.15);
+  --shadow-xl: 0 12px 24px rgba(107, 114, 128, 0.18);
+
+  /* Score colors */
+  --score-positive: #2a9d8f;
+  --score-negative: #e63946;
+  --score-neutral: #5a5d7a;
 }
 
 /* Dark Theme */
-[data-theme="dark"] {
-  /* Base colors - dark with cool undertones */
-  --color-base: #1A1F2E;
-  --color-surface: #252A3A;
-  --color-surface-alt: #2F3547;
-  --color-canvas: #3A4154;
+[data-theme='dark'] {
+  /* Base colors - dark with neutral undertones */
+  --color-base: #1f1f1f;
+  --color-surface: #2a2a2a;
+  --color-surface-alt: #353535;
+  --color-canvas: #404040;
 
-  /* Primary - soft blue (slightly brighter for dark) */
-  --color-primary: #7DB3E3;
-  --color-primary-dark: #5B9BD5;
-  --color-primary-light: #9EC9ED;
-  --color-primary-pale: #2F3A47;
+  /* Primary - soft grey (slightly brighter for dark) */
+  --color-primary: #9ca3af;
+  --color-primary-dark: #6b7280;
+  --color-primary-light: #d1d5db;
+  --color-primary-pale: #374151;
 
   /* Accent - teal */
-  --color-accent: #4DB8AA;
-  --color-accent-dark: #2A9D8F;
-  --color-accent-light: #7BCFC4;
+  --color-accent: #4db8aa;
+  --color-accent-dark: #2a9d8f;
+  --color-accent-light: #7bcfc4;
 
   /* Semantic colors */
-  --color-success: #6FCF97;
-  --color-success-bg: #2D4A37;
-  --color-danger: #FF6B6B;
-  --color-danger-bg: #4A2D2F;
-  --color-warning: #F4A261;
-  --color-warning-bg: #4A3A2E;
+  --color-success: #6fcf97;
+  --color-success-bg: #2d4a37;
+  --color-danger: #ff6b6b;
+  --color-danger-bg: #4a2d2f;
+  --color-warning: #f4a261;
+  --color-warning-bg: #4a3a2e;
 
   /* Text colors */
-  --text-primary: #F0F0F5;
-  --text-secondary: #B8B8C8;
-  --text-muted: #7A7A8A;
-  --text-inverse: #1A1A1F;
+  --text-primary: #f0f0f5;
+  --text-secondary: #b8b8c8;
+  --text-muted: #7a7a8a;
+  --text-inverse: #1a1a1f;
 
   /* Borders & dividers */
-  --border-light: #3A3A47;
-  --border-medium: #4A4A57;
-  --border-dark: #5A5A67;
+  --border-light: #3a3a47;
+  --border-medium: #4a4a57;
+  --border-dark: #5a5a67;
 
   /* Shadows - deeper for dark theme */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -115,26 +114,9 @@
   --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.7);
 
   /* Score colors */
-  --score-positive: #6FCF97;
-  --score-negative: #FF6B6B;
-  --score-neutral: #B8B8C8;
-
-  /* Legacy mappings */
-  --bg-primary: var(--color-surface);
-  --bg-secondary: var(--color-surface-alt);
-  --bg-tertiary: var(--color-canvas);
-  --border-color: var(--border-medium);
-  --accent-color: var(--color-primary);
-  --accent-hover: var(--color-primary-dark);
-  --success-color: var(--color-success);
-  --success-bg: var(--color-success-bg);
-  --danger-color: var(--color-danger);
-  --danger-bg: var(--color-danger-bg);
-  --warning-color: var(--color-warning);
-  --warning-bg: var(--color-warning-bg);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
+  --score-positive: #6fcf97;
+  --score-negative: #ff6b6b;
+  --score-neutral: #b8b8c8;
 }
 
 /* Apply theme colors */

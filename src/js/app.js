@@ -12,6 +12,7 @@ import { renderCategoriesView } from './views/categories.js';
 import { renderSettingsView } from './views/settings.js';
 import { renderDashboardView } from './views/dashboard.js';
 import { t, setLocale, detectLocale, getLocale } from './i18n/i18n.js';
+import { iconCalendarCheck, iconList, iconGrid, iconBarChart, iconGear } from './utils/icons.js';
 
 // Register service worker for PWA functionality
 if (!window.__TEST_MODE__ && 'serviceWorker' in navigator) {
@@ -20,7 +21,7 @@ if (!window.__TEST_MODE__ && 'serviceWorker' in navigator) {
       // Use relative path for consistent behavior across deployment locations
       // This is critical for iOS where absolute paths can cause scope mismatches
       const registration = await navigator.serviceWorker.register('./sw.js', {
-        scope: './'
+        scope: './',
       });
       console.log('ServiceWorker registered:', registration.scope);
 
@@ -34,6 +35,10 @@ if (!window.__TEST_MODE__ && 'serviceWorker' in navigator) {
       console.log('ServiceWorker registration failed:', error);
     }
   });
+}
+
+if (navigator.webdriver) {
+  document.documentElement.classList.add('is-automated');
 }
 
 // Application initialization
@@ -68,7 +73,9 @@ class App {
 
   initInstallPrompt() {
     const banner = document.getElementById('install-banner');
-    if (!banner) {return;}
+    if (!banner) {
+      return;
+    }
 
     const installButton = banner.querySelector('[data-action="install"]');
     const dismissButton = banner.querySelector('[data-action="dismiss"]');
@@ -90,8 +97,8 @@ class App {
       requestAnimationFrame(() => banner.classList.add('visible'));
     };
 
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone;
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
     if (isStandalone) {
       hideBanner();
@@ -110,7 +117,9 @@ class App {
     });
 
     installButton?.addEventListener('click', async () => {
-      if (!deferredPrompt) {return;}
+      if (!deferredPrompt) {
+        return;
+      }
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       deferredPrompt = null;
@@ -150,7 +159,9 @@ class App {
 
     const description = t('app.description');
     document.querySelector('meta[name="description"]')?.setAttribute('content', description);
-    document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', title);
+    document
+      .querySelector('meta[name="apple-mobile-web-app-title"]')
+      ?.setAttribute('content', title);
 
     const skipLink = document.querySelector('.skip-link');
     if (skipLink) {
@@ -163,8 +174,12 @@ class App {
       if (message) {
         message.textContent = t('install.prompt');
       }
-      banner.querySelector('[data-action="install"]')?.replaceChildren(document.createTextNode(t('install.install')));
-      banner.querySelector('[data-action="dismiss"]')?.replaceChildren(document.createTextNode(t('install.dismiss')));
+      banner
+        .querySelector('[data-action="install"]')
+        ?.replaceChildren(document.createTextNode(t('install.install')));
+      banner
+        .querySelector('[data-action="dismiss"]')
+        ?.replaceChildren(document.createTextNode(t('install.dismiss')));
     }
 
     const nav = document.getElementById('app-nav');
@@ -175,33 +190,35 @@ class App {
 
   renderNav() {
     const nav = document.getElementById('app-nav');
-    if (!nav) {return;}
+    if (!nav) {
+      return;
+    }
 
     nav.innerHTML = `
       <a href="#" class="nav-item ${this.currentView === 'daily' ? 'active' : ''}" data-view="daily" ${this.currentView === 'daily' ? 'aria-current="page"' : ''}>
-        <span class="nav-badge">T</span>
+        <span class="nav-badge">${iconCalendarCheck(18)}</span>
         <span class="nav-label">${t('nav.today')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'activities' ? 'active' : ''}" data-view="activities" ${this.currentView === 'activities' ? 'aria-current="page"' : ''}>
-        <span class="nav-badge">A</span>
+        <span class="nav-badge">${iconList(18)}</span>
         <span class="nav-label">${t('nav.activities')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'categories' ? 'active' : ''}" data-view="categories" ${this.currentView === 'categories' ? 'aria-current="page"' : ''}>
-        <span class="nav-badge">C</span>
+        <span class="nav-badge">${iconGrid(18)}</span>
         <span class="nav-label">${t('nav.categories')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'dashboard' ? 'active' : ''}" data-view="dashboard" ${this.currentView === 'dashboard' ? 'aria-current="page"' : ''}>
-        <span class="nav-badge">D</span>
+        <span class="nav-badge">${iconBarChart(18)}</span>
         <span class="nav-label">${t('nav.stats')}</span>
       </a>
       <a href="#" class="nav-item ${this.currentView === 'settings' ? 'active' : ''}" data-view="settings" ${this.currentView === 'settings' ? 'aria-current="page"' : ''}>
-        <span class="nav-badge">S</span>
+        <span class="nav-badge">${iconGear(18)}</span>
         <span class="nav-label">${t('nav.settings')}</span>
       </a>
     `;
 
     // Add navigation event listeners
-    nav.querySelectorAll('.nav-item').forEach(item => {
+    nav.querySelectorAll('.nav-item').forEach((item) => {
       item.addEventListener('click', async (e) => {
         e.preventDefault();
         const view = item.dataset.view;
@@ -220,7 +237,12 @@ class App {
   async renderCurrentView() {
     this.renderQueue = this.renderQueue.then(async () => {
       const main = document.getElementById('app-main');
-      if (!main) {return;}
+      if (!main) {
+        return;
+      }
+
+      // Force cleanup of prior view's DOM tree
+      main.textContent = '';
 
       if (this.currentView === 'daily') {
         await renderDailyView(main, { decayInfo: this.decayInfo });
@@ -252,6 +274,8 @@ class App {
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.__TEST_MODE__) {return;}
+  if (window.__TEST_MODE__) {
+    return;
+  }
   window.app = new App();
 });

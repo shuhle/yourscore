@@ -1,62 +1,63 @@
 # YourScore
 
-Turn daily habits into points, streaks, and achievements with a PWA that works offline and keeps your data on your device.
+YourScore is a client-only PWA that turns daily habits into points, streaks, and achievements. It runs fully offline and stores everything on your device.
+
+## Why Use It
+
+- **Private by default**: No accounts, no tracking, no server.
+- **Offline-first**: Works anywhere once installed.
+- **Motivating, not nagging**: Daily decay keeps momentum without guilt.
+- **Built for consistency**: Streaks, milestones, and recovery achievements.
 
 ## Screenshots
 
 <img src="docs/screenshots/daily-view.png" alt="Daily view" width="25%">
 <img src="docs/screenshots/dashboard-view.png" alt="Dashboard" width="25%">
 
-## Why YourScore
+## Live App
 
-- **Client-only by design**: No server, no account, no tracking.
-- **Offline-first**: Works anywhere once installed.
-- **Momentum over guilt**: Daily decay nudges you forward without nagging.
-- **Built for long runs**: Streaks, milestones, and recovery achievements.
+Open the hosted version at `https://shuhle.github.io/yourscore/`.
+
+## AI-Assisted Code Notice
+
+This project was coded with AI agents. Please review changes carefully if you plan to reuse or extend the code.
+
+## Features
+
+- Main score that carries across days (positive or negative)
+- Daily decay with first-day exemption
+- Break-even tracking for today’s points vs. decay
+- One completion per activity per day with quick undo
+- Categories, analytics, and achievements
+- PWA install support
+
+## Install as a PWA
+
+- **Desktop**: Click the install icon in your browser’s address bar
+- **Mobile**: Use "Add to Home Screen" from your browser menu
 
 ## Quick Start (Development)
 
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd yourscore
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
 The app will be available at `http://localhost:3000`.
 
-### Serve Without Node
+## Serve Without Node
 
 You can host the app by serving the `src/` folder directly:
 
 ```bash
-# Example with Python
 python3 -m http.server --directory src 3000
 ```
 
 Then open `http://localhost:3000`. (An HTTP server is required for ES modules and the service worker.)
 
-## Install as a PWA
-
-The app can be installed on your device for quick access:
-- **Desktop**: Click the install icon in your browser's address bar
-- **Mobile**: Use "Add to Home Screen" from your browser's menu
-
-## How It Works
-
-- **Main score** carries between days, positive or negative.
-- **Daily decay** applies once per day (first day is free).
-- **Break-even** is today’s points vs. decay target.
-- **Completions** are one per activity per day, with quick undo.
-
 ## Development
-
-### Commands
 
 ```bash
 npm run dev          # Start development server
@@ -67,10 +68,6 @@ npm run test:visual  # Visual regression tests
 npm run lint         # Check code style
 npm run format       # Format code
 ```
-
-### Testing
-
-Playwright covers unit, integration, end-to-end, and visual regression tests across viewports.
 
 ## License
 

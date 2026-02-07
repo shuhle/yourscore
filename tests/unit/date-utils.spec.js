@@ -92,6 +92,27 @@ test.describe('Date Utils (unit)', () => {
     expect(result.acrossYears).toBe(3);
   });
 
+  test.describe('daysBetween DST boundaries (America/New_York)', () => {
+    test.use({ timezoneId: 'America/New_York' });
+
+    test('daysBetween stays 1 day across DST transitions', async ({ page }) => {
+      const result = await page.evaluate(async () => {
+        const { daysBetween } = await import('/js/utils/date.js');
+        return {
+          springForward1: daysBetween('2024-03-09', '2024-03-10'),
+          springForward2: daysBetween('2024-03-10', '2024-03-11'),
+          fallBack1: daysBetween('2024-11-02', '2024-11-03'),
+          fallBack2: daysBetween('2024-11-03', '2024-11-04')
+        };
+      });
+
+      expect(result.springForward1).toBe(1);
+      expect(result.springForward2).toBe(1);
+      expect(result.fallBack1).toBe(1);
+      expect(result.fallBack2).toBe(1);
+    });
+  });
+
   test('hasNewDayStarted detects day changes', async ({ page }) => {
     const result = await page.evaluate(async () => {
       const { hasNewDayStarted, getLocalDateString } = await import('/js/utils/date.js');

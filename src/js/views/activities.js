@@ -5,16 +5,16 @@
 import { ActivityModel } from '../models/activity.js';
 import { CategoryModel, UNCATEGORIZED_ID } from '../models/category.js';
 import { showToast } from '../components/toast.js';
-import { escapeHtml, createEmptyState } from '../utils/dom.js';
+import { escapeHtml, createEmptyState, validateInteger } from '../utils/dom.js';
 import { t, formatNumber } from '../i18n/i18n.js';
+import { ACTION_ICONS } from '../utils/icons.js';
 
 async function renderActivitiesView(container) {
   container.innerHTML = '';
 
-  // Categories are seeded in app.js init, just fetch them here
   const categories = await CategoryModel.getAll();
   const uncategorized = await CategoryModel.getUncategorized();
-  const categoryMap = new Map(categories.map(cat => [cat.id, cat]));
+  const categoryMap = new Map(categories.map((cat) => [cat.id, cat]));
   categoryMap.set(uncategorized.id, uncategorized);
 
   const view = document.createElement('section');
@@ -49,9 +49,7 @@ async function renderActivitiesView(container) {
       </div>
       <div class="form-group">
         <label class="form-label" for="activity-category">${t('activities.form.categoryLabel')}</label>
-        <select class="form-input" id="activity-category" name="categoryId">
-          ${[...categoryMap.values()].map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
-        </select>
+        <select class="form-input" id="activity-category" name="categoryId"></select>
       </div>
     </div>
     <div class="form-error" data-testid="activity-form-error" aria-live="polite"></div>
@@ -61,12 +59,58 @@ async function renderActivitiesView(container) {
     </div>
   `;
 
-  const listSection = document.createElement('div');
-  listSection.className = 'activity-list-section';
-
   const activeList = document.createElement('div');
   activeList.className = 'activity-list';
   activeList.dataset.testid = 'activity-list';
+
+  const archivedList = document.createElement('div');
+  archivedList.className = 'activity-list archived';
+  archivedList.dataset.testid = 'archived-list';
+
+  const listSection = buildListSection(activeList, archivedList);
+
+  formCard.appendChild(formTitle);
+  formCard.appendChild(form);
+
+  const categorySelect = form.querySelector('#activity-category');
+  populateCategorySelect(categorySelect, [...categoryMap.values()], uncategorized);
+
+  view.appendChild(header);
+  view.appendChild(formCard);
+  view.appendChild(listSection);
+  container.appendChild(view);
+
+  const ctx = setupFormHandlers({
+    form,
+    formTitle,
+    uncategorized,
+    onRefresh: () =>
+      refreshLists({
+        activeList,
+        archivedList,
+        categorySelect,
+        setEditMode: ctx.setEditMode,
+        swapActivityRows,
+        updateOrderFromDOM,
+      }),
+  });
+
+  const { setEditMode } = ctx;
+
+  await refreshLists({
+    activeList,
+    archivedList,
+    categorySelect,
+    setEditMode,
+    swapActivityRows,
+    updateOrderFromDOM,
+  });
+  view.dataset.ready = 'true';
+}
+
+function buildListSection(activeList, archivedList) {
+  const listSection = document.createElement('div');
+  listSection.className = 'activity-list-section';
 
   const archivedSection = document.createElement('div');
   archivedSection.className = 'archived-section';
@@ -76,34 +120,50 @@ async function renderActivitiesView(container) {
       <p>${t('activities.sections.archivedSubtitle')}</p>
     </div>
   `;
-
-  const archivedList = document.createElement('div');
-  archivedList.className = 'activity-list archived';
-  archivedList.dataset.testid = 'archived-list';
   archivedSection.appendChild(archivedList);
 
   listSection.appendChild(activeList);
   listSection.appendChild(archivedSection);
+  return listSection;
+}
 
-  formCard.appendChild(formTitle);
-  formCard.appendChild(form);
-
-  view.appendChild(header);
-  view.appendChild(formCard);
-  view.appendChild(listSection);
-  container.appendChild(view);
-
+function setupFormHandlers({ form, formTitle, uncategorized, onRefresh }) {
   const formError = form.querySelector('.form-error');
   const cancelButton = form.querySelector('[data-testid="activity-cancel"]');
   let editingId = null;
 
-  form.addEventListener('submit', async event => {
+  function resetForm() {
+    editingId = null;
+    form.reset();
+    formTitle.textContent = t('activities.form.addTitle');
+    form.querySelector('[data-testid="activity-submit"]').textContent = t(
+      'activities.form.addButton'
+    );
+    cancelButton.hidden = true;
+    formError.textContent = '';
+  }
+
+  function setEditMode(activity) {
+    editingId = activity.id;
+    formTitle.textContent = t('activities.form.editTitle');
+    form.querySelector('[data-testid="activity-submit"]').textContent = t(
+      'activities.form.saveButton'
+    );
+    cancelButton.hidden = false;
+    form.elements.name.value = activity.name;
+    form.elements.points.value = activity.points;
+    form.elements.categoryId.value = activity.categoryId || uncategorized.id;
+    formError.textContent = '';
+    const prefersInstant = window.__TEST_MODE__ || navigator.webdriver;
+    form.scrollIntoView({ behavior: prefersInstant ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     formError.textContent = '';
 
     const formData = new FormData(form);
     const name = formData.get('name').toString().trim();
-    const pointsValue = Number.parseInt(formData.get('points').toString(), 10);
     const categoryId = formData.get('categoryId').toString() || UNCATEGORIZED_ID;
 
     if (!name) {
@@ -111,30 +171,28 @@ async function renderActivitiesView(container) {
       return;
     }
 
-    if (!Number.isFinite(pointsValue) || pointsValue < 1) {
-      formError.textContent = t('activities.errors.pointsPositive');
+    const pointsResult = validateInteger(formData.get('points'), {
+      min: 1,
+      fieldName: 'Points',
+      errorMessage: t('activities.errors.pointsPositive'),
+    });
+    if (!pointsResult.valid) {
+      formError.textContent = pointsResult.error;
       return;
     }
+    const pointsValue = pointsResult.value;
 
     try {
       if (editingId) {
-        await ActivityModel.update(editingId, {
-          name,
-          points: pointsValue,
-          categoryId
-        });
+        await ActivityModel.update(editingId, { name, points: pointsValue, categoryId });
         showToast(t('toasts.activityUpdated'), 'success');
       } else {
-        await ActivityModel.create({
-          name,
-          points: pointsValue,
-          categoryId
-        });
+        await ActivityModel.create({ name, points: pointsValue, categoryId });
         showToast(t('toasts.activityAdded'), 'success');
       }
 
       resetForm();
-      await refreshLists();
+      await onRefresh();
     } catch (error) {
       formError.textContent = error.message;
     }
@@ -144,176 +202,174 @@ async function renderActivitiesView(container) {
     resetForm();
   });
 
-  function resetForm() {
-    editingId = null;
-    form.reset();
-    formTitle.textContent = t('activities.form.addTitle');
-    form.querySelector('[data-testid="activity-submit"]').textContent = t('activities.form.addButton');
-    cancelButton.hidden = true;
-    formError.textContent = '';
-  }
-
-  function setEditMode(activity) {
-    editingId = activity.id;
-    formTitle.textContent = t('activities.form.editTitle');
-    form.querySelector('[data-testid="activity-submit"]').textContent = t('activities.form.saveButton');
-    cancelButton.hidden = false;
-    form.elements.name.value = activity.name;
-    form.elements.points.value = activity.points;
-    form.elements.categoryId.value = activity.categoryId || uncategorized.id;
-    formError.textContent = '';
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function swapActivityRows(rowA, rowB) {
-    const parent = rowA.parentElement;
-    const sibling = rowB.nextElementSibling === rowA ? rowB : rowB.nextElementSibling;
-    parent.insertBefore(rowA, sibling);
-  }
-
-  async function updateOrderFromDOM(group, categoryId) {
-    const ids = Array.from(group.querySelectorAll('.activity-row')).map(row => row.dataset.activityId);
-    await ActivityModel.reorder(categoryId, ids);
-    await refreshLists();
-  }
-
-  async function refreshLists() {
-    const updatedCategories = await CategoryModel.getAll();
-    const updatedUncategorized = await CategoryModel.getUncategorized();
-    const updatedCategoryMap = new Map(updatedCategories.map(cat => [cat.id, cat]));
-    updatedCategoryMap.set(updatedUncategorized.id, updatedUncategorized);
-
-    activeList.innerHTML = `
-      <div class="section-title">
-        <h3>${t('activities.sections.activeTitle')}</h3>
-        <p>${t('activities.sections.activeSubtitle')}</p>
-      </div>
-    `;
-
-    const grouped = await ActivityModel.getGroupedByCategory();
-    const activities = await ActivityModel.getAll();
-
-    if (activities.length === 0) {
-      activeList.appendChild(createEmptyState({
-        title: t('activities.empty.noActivitiesTitle'),
-        message: t('activities.empty.noActivitiesMessage')
-      }));
-    } else {
-      // Ensure all category IDs in grouped have a category entry
-      for (const categoryId of Object.keys(grouped)) {
-        if (!updatedCategoryMap.has(categoryId)) {
-          updatedCategoryMap.set(categoryId, { id: categoryId, name: t('common.uncategorized') });
-        }
-      }
-
-      // Get categories in order
-      const categoryOrder = [...updatedCategoryMap.values()];
-
-      for (const category of categoryOrder) {
-        const categoryActivities = grouped[category.id] || [];
-        if (categoryActivities.length === 0) { continue; }
-
-        const group = document.createElement('div');
-        group.className = 'category-group';
-
-        const header = document.createElement('div');
-        header.className = 'category-header';
-        header.textContent = category.name;
-        group.appendChild(header);
-
-        for (const activity of categoryActivities) {
-          const row = createActivityRow(activity, {
-            onEdit: setEditMode,
-            onArchive: async () => {
-              await ActivityModel.archive(activity.id);
-              showToast(t('toasts.activityArchived'), 'warning');
-              await refreshLists();
-            },
-            onMoveUp: async (currentRow) => {
-              const previous = currentRow.previousElementSibling;
-              if (!previous || !previous.classList.contains('activity-row')) {return;}
-              swapActivityRows(currentRow, previous);
-              await updateOrderFromDOM(group, category.id);
-            },
-            onMoveDown: async (currentRow) => {
-              const next = currentRow.nextElementSibling;
-              if (!next || !next.classList.contains('activity-row')) {return;}
-              swapActivityRows(next, currentRow);
-              await updateOrderFromDOM(group, category.id);
-            }
-          });
-          group.appendChild(row);
-        }
-
-        activeList.appendChild(group);
-      }
-    }
-
-    archivedList.innerHTML = '';
-    const archived = await ActivityModel.getArchived();
-    if (archived.length === 0) {
-      archivedList.appendChild(createEmptyState({
-        title: t('activities.empty.noArchivedTitle'),
-        message: t('activities.empty.noArchivedMessage')
-      }));
-    } else {
-      for (const activity of archived) {
-        archivedList.appendChild(
-          createActivityRow(activity, {
-            onEdit: () => {},
-            onArchive: async () => {
-              await ActivityModel.unarchive(activity.id);
-              showToast(t('toasts.activityRestored'), 'success');
-              await refreshLists();
-            },
-            isArchived: true
-          })
-        );
-      }
-    }
-  }
-
-  await refreshLists();
-  view.dataset.ready = 'true';
+  return { setEditMode };
 }
 
-const ACTIVITY_ACTION_ICONS = {
-  up: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M10 4l6 6h-4v6H8v-6H4l6-6z"></path>
-    </svg>
-  `,
-  down: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M10 16l-6-6h4V4h4v6h4l-6 6z"></path>
-    </svg>
-  `,
-  edit: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M14.69 3.86l1.45 1.45a2 2 0 010 2.83l-7.8 7.8-3.53.39.39-3.53 7.8-7.8a2 2 0 012.83 0z"></path>
-      <path d="M3 17h14v2H3z"></path>
-    </svg>
-  `,
-  archive: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M3 5h14l-1 12H4L3 5zm2-3h10l1 3H4l1-3zm4 6v4h2V8H9z"></path>
-    </svg>
-  `,
-  restore: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M10 4a6 6 0 016 6h-2a4 4 0 10-4 4v2a6 6 0 010-12z"></path>
-      <path d="M10 1l3 3-3 3V1z"></path>
-    </svg>
-  `
-};
+function populateCategorySelect(select, categories, uncategorized) {
+  if (!select) {
+    return;
+  }
+  const selected = select.value;
+  select.innerHTML = '';
 
-function createActivityRow(activity, {
-  onEdit,
-  onArchive,
-  onMoveUp,
-  onMoveDown,
-  isArchived = false
+  const resolvedCategories = categories.length
+    ? categories
+    : [{ id: uncategorized.id, name: uncategorized.name }];
+
+  for (const category of resolvedCategories) {
+    const option = document.createElement('option');
+    option.value = category.id;
+    option.textContent = category.name;
+    select.appendChild(option);
+  }
+
+  if (selected && select.querySelector(`option[value="${selected}"]`)) {
+    select.value = selected;
+  } else {
+    select.value = uncategorized.id;
+  }
+}
+
+function swapActivityRows(rowA, rowB) {
+  const parent = rowA.parentElement;
+  const sibling = rowB.nextElementSibling === rowA ? rowB : rowB.nextElementSibling;
+  parent.insertBefore(rowA, sibling);
+}
+
+async function updateOrderFromDOM(group, categoryId, onRefresh) {
+  const ids = Array.from(group.querySelectorAll('.activity-row')).map(
+    (row) => row.dataset.activityId
+  );
+  await ActivityModel.reorder(categoryId, ids);
+  await onRefresh();
+}
+
+async function refreshLists({
+  activeList,
+  archivedList,
+  categorySelect,
+  setEditMode,
+  swapActivityRows: swapRows,
+  updateOrderFromDOM: updateOrder,
 }) {
+  const self = () =>
+    refreshLists({
+      activeList,
+      archivedList,
+      setEditMode,
+      swapActivityRows: swapRows,
+      updateOrderFromDOM: updateOrder,
+    });
+
+  const updatedCategories = await CategoryModel.getAll();
+  const updatedUncategorized = await CategoryModel.getUncategorized();
+  const updatedCategoryMap = new Map(updatedCategories.map((cat) => [cat.id, cat]));
+  updatedCategoryMap.set(updatedUncategorized.id, updatedUncategorized);
+
+  populateCategorySelect(categorySelect, [...updatedCategoryMap.values()], updatedUncategorized);
+
+  activeList.innerHTML = `
+    <div class="section-title">
+      <h3>${t('activities.sections.activeTitle')}</h3>
+      <p>${t('activities.sections.activeSubtitle')}</p>
+    </div>
+  `;
+
+  const grouped = await ActivityModel.getGroupedByCategory();
+  const activities = await ActivityModel.getAll();
+
+  if (activities.length === 0) {
+    activeList.appendChild(
+      createEmptyState({
+        title: t('activities.empty.noActivitiesTitle'),
+        message: t('activities.empty.noActivitiesMessage'),
+      })
+    );
+  } else {
+    for (const categoryId of Object.keys(grouped)) {
+      if (!updatedCategoryMap.has(categoryId)) {
+        updatedCategoryMap.set(categoryId, { id: categoryId, name: t('common.uncategorized') });
+      }
+    }
+
+    const categoryOrder = [...updatedCategoryMap.values()];
+
+    for (const category of categoryOrder) {
+      const categoryActivities = grouped[category.id] || [];
+      if (categoryActivities.length === 0) {
+        continue;
+      }
+
+      const group = document.createElement('div');
+      group.className = 'category-group';
+
+      const header = document.createElement('div');
+      header.className = 'category-header';
+      header.textContent = category.name;
+      group.appendChild(header);
+
+      for (const activity of categoryActivities) {
+        const row = createActivityRow(activity, {
+          onEdit: setEditMode,
+          onArchive: async () => {
+            await ActivityModel.archive(activity.id);
+            showToast(t('toasts.activityArchived'), 'warning');
+            await self();
+          },
+          onMoveUp: async (currentRow) => {
+            const previous = currentRow.previousElementSibling;
+            if (!previous || !previous.classList.contains('activity-row')) {
+              return;
+            }
+            swapRows(currentRow, previous);
+            await updateOrder(group, category.id, self);
+          },
+          onMoveDown: async (currentRow) => {
+            const next = currentRow.nextElementSibling;
+            if (!next || !next.classList.contains('activity-row')) {
+              return;
+            }
+            swapRows(next, currentRow);
+            await updateOrder(group, category.id, self);
+          },
+        });
+        group.appendChild(row);
+      }
+
+      activeList.appendChild(group);
+    }
+  }
+
+  archivedList.innerHTML = '';
+  const archived = await ActivityModel.getArchived();
+  if (archived.length === 0) {
+    archivedList.appendChild(
+      createEmptyState({
+        title: t('activities.empty.noArchivedTitle'),
+        message: t('activities.empty.noArchivedMessage'),
+      })
+    );
+  } else {
+    for (const activity of archived) {
+      archivedList.appendChild(
+        createActivityRow(activity, {
+          onEdit: () => {},
+          onArchive: async () => {
+            await ActivityModel.unarchive(activity.id);
+            showToast(t('toasts.activityRestored'), 'success');
+            await self();
+          },
+          isArchived: true,
+        })
+      );
+    }
+  }
+}
+
+function createActivityRow(
+  activity,
+  { onEdit, onArchive, onMoveUp, onMoveDown, isArchived = false }
+) {
   const row = document.createElement('div');
   row.className = `activity-row ${isArchived ? 'archived' : ''}`;
   row.dataset.activityId = activity.id;
@@ -326,30 +382,36 @@ function createActivityRow(activity, {
       </div>
     </div>
     <div class="activity-row-actions">
-      ${!isArchived ? `
+      ${
+        !isArchived
+          ? `
         <button class="btn btn-secondary icon-button" type="button" data-testid="activity-move-up" aria-label="${t('categories.row.up')}">
-          ${ACTIVITY_ACTION_ICONS.up}
+          ${ACTION_ICONS.up}
           <span class="visually-hidden">${t('categories.row.up')}</span>
         </button>
         <button class="btn btn-secondary icon-button" type="button" data-testid="activity-move-down" aria-label="${t('categories.row.down')}">
-          ${ACTIVITY_ACTION_ICONS.down}
+          ${ACTION_ICONS.down}
           <span class="visually-hidden">${t('categories.row.down')}</span>
         </button>
         <button class="btn btn-secondary icon-button" type="button" data-testid="activity-edit" aria-label="${t('activities.row.edit')}">
-          ${ACTIVITY_ACTION_ICONS.edit}
+          ${ACTION_ICONS.edit}
           <span class="visually-hidden">${t('activities.row.edit')}</span>
         </button>
-      ` : ''}
+      `
+          : ''
+      }
       <button class="btn ${isArchived ? 'btn-primary' : 'btn-danger'} icon-button" type="button" data-testid="activity-archive" aria-label="${isArchived ? t('activities.row.restore') : t('activities.row.archive')}">
-        ${isArchived ? ACTIVITY_ACTION_ICONS.restore : ACTIVITY_ACTION_ICONS.archive}
+        ${isArchived ? ACTION_ICONS.restore : ACTION_ICONS.archive}
         <span class="visually-hidden">${isArchived ? t('activities.row.restore') : t('activities.row.archive')}</span>
       </button>
     </div>
   `;
 
   if (!isArchived) {
-    row.addEventListener('click', event => {
-      if (event.target.closest('button')) {return;}
+    row.addEventListener('click', (event) => {
+      if (event.target.closest('button')) {
+        return;
+      }
       if (onEdit) {
         onEdit(activity);
       }
@@ -374,7 +436,9 @@ function createActivityRow(activity, {
     });
   }
 
-  row.querySelector('[data-testid="activity-archive"]').addEventListener('click', () => {
+  row.querySelector('[data-testid="activity-archive"]').addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (onArchive) {
       onArchive(activity);
     }

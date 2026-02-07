@@ -451,13 +451,13 @@ test.describe('Achievement Badge Component', () => {
       return {
         isLocked: card.classList.contains('achievement-card--locked'),
         noDate: !card.querySelector('.achievement-card__date'),
-        statusContent: card.querySelector('.achievement-card__status')?.textContent.trim()
+        hasSvgIcon: !!card.querySelector('.achievement-card__status svg')
       };
     });
 
     expect(result.isLocked).toBe(true);
     expect(result.noDate).toBe(true);
-    expect(result.statusContent).toBe('🔒');
+    expect(result.hasSvgIcon).toBe(true);
   });
 
   test('createAchievementNotification creates accessible notification', async ({ page }) => {

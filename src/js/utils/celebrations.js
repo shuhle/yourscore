@@ -4,10 +4,26 @@
  */
 
 import { t, tPlural, formatNumber } from '../i18n/i18n.js';
+import {
+  iconTrophy,
+  iconDoubleStar,
+  iconStar,
+  iconFlame,
+  iconSparkle,
+  iconArrowUp,
+} from './icons.js';
 
 const CONFETTI_COLORS = [
-  '#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#ff9ff3',
-  '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43', '#10ac84'
+  '#ff6b6b',
+  '#feca57',
+  '#48dbfb',
+  '#1dd1a1',
+  '#ff9ff3',
+  '#54a0ff',
+  '#5f27cd',
+  '#00d2d3',
+  '#ff9f43',
+  '#10ac84',
 ];
 
 /**
@@ -142,13 +158,7 @@ function animateActivityCompletion(cardElement) {
  * @returns {Promise<void>} Resolves when dismissed
  */
 function showMilestoneCelebration(options) {
-  const {
-    icon,
-    title,
-    subtitle,
-    confetti = true,
-    autoDismiss = 0
-  } = options;
+  const { icon, title, subtitle, confetti = true, autoDismiss = 0 } = options;
 
   return new Promise((resolve) => {
     const shouldConfetti = confetti && !prefersReducedMotion();
@@ -204,13 +214,13 @@ function showMilestoneCelebration(options) {
  */
 async function celebrateScoreMilestone(score) {
   await showMilestoneCelebration({
-    icon: score >= 1000 ? '🏆' : score >= 500 ? '⭐' : '💯',
+    icon: score >= 1000 ? iconTrophy(48) : score >= 500 ? iconDoubleStar(48) : iconStar(48),
     title: t('celebrations.scoreMilestoneTitle', {
       score: formatNumber(score),
-      pointsLabel: tPlural('units.pointsLong', score)
+      pointsLabel: tPlural('units.pointsLong', score),
     }),
     subtitle: t('celebrations.scoreMilestoneSubtitle'),
-    confetti: true
+    confetti: true,
   });
 }
 
@@ -219,18 +229,11 @@ async function celebrateScoreMilestone(score) {
  * @param {number} days - Streak days
  */
 async function celebrateStreak(days) {
-  const icons = {
-    3: '🔥',
-    7: '🔥',
-    14: '🔥',
-    30: '🔥'
-  };
-
   await showMilestoneCelebration({
-    icon: icons[days] || '🔥',
+    icon: iconFlame(48),
     title: t('celebrations.streakTitle', { days: formatNumber(days) }),
     subtitle: t('celebrations.streakSubtitle', { days: formatNumber(days) }),
-    confetti: true
+    confetti: true,
   });
 }
 
@@ -239,10 +242,10 @@ async function celebrateStreak(days) {
  */
 async function celebratePerfectWeek() {
   await showMilestoneCelebration({
-    icon: '🌟',
+    icon: iconSparkle(48),
     title: t('celebrations.perfectWeekTitle'),
     subtitle: t('celebrations.perfectWeekSubtitle'),
-    confetti: true
+    confetti: true,
   });
 }
 
@@ -251,10 +254,10 @@ async function celebratePerfectWeek() {
  */
 async function celebrateRecovery() {
   await showMilestoneCelebration({
-    icon: '🚀',
+    icon: iconArrowUp(48),
     title: t('celebrations.recoveryTitle'),
     subtitle: t('celebrations.recoverySubtitle'),
-    confetti: true
+    confetti: true,
   });
 }
 
@@ -267,5 +270,5 @@ export {
   celebrateScoreMilestone,
   celebrateStreak,
   celebratePerfectWeek,
-  celebrateRecovery
+  celebrateRecovery,
 };

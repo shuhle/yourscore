@@ -6,6 +6,7 @@
 import { getAchievementById } from '../services/achievements.js';
 import { showConfetti } from '../utils/celebrations.js';
 import { t, getLocale } from '../i18n/i18n.js';
+import { iconCheck, iconLock } from '../utils/icons.js';
 
 /**
  * Create an achievement badge element
@@ -17,16 +18,11 @@ import { t, getLocale } from '../i18n/i18n.js';
  * @returns {HTMLElement} Badge element
  */
 function createAchievementBadge(options) {
-  const {
-    achievementId,
-    unlocked = false,
-    showDescription = false,
-    size = 'medium'
-  } = options;
+  const { achievementId, unlocked = false, showDescription = false, size = 'medium' } = options;
 
   const achievement = getAchievementById(achievementId);
   if (!achievement) {
-    console.warn(`Achievement not found: ${achievementId}`);
+    console.error(`Achievement not found: ${achievementId}`);
     return document.createElement('span');
   }
 
@@ -77,7 +73,7 @@ function createAchievementCard(achievement) {
       ${achievement.unlocked && unlockedDate ? `<div class="achievement-card__date">${t('date.unlockedOn', { date: unlockedDate })}</div>` : ''}
     </div>
     <div class="achievement-card__status">
-      ${achievement.unlocked ? '✓' : '🔒'}
+      ${achievement.unlocked ? iconCheck(20) : iconLock(20)}
     </div>
   `;
 
@@ -120,9 +116,14 @@ function createAchievementNotification(achievementId) {
  * Achievements that trigger confetti celebration
  */
 const CONFETTI_ACHIEVEMENTS = new Set([
-  'score_100', 'score_500', 'score_1000',
-  'streak_7', 'streak_14', 'streak_30',
-  'perfect_week', 'recovery'
+  'score_100',
+  'score_500',
+  'score_1000',
+  'streak_7',
+  'streak_14',
+  'streak_30',
+  'perfect_week',
+  'recovery',
 ]);
 
 /**
@@ -149,9 +150,13 @@ function showAchievementNotification(achievementId, duration = 4000) {
     notification.classList.remove('achievement-notification--visible');
     notification.classList.add('achievement-notification--hiding');
 
-    notification.addEventListener('animationend', () => {
-      notification.remove();
-    }, { once: true });
+    notification.addEventListener(
+      'animationend',
+      () => {
+        notification.remove();
+      },
+      { once: true }
+    );
 
     // Fallback removal
     setTimeout(() => {
@@ -169,9 +174,12 @@ function showAchievementNotification(achievementId, duration = 4000) {
  */
 function showMultipleAchievementNotifications(achievementIds, delay = 1500) {
   achievementIds.forEach((id, index) => {
-    setTimeout(() => {
-      showAchievementNotification(id);
-    }, index * (4000 + delay));
+    setTimeout(
+      () => {
+        showAchievementNotification(id);
+      },
+      index * (4000 + delay)
+    );
   });
 }
 
@@ -205,5 +213,5 @@ export {
   createAchievementNotification,
   showAchievementNotification,
   showMultipleAchievementNotifications,
-  createProgressBar
+  createProgressBar,
 };

@@ -5,8 +5,12 @@
 import { t, formatNumber } from '../i18n/i18n.js';
 
 function getScoreClass(score) {
-  if (score > 0) {return 'score-positive';}
-  if (score < 0) {return 'score-negative';}
+  if (score > 0) {
+    return 'score-positive';
+  }
+  if (score < 0) {
+    return 'score-negative';
+  }
   return 'score-neutral';
 }
 

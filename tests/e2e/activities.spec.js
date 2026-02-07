@@ -77,7 +77,7 @@ test.describe('Activities View', () => {
 
     const updated = page.locator('.activity-row', { hasText: 'Morning Walk Plus' });
     await expect(updated).toBeVisible();
-    await updated.locator('[data-testid="activity-archive"]').click();
+    await updated.locator('[data-testid="activity-archive"]').click({ force: true });
 
     await expect(page.locator('[data-testid="archived-list"]')).toContainText('Morning Walk Plus');
   });

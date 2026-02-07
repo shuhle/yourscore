@@ -1,49 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#FF8F3D">
-  <meta name="description" content="">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="">
-  <title></title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/themes.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-</head>
-<body>
-  <a class="skip-link" href="#app-main"></a>
-  <div id="app">
-    <header id="app-header">
-      <h1>YourScore</h1>
-      <div id="install-banner" hidden>
-        <span></span>
-        <div class="install-actions">
-          <button class="btn btn-primary" data-action="install"></button>
-          <button class="btn btn-secondary" data-action="dismiss"></button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FF8F3D" />
+    <meta name="description" content="" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="" />
+    <title></title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/themes.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  </head>
+  <body>
+    <a class="skip-link" href="#app-main"></a>
+    <div id="app">
+      <header id="app-header">
+        <h1>YourScore</h1>
+        <div id="install-banner" hidden>
+          <span></span>
+          <div class="install-actions">
+            <button class="btn btn-primary" data-action="install"></button>
+            <button class="btn btn-secondary" data-action="dismiss"></button>
+          </div>
         </div>
-      </div>
-    </header>
-    <main id="app-main" tabindex="-1">
-      <!-- Inline loading state shown while JS loads - helps iOS PWA feel responsive -->
-      <div id="loading-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: #666;">
-        <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
-        <div>Loading YourScore...</div>
-      </div>
-    </main>
-    <nav id="app-nav" aria-label="Primary">
-      <!-- Navigation will be rendered here -->
-    </nav>
-  </div>
+      </header>
+      <main id="app-main" tabindex="-1">
+        <!-- Inline loading state shown while JS loads - helps iOS PWA feel responsive -->
+        <div
+          id="loading-placeholder"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+            color: #6b5d4f;
+          "
+        >
+          <div
+            style="
+              width: 36px;
+              height: 36px;
+              border: 3px solid #fdebd0;
+              border-top-color: #e08a3c;
+              border-radius: 50%;
+              animation: spin 0.8s linear infinite;
+              margin-bottom: 16px;
+            "
+          ></div>
+          <style>
+            @keyframes spin {
+              to {
+                transform: rotate(360deg);
+              }
+            }
+          </style>
+          <div>Loading YourScore...</div>
+        </div>
+      </main>
+      <nav id="app-nav" aria-label="Primary">
+        <!-- Navigation will be rendered here -->
+      </nav>
+    </div>
 
-  <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <script type="module" src="js/app.js"></script>
-</body>
+    <script type="module" src="js/app.js"></script>
+  </body>
 </html>

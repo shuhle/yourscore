@@ -15,38 +15,36 @@ const DB_VERSION = 2;
 const STORES = {
   settings: {
     keyPath: 'key',
-    indexes: []
+    indexes: [],
   },
   categories: {
     keyPath: 'id',
-    indexes: [
-      { name: 'order', keyPath: 'order', options: { unique: false } }
-    ]
+    indexes: [{ name: 'order', keyPath: 'order', options: { unique: false } }],
   },
   activities: {
     keyPath: 'id',
     indexes: [
       { name: 'categoryId', keyPath: 'categoryId', options: { unique: false } },
       { name: 'order', keyPath: 'order', options: { unique: false } },
-      { name: 'archived', keyPath: 'archived', options: { unique: false } }
-    ]
+      { name: 'archived', keyPath: 'archived', options: { unique: false } },
+    ],
   },
   completions: {
     keyPath: 'id',
     indexes: [
       { name: 'activityId', keyPath: 'activityId', options: { unique: false } },
       { name: 'date', keyPath: 'date', options: { unique: false } },
-      { name: 'activityDate', keyPath: ['activityId', 'date'], options: { unique: true } }
-    ]
+      { name: 'activityDate', keyPath: ['activityId', 'date'], options: { unique: true } },
+    ],
   },
   scoreHistory: {
     keyPath: 'date',
-    indexes: []
+    indexes: [],
   },
   achievements: {
     keyPath: 'id',
-    indexes: []
-  }
+    indexes: [],
+  },
 };
 
 /**
@@ -136,7 +134,8 @@ class Database {
       const request = store.get(key);
 
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(new Error(`Failed to get from ${storeName}: ${request.error}`));
+      request.onerror = () =>
+        reject(new Error(`Failed to get from ${storeName}: ${request.error}`));
     });
   }
 
@@ -154,7 +153,8 @@ class Database {
       const request = store.getAll();
 
       request.onsuccess = () => resolve(request.result || []);
-      request.onerror = () => reject(new Error(`Failed to getAll from ${storeName}: ${request.error}`));
+      request.onerror = () =>
+        reject(new Error(`Failed to getAll from ${storeName}: ${request.error}`));
     });
   }
 
@@ -175,7 +175,8 @@ class Database {
       const request = index.getAll(value);
 
       request.onsuccess = () => resolve(request.result || []);
-      request.onerror = () => reject(new Error(`Failed to getByIndex from ${storeName}: ${request.error}`));
+      request.onerror = () =>
+        reject(new Error(`Failed to getByIndex from ${storeName}: ${request.error}`));
     });
   }
 
@@ -196,7 +197,8 @@ class Database {
       const request = index.get(value);
 
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(new Error(`Failed to getOneByIndex from ${storeName}: ${request.error}`));
+      request.onerror = () =>
+        reject(new Error(`Failed to getOneByIndex from ${storeName}: ${request.error}`));
     });
   }
 
@@ -233,7 +235,8 @@ class Database {
       const store = transaction.objectStore(storeName);
 
       transaction.oncomplete = () => resolve();
-      transaction.onerror = () => reject(new Error(`Failed to putMany to ${storeName}: ${transaction.error}`));
+      transaction.onerror = () =>
+        reject(new Error(`Failed to putMany to ${storeName}: ${transaction.error}`));
 
       for (const value of values) {
         store.put(value);
@@ -256,7 +259,8 @@ class Database {
       const request = store.delete(key);
 
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error(`Failed to delete from ${storeName}: ${request.error}`));
+      request.onerror = () =>
+        reject(new Error(`Failed to delete from ${storeName}: ${request.error}`));
     });
   }
 
@@ -379,9 +383,9 @@ function generateId() {
     return crypto.randomUUID();
   }
   // Fallback for older browsers
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }

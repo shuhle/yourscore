@@ -8,12 +8,12 @@
  * - The SW must be able to serve content immediately upon reactivation
  */
 
-const CACHE_NAME = 'yourscore-v7';
+const CACHE_NAME = 'yourscore-v8';
 
 // Core assets that MUST be cached for offline functionality
 // Listed in order of priority for iOS where cache space may be limited
 const CORE_ASSETS = [
-  './',           // Root URL (how iOS opens the PWA from home screen)
+  './', // Root URL (how iOS opens the PWA from home screen)
   './index.html', // Explicit path for navigation requests
   './manifest.json',
   './css/main.css',
@@ -43,6 +43,7 @@ const CORE_ASSETS = [
   './js/components/toast.js',
   './js/utils/date.js',
   './js/utils/celebrations.js',
+  './js/utils/icons.js',
 ];
 
 // Non-critical assets (icons) - cached separately so core app works even if these fail
@@ -63,7 +64,8 @@ const ALL_ASSETS = [...CORE_ASSETS, ...ICON_ASSETS];
 // On iOS, we cache core assets first to ensure the app works even if icon caching fails
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches
+      .open(CACHE_NAME)
       .then(async (cache) => {
         console.log('[SW] Caching core assets...');
 
@@ -107,9 +109,9 @@ self.addEventListener('activate', (event) => {
       // This helps recover from iOS cache eviction
       const cache = await caches.open(CACHE_NAME);
       const cachedRequests = await cache.keys();
-      const cachedUrls = cachedRequests.map(r => r.url);
+      const cachedUrls = cachedRequests.map((r) => r.url);
 
-      const missingCore = CORE_ASSETS.filter(asset => {
+      const missingCore = CORE_ASSETS.filter((asset) => {
         const fullUrl = new URL(asset, self.registration.scope).toString();
         return !cachedUrls.includes(fullUrl);
       });
@@ -132,65 +134,75 @@ self.addEventListener('activate', (event) => {
 // 2. Handle cases where cache might be partially evicted
 // 3. Provide graceful fallbacks
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {return;}
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
   const requestUrl = new URL(event.request.url);
 
   // Only handle same-origin requests
-  if (requestUrl.origin !== self.location.origin) {return;}
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
 
   // Navigation requests (opening the app, page loads)
   if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
 
-      // Build list of possible matches for navigation
-      // iOS PWAs may request different URLs depending on how they're opened
-      const urlsToTry = [
-        event.request.url,
-        new URL('./', self.registration.scope).toString(),
-        new URL('./index.html', self.registration.scope).toString(),
-      ];
+        // Build list of possible matches for navigation
+        // iOS PWAs may request different URLs depending on how they're opened
+        const urlsToTry = [
+          event.request.url,
+          new URL('./', self.registration.scope).toString(),
+          new URL('./index.html', self.registration.scope).toString(),
+        ];
 
-      // Try cache first - critical for iOS offline reliability
-      let cachedResponse = null;
-      for (const url of urlsToTry) {
-        cachedResponse = await cache.match(url);
-        if (cachedResponse) {break;}
-      }
-
-      if (cachedResponse) {
-        // Return cached version immediately, but update cache in background when online
-        event.waitUntil((async () => {
-          try {
-            const networkResponse = await fetch(event.request);
-            if (networkResponse && networkResponse.ok) {
-              // Update cache with fresh content
-              await cache.put(event.request, networkResponse.clone());
-              // Also update the index.html entry
-              const indexUrl = new URL('./index.html', self.registration.scope).toString();
-              await cache.put(indexUrl, networkResponse.clone());
-            }
-          } catch (e) {
-            // Network failed, that's fine - we served from cache
+        // Try cache first - critical for iOS offline reliability
+        let cachedResponse = null;
+        for (const url of urlsToTry) {
+          cachedResponse = await cache.match(url);
+          if (cachedResponse) {
+            break;
           }
-        })());
-        return cachedResponse;
-      }
-
-      // No cache - must try network
-      try {
-        const response = await fetch(event.request);
-        if (response && response.ok) {
-          // Cache the response for future offline use
-          await cache.put(event.request, response.clone());
-          const indexUrl = new URL('./index.html', self.registration.scope).toString();
-          await cache.put(indexUrl, response.clone());
         }
-        return response;
-      } catch (error) {
-        // Nothing in cache and network failed - show offline message
-        return new Response(`<!DOCTYPE html>
+
+        if (cachedResponse) {
+          // Return cached version immediately, but update cache in background when online
+          event.waitUntil(
+            (async () => {
+              try {
+                const networkResponse = await fetch(event.request);
+                if (networkResponse && networkResponse.ok) {
+                  // Update cache with fresh content
+                  await cache.put(event.request, networkResponse.clone());
+                  // Also update the index.html entry
+                  const indexUrl = new URL('./index.html', self.registration.scope).toString();
+                  await cache.put(indexUrl, networkResponse.clone());
+                }
+              } catch (e) {
+                // Network failed, that's fine - we served from cache
+              }
+            })()
+          );
+          return cachedResponse;
+        }
+
+        // No cache - must try network
+        try {
+          const response = await fetch(event.request);
+          if (response && response.ok) {
+            // Cache the response for future offline use
+            await cache.put(event.request, response.clone());
+            const indexUrl = new URL('./index.html', self.registration.scope).toString();
+            await cache.put(indexUrl, response.clone());
+          }
+          return response;
+        } catch (error) {
+          // Nothing in cache and network failed - show offline message
+          return new Response(
+            `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -211,47 +223,54 @@ self.addEventListener('fetch', (event) => {
     <button onclick="location.reload()">Try Again</button>
   </div>
 </body>
-</html>`, {
-          headers: { 'Content-Type': 'text/html' }
-        });
-      }
-    })());
+</html>`,
+            {
+              headers: { 'Content-Type': 'text/html' },
+            }
+          );
+        }
+      })()
+    );
     return;
   }
 
   // Static assets - cache-first with network fallback
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
 
-    // Try cache first
-    const cachedResponse = await cache.match(event.request);
-    if (cachedResponse) {
-      // Optionally update cache in background (stale-while-revalidate)
-      event.waitUntil((async () => {
-        try {
-          const networkResponse = await fetch(event.request);
-          if (networkResponse && networkResponse.ok) {
-            await cache.put(event.request, networkResponse);
-          }
-        } catch (e) {
-          // Network unavailable, cached version is fine
-        }
-      })());
-      return cachedResponse;
-    }
-
-    // Not in cache, try network
-    try {
-      const response = await fetch(event.request);
-      if (response && response.ok) {
-        // Cache for future use
-        await cache.put(event.request, response.clone());
+      // Try cache first
+      const cachedResponse = await cache.match(event.request);
+      if (cachedResponse) {
+        // Optionally update cache in background (stale-while-revalidate)
+        event.waitUntil(
+          (async () => {
+            try {
+              const networkResponse = await fetch(event.request);
+              if (networkResponse && networkResponse.ok) {
+                await cache.put(event.request, networkResponse);
+              }
+            } catch (e) {
+              // Network unavailable, cached version is fine
+            }
+          })()
+        );
+        return cachedResponse;
       }
-      return response;
-    } catch (error) {
-      // For non-navigation requests, just return an error
-      console.log('[SW] Fetch failed for:', event.request.url);
-      return Response.error();
-    }
-  })());
+
+      // Not in cache, try network
+      try {
+        const response = await fetch(event.request);
+        if (response && response.ok) {
+          // Cache for future use
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch (error) {
+        // For non-navigation requests, just return an error
+        console.log('[SW] Fetch failed for:', event.request.url);
+        return Response.error();
+      }
+    })()
+  );
 });

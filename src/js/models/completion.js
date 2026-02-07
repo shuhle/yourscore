@@ -37,7 +37,7 @@ class CompletionModel {
       id: generateId(),
       activityId: data.activityId,
       date: date,
-      completedAt: getTimestamp()
+      completedAt: getTimestamp(),
     };
 
     await db.put(STORE_NAME, completion);
@@ -100,7 +100,7 @@ class CompletionModel {
    */
   static async getByDateRange(startDate, endDate) {
     const allCompletions = await db.getAll(STORE_NAME);
-    return allCompletions.filter(c => c.date >= startDate && c.date <= endDate);
+    return allCompletions.filter((c) => c.date >= startDate && c.date <= endDate);
   }
 
   /**
@@ -188,7 +188,7 @@ class CompletionModel {
    */
   static async getDatesWithCompletions(startDate, endDate) {
     const completions = await this.getByDateRange(startDate, endDate);
-    return new Set(completions.map(c => c.date));
+    return new Set(completions.map((c) => c.date));
   }
 
   /**
@@ -203,9 +203,9 @@ class CompletionModel {
     }
 
     const completions = await this.getByDate(date);
-    const completedIds = new Set(completions.map(c => c.activityId));
+    const completedIds = new Set(completions.map((c) => c.activityId));
 
-    return activityIds.every(id => completedIds.has(id));
+    return activityIds.every((id) => completedIds.has(id));
   }
 
   /**
@@ -215,7 +215,7 @@ class CompletionModel {
    */
   static async getCompletionStreak(endDate = getLocalDateString()) {
     const allCompletions = await this.getAll();
-    const datesWithCompletions = new Set(allCompletions.map(c => c.date));
+    const datesWithCompletions = new Set(allCompletions.map((c) => c.date));
 
     let streak = 0;
     let currentDate = endDate;

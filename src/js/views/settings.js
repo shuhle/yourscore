@@ -5,13 +5,13 @@
 import { SettingsModel } from '../models/settings.js';
 import { ScoreModel } from '../models/score.js';
 import { showToast } from '../components/toast.js';
-import {
-  downloadJSON,
-  downloadCSV,
-  importFromFile,
-  resetAllData
-} from '../services/export.js';
+import { downloadJSON, downloadCSV, importFromFile, resetAllData } from '../services/export.js';
+import { validateInteger } from '../utils/dom.js';
 import { t, formatNumber, getSupportedLocales, getLocaleLabel } from '../i18n/i18n.js';
+
+const UI_SCALE_MIN = 0.8;
+const UI_SCALE_MAX = 1.4;
+const UI_SCALE_STEP = 0.05;
 
 async function renderSettingsView(container) {
   container.innerHTML = '';
@@ -55,13 +55,15 @@ async function renderSettingsView(container) {
           <label class="form-label" for="settings-language">${t('settings.fields.language')}</label>
           <select class="form-input" id="settings-language" name="language">
             <option value="auto">${t('settings.fields.languageAuto')}</option>
-            ${getSupportedLocales().map(locale => `<option value="${locale}">${getLocaleLabel(locale)}</option>`).join('')}
+            ${getSupportedLocales()
+              .map((locale) => `<option value="${locale}">${getLocaleLabel(locale)}</option>`)
+              .join('')}
           </select>
         </div>
         <div class="form-group">
           <label class="form-label" for="settings-scale">${t('settings.fields.uiScale')}</label>
           <div class="range-field">
-            <input class="form-input" id="settings-scale" name="uiScale" type="range" min="0.8" max="1.4" step="0.05" />
+            <input class="form-input" id="settings-scale" name="uiScale" type="range" min="${UI_SCALE_MIN}" max="${UI_SCALE_MAX}" step="${UI_SCALE_STEP}" />
             <span class="range-value" data-testid="settings-scale-value"></span>
           </div>
         </div>
@@ -140,8 +142,8 @@ async function renderSettingsView(container) {
   const applyScale = async () => {
     const scale = Number(scaleInput.value);
     scaleValue.textContent = `${formatNumber(scale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}x`;
-    await SettingsModel.setUIScale(scale);
     document.documentElement.style.setProperty('--ui-scale', String(scale));
+    await SettingsModel.setUIScale(scale);
   };
 
   const applyTheme = async () => {
@@ -166,22 +168,31 @@ async function renderSettingsView(container) {
   form.elements.theme.addEventListener('input', applyTheme);
   form.elements.language.addEventListener('change', applyLanguage);
 
-  form.addEventListener('submit', async event => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     errorField.textContent = '';
 
-    const decayAmount = Number.parseInt(form.elements.decayAmount.value, 10);
-    const mainScore = Number.parseInt(form.elements.mainScore.value, 10);
-
-    if (!Number.isFinite(decayAmount) || decayAmount < 0) {
-      errorField.textContent = t('settings.errors.decayNonNegative');
+    const decayResult = validateInteger(form.elements.decayAmount.value, {
+      min: 0,
+      fieldName: 'Decay',
+      errorMessage: t('settings.errors.decayNonNegative'),
+    });
+    if (!decayResult.valid) {
+      errorField.textContent = decayResult.error;
       return;
     }
 
-    if (!Number.isFinite(mainScore)) {
-      errorField.textContent = t('settings.errors.mainScoreNumber');
+    const scoreResult = validateInteger(form.elements.mainScore.value, {
+      fieldName: 'Score',
+      errorMessage: t('settings.errors.mainScoreNumber'),
+    });
+    if (!scoreResult.valid) {
+      errorField.textContent = scoreResult.error;
       return;
     }
+
+    const decayAmount = decayResult.value;
+    const mainScore = scoreResult.value;
 
     try {
       await SettingsModel.setDecayAmount(decayAmount);
@@ -224,7 +235,7 @@ async function renderSettingsView(container) {
     importFileInput.click();
   });
 
-  importFileInput.addEventListener('change', async event => {
+  importFileInput.addEventListener('change', async (event) => {
     const file = event.target.files[0];
     if (!file) {
       return;
@@ -240,14 +251,16 @@ async function renderSettingsView(container) {
       const storeLabels = t('import.storeLabels') || {};
       const counts = Object.entries(result.imported)
         .filter(([_, count]) => count > 0)
-        .map(([store, count]) => t('settings.import.countItem', {
-          store: storeLabels[store] || store,
-          count: formatNumber(count)
-        }))
+        .map(([store, count]) =>
+          t('settings.import.countItem', {
+            store: storeLabels[store] || store,
+            count: formatNumber(count),
+          })
+        )
         .join(', ');
 
       importStatus.textContent = t('settings.import.success', {
-        summary: counts || t('settings.import.noRecords')
+        summary: counts || t('settings.import.noRecords'),
       });
       importStatus.className = 'import-status import-success';
       showToast(t('toasts.importSuccess'), 'success');

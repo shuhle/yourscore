@@ -314,13 +314,13 @@ yourscore/
 **Goals:**
 - Full category CRUD
 - Category reordering
-- Default categories
+- Default category (Uncategorized only)
 
 **Tasks:**
 1. Create `views/categories.js` - Category management
 2. Implement create/rename/delete
 3. Implement drag-to-reorder
-4. Seed default categories on first run
+4. Seed only "Uncategorized" on first run
 5. Handle "Uncategorized" special case
 6. E2E tests for category management
 
@@ -328,7 +328,7 @@ yourscore/
 - User can create, rename, delete categories
 - Deleting category moves activities to Uncategorized
 - Categories can be reordered
-- Default categories exist on first launch
+- "Uncategorized" exists on first launch
 
 ---
 

@@ -82,7 +82,7 @@ test.describe('Marketing Screenshots (Mobile)', () => {
 
     await page.screenshot({
       path: 'docs/screenshots/daily-view.png',
-      fullPage: true
+      fullPage: false
     });
   });
 
@@ -179,7 +179,7 @@ test.describe('Marketing Screenshots (Mobile)', () => {
 
     await page.screenshot({
       path: 'docs/screenshots/dashboard-view.png',
-      fullPage: true
+      fullPage: false
     });
   });
 });

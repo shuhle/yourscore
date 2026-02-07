@@ -71,8 +71,7 @@ A Progressive Web App (PWA) that gamifies daily habit tracking through a scoring
   - Reorder categories for display priority
 
 - **Default Categories**
-  - Pre-populated categories available: Morning, Work, Evening, Health, Learning
-  - User can modify or delete default categories
+  - Only "Uncategorized" is pre-populated by default
   - "Uncategorized" category always exists and cannot be deleted
 
 ### 5. Gamification Elements

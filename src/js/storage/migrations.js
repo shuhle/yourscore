@@ -63,7 +63,7 @@ const migrations = {
         });
       }
     };
-  }
+  },
 
   // Future migrations will be added here as:
   // 2: (db, transaction) => { ... },

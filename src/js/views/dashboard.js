@@ -7,15 +7,16 @@ import { ScoreModel } from '../models/score.js';
 import { ActivityModel } from '../models/activity.js';
 import { CompletionModel } from '../models/completion.js';
 import { SettingsModel } from '../models/settings.js';
-import { getLocalDateString, daysBetween } from '../utils/date.js';
+import { getLocalDateString, getDateDaysAgo, daysBetween } from '../utils/date.js';
 import { escapeHtml } from '../utils/dom.js';
 import {
   getSuccessfulDayStreak,
   getPerfectDayStreak,
   getAchievementProgress,
-  getAllAchievementsWithStatus
+  getAllAchievementsWithStatus,
 } from '../services/achievements.js';
 import { t, tPlural, formatNumber } from '../i18n/i18n.js';
+import { iconFlame, iconSparkle, iconCalendar } from '../utils/icons.js';
 
 async function renderDashboardView(container) {
   container.innerHTML = '';
@@ -97,13 +98,11 @@ async function createTodayProgressCard() {
   const activities = await ActivityModel.getAll();
   const totalActivities = activities.length;
 
-  const progressPercent = decayAmount > 0
-    ? Math.min(100, Math.round((breakEven.earned / decayAmount) * 100))
-    : 100;
+  const progressPercent =
+    decayAmount > 0 ? Math.min(100, Math.round((breakEven.earned / decayAmount) * 100)) : 100;
 
-  const completionPercent = totalActivities > 0
-    ? Math.round((completionsToday / totalActivities) * 100)
-    : 0;
+  const completionPercent =
+    totalActivities > 0 ? Math.round((completionsToday / totalActivities) * 100) : 0;
 
   const remainingPointsLabel = tPlural('units.pointsLong', breakEven.remaining);
   const card = document.createElement('div');
@@ -158,19 +157,19 @@ async function createStreaksCard() {
     <h3 class="dashboard-card-title">${t('dashboard.streaksTitle')}</h3>
     <div class="streaks-grid">
       <div class="streak-item">
-        <span class="streak-icon">🔥</span>
+        <span class="streak-icon">${iconFlame(20)}</span>
         <span class="streak-value" data-testid="success-streak">${formatNumber(successStreak)}</span>
         <span class="streak-label">${t('dashboard.streaks.successfulDays')}</span>
         <span class="streak-hint">${t('dashboard.streaks.successfulHint')}</span>
       </div>
       <div class="streak-item">
-        <span class="streak-icon">⭐</span>
+        <span class="streak-icon">${iconSparkle(20)}</span>
         <span class="streak-value" data-testid="perfect-streak">${formatNumber(perfectStreak)}</span>
         <span class="streak-label">${t('dashboard.streaks.perfectDays')}</span>
         <span class="streak-hint">${t('dashboard.streaks.perfectHint')}</span>
       </div>
       <div class="streak-item">
-        <span class="streak-icon">📅</span>
+        <span class="streak-icon">${iconCalendar(20)}</span>
         <span class="streak-value" data-testid="completion-streak">${formatNumber(completionStreak)}</span>
         <span class="streak-label">${t('dashboard.streaks.activeDays')}</span>
         <span class="streak-hint">${t('dashboard.streaks.activeHint')}</span>
@@ -181,87 +180,88 @@ async function createStreaksCard() {
   return card;
 }
 
+function createStatsSection(title, items, testId, extraClass = '') {
+  if (items.length === 0) {
+    return '';
+  }
+  return `
+    <div class="stats-section ${extraClass}">
+      <h4 class="stats-section-title">${title}</h4>
+      <ul class="stats-list ${extraClass ? 'stats-list-muted' : ''}" data-testid="${testId}">
+        ${items
+          .map(
+            (a) => `
+          <li class="stats-list-item">
+            <span class="stats-item-name">${escapeHtml(a.name)}</span>
+            <span class="stats-item-count">${formatNumber(a.completions)}×</span>
+          </li>
+        `
+          )
+          .join('')}
+      </ul>
+    </div>
+  `;
+}
+
 async function createActivityStatsCard() {
+  const STATS_PERIOD_DAYS = 30;
+  const TOP_ACTIVITIES_COUNT = 3;
   const today = getLocalDateString();
-  const thirtyDaysAgo = getLocalDateString(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+  const thirtyDaysAgo = getDateDaysAgo(STATS_PERIOD_DAYS);
 
   const activities = await ActivityModel.getAll();
-  const completionCounts = await CompletionModel.getCompletionCountsByActivity(thirtyDaysAgo, today);
+  const completionCounts = await CompletionModel.getCompletionCountsByActivity(
+    thirtyDaysAgo,
+    today
+  );
 
-  // Calculate stats for each activity
-  const activityStats = activities.map(activity => ({
+  const activityStats = activities.map((activity) => ({
     ...activity,
-    completions: completionCounts[activity.id] || 0
+    completions: completionCounts[activity.id] || 0,
   }));
 
-  // Sort by completions
   const sorted = [...activityStats].sort((a, b) => b.completions - a.completions);
-  const mostCompleted = sorted.slice(0, 3);
-  const leastCompleted = sorted.filter(a => a.completions > 0).slice(-3).reverse();
-
-  // Get activities never completed in 30 days
-  const neverCompleted = activityStats.filter(a => a.completions === 0);
+  const mostCompleted = sorted.slice(0, TOP_ACTIVITIES_COUNT).filter((a) => a.completions > 0);
+  const leastCompleted = sorted
+    .filter((a) => a.completions > 0)
+    .slice(-TOP_ACTIVITIES_COUNT)
+    .reverse()
+    .filter((a) => a.completions > 0);
+  const neverCompleted = activityStats.filter((a) => a.completions === 0);
 
   const card = document.createElement('div');
   card.className = 'card dashboard-card';
 
-  let content = `<h3 class="dashboard-card-title">${t('dashboard.activityStatsTitle', { days: formatNumber(30) })}</h3>`;
+  let content = `<h3 class="dashboard-card-title">${t('dashboard.activityStatsTitle', { days: formatNumber(STATS_PERIOD_DAYS) })}</h3>`;
 
   if (activities.length === 0) {
     content += `<p class="empty-message">${t('dashboard.activityStatsEmpty')}</p>`;
   } else {
     content += '<div class="activity-stats-sections">';
+    content += createStatsSection(
+      t('dashboard.stats.mostCompleted'),
+      mostCompleted,
+      'most-completed'
+    );
+    content += createStatsSection(
+      t('dashboard.stats.leastCompleted'),
+      leastCompleted,
+      'least-completed'
+    );
 
-    // Most completed
-    if (mostCompleted.length > 0 && mostCompleted[0].completions > 0) {
-      content += `
-        <div class="stats-section">
-          <h4 class="stats-section-title">${t('dashboard.stats.mostCompleted')}</h4>
-          <ul class="stats-list" data-testid="most-completed">
-            ${mostCompleted.filter(a => a.completions > 0).map(a => `
-              <li class="stats-list-item">
-                <span class="stats-item-name">${escapeHtml(a.name)}</span>
-                <span class="stats-item-count">${formatNumber(a.completions)}×</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      `;
-    }
-
-    // Least completed (but at least once)
-    if (leastCompleted.length > 0 && leastCompleted.some(a => a.completions > 0)) {
-      content += `
-        <div class="stats-section">
-          <h4 class="stats-section-title">${t('dashboard.stats.leastCompleted')}</h4>
-          <ul class="stats-list" data-testid="least-completed">
-            ${leastCompleted.filter(a => a.completions > 0).map(a => `
-              <li class="stats-list-item">
-                <span class="stats-item-name">${escapeHtml(a.name)}</span>
-                <span class="stats-item-count">${formatNumber(a.completions)}×</span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      `;
-    }
-
-    // Never completed
     if (neverCompleted.length > 0) {
-      content += `
-        <div class="stats-section stats-section-warning">
-          <h4 class="stats-section-title">${t('dashboard.stats.notCompletedYet')}</h4>
-          <ul class="stats-list stats-list-muted" data-testid="never-completed">
-            ${neverCompleted.slice(0, 3).map(a => `
-              <li class="stats-list-item">
-                <span class="stats-item-name">${escapeHtml(a.name)}</span>
-                <span class="stats-item-count">0×</span>
-              </li>
-            `).join('')}
-            ${neverCompleted.length > 3 ? `<li class="stats-more">${t('dashboard.stats.more', { count: formatNumber(neverCompleted.length - 3) })}</li>` : ''}
-          </ul>
-        </div>
-      `;
+      const displayed = neverCompleted
+        .slice(0, TOP_ACTIVITIES_COUNT)
+        .map((a) => ({ ...a, completions: 0 }));
+      content += createStatsSection(
+        t('dashboard.stats.notCompletedYet'),
+        displayed,
+        'never-completed',
+        'stats-section-warning'
+      );
+      if (neverCompleted.length > TOP_ACTIVITIES_COUNT) {
+        content += `<div class="stats-more">${t('dashboard.stats.more', { count: formatNumber(neverCompleted.length - TOP_ACTIVITIES_COUNT) })}</div>`;
+      }
     }
 
     content += '</div>';
@@ -271,10 +271,52 @@ async function createActivityStatsCard() {
   return card;
 }
 
+function createNextAchievementsSection(progress) {
+  const nextAchievements = [];
+  if (progress.score.nextAchievement) {
+    nextAchievements.push({
+      ...progress.score.nextAchievement,
+      progress: `${formatNumber(progress.score.current)} / ${formatNumber(progress.score.next)}`,
+    });
+  }
+  if (progress.streak.nextAchievement) {
+    nextAchievements.push({
+      ...progress.streak.nextAchievement,
+      progress: `${formatNumber(progress.streak.current)} / ${formatNumber(progress.streak.next)}`,
+    });
+  }
+
+  if (nextAchievements.length === 0) {
+    return '';
+  }
+
+  return `
+    <div class="next-achievements">
+      <h4 class="stats-section-title">${t('dashboard.achievementsNext')}</h4>
+      <ul class="next-achievement-list">
+        ${nextAchievements
+          .slice(0, 2)
+          .map(
+            (a) => `
+          <li class="next-achievement-item">
+            <span class="next-achievement-icon">${a.icon}</span>
+            <div class="next-achievement-info">
+              <span class="next-achievement-name">${escapeHtml(a.name)}</span>
+              <span class="next-achievement-progress">${a.progress}</span>
+            </div>
+          </li>
+        `
+          )
+          .join('')}
+      </ul>
+    </div>
+  `;
+}
+
 async function createAchievementsCard() {
   const progress = await getAchievementProgress();
   const achievements = await getAllAchievementsWithStatus();
-  const unlockedAchievements = achievements.filter(a => a.unlocked);
+  const unlockedAchievements = achievements.filter((a) => a.unlocked);
   const recentUnlocked = unlockedAchievements
     .sort((a, b) => (b.unlockedAt || '').localeCompare(a.unlockedAt || ''))
     .slice(0, 4);
@@ -295,50 +337,22 @@ async function createAchievementsCard() {
       <div class="recent-achievements">
         <h4 class="stats-section-title">${t('dashboard.achievementsRecent')}</h4>
         <div class="achievement-badges">
-          ${recentUnlocked.map(a => `
+          ${recentUnlocked
+            .map(
+              (a) => `
             <div class="dashboard-achievement-badge" title="${escapeHtml(a.description)}">
               <span class="badge-icon">${a.icon}</span>
               <span class="badge-name">${escapeHtml(a.name)}</span>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       </div>
     `;
   }
 
-  // Next achievements to unlock
-  const nextAchievements = [];
-  if (progress.score.nextAchievement) {
-    nextAchievements.push({
-      ...progress.score.nextAchievement,
-      progress: `${formatNumber(progress.score.current)} / ${formatNumber(progress.score.next)}`
-    });
-  }
-  if (progress.streak.nextAchievement) {
-    nextAchievements.push({
-      ...progress.streak.nextAchievement,
-      progress: `${formatNumber(progress.streak.current)} / ${formatNumber(progress.streak.next)}`
-    });
-  }
-
-  if (nextAchievements.length > 0) {
-    content += `
-      <div class="next-achievements">
-        <h4 class="stats-section-title">${t('dashboard.achievementsNext')}</h4>
-        <ul class="next-achievement-list">
-          ${nextAchievements.slice(0, 2).map(a => `
-            <li class="next-achievement-item">
-              <span class="next-achievement-icon">${a.icon}</span>
-              <div class="next-achievement-info">
-                <span class="next-achievement-name">${escapeHtml(a.name)}</span>
-                <span class="next-achievement-progress">${a.progress}</span>
-              </div>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
-  }
+  content += createNextAchievementsSection(progress);
 
   card.innerHTML = content;
   return card;

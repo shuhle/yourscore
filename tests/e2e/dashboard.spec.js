@@ -10,6 +10,11 @@ test.describe('Dashboard View', () => {
     });
     await page.reload();
     await page.waitForFunction(() => window.app);
+    await page.evaluate(async () => {
+      if (window.app?.ready) {
+        await window.app.ready;
+      }
+    });
   });
 
   async function openDashboard(page) {

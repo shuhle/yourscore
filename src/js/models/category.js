@@ -18,9 +18,7 @@ const UNCATEGORIZED_ORDER = 999;
  * Default categories to seed on first use
  * Only Uncategorized is seeded by default.
  */
-const DEFAULT_CATEGORIES = [
-  { name: t('common.uncategorized'), order: UNCATEGORIZED_ORDER }
-];
+const DEFAULT_CATEGORIES = [{ name: t('common.uncategorized'), order: UNCATEGORIZED_ORDER }];
 
 /**
  * The uncategorized category ID (constant)
@@ -41,14 +39,14 @@ class CategoryModel {
   static async create(data) {
     const categories = await this.getAll();
     const maxOrder = categories
-      .filter(cat => cat.id !== UNCATEGORIZED_ID)
+      .filter((cat) => cat.id !== UNCATEGORIZED_ID)
       .reduce((max, cat) => Math.max(max, cat.order), -1);
 
     const category = {
       id: generateId(),
       name: data.name,
       order: data.order !== undefined ? data.order : maxOrder + 1,
-      createdAt: getTimestamp()
+      createdAt: getTimestamp(),
     };
 
     await db.put(STORE_NAME, category);
@@ -71,8 +69,12 @@ class CategoryModel {
   static async getAll() {
     const categories = await db.getAll(STORE_NAME);
     return categories.sort((a, b) => {
-      if (a.id === UNCATEGORIZED_ID) {return 1;}
-      if (b.id === UNCATEGORIZED_ID) {return -1;}
+      if (a.id === UNCATEGORIZED_ID) {
+        return 1;
+      }
+      if (b.id === UNCATEGORIZED_ID) {
+        return -1;
+      }
       return a.order - b.order;
     });
   }
@@ -97,7 +99,7 @@ class CategoryModel {
     const updated = {
       ...category,
       ...data,
-      id // Ensure ID cannot be changed
+      id, // Ensure ID cannot be changed
     };
 
     await db.put(STORE_NAME, updated);
@@ -138,15 +140,15 @@ class CategoryModel {
     const categories = await this.getAll();
     const updates = [];
 
-    const ids = orderedIds.filter(id => id !== UNCATEGORIZED_ID);
+    const ids = orderedIds.filter((id) => id !== UNCATEGORIZED_ID);
     for (let i = 0; i < ids.length; i++) {
-      const category = categories.find(c => c.id === ids[i]);
+      const category = categories.find((c) => c.id === ids[i]);
       if (category && category.order !== i) {
         updates.push({ ...category, order: i });
       }
     }
 
-    const uncategorized = categories.find(c => c.id === UNCATEGORIZED_ID);
+    const uncategorized = categories.find((c) => c.id === UNCATEGORIZED_ID);
     if (uncategorized && uncategorized.order !== UNCATEGORIZED_ORDER) {
       updates.push({ ...uncategorized, order: UNCATEGORIZED_ORDER });
     }
@@ -168,7 +170,7 @@ class CategoryModel {
         id: UNCATEGORIZED_ID,
         name: t('common.uncategorized'),
         order: UNCATEGORIZED_ORDER,
-        createdAt: getTimestamp()
+        createdAt: getTimestamp(),
       };
       await db.put(STORE_NAME, uncategorized);
     }
@@ -187,7 +189,7 @@ class CategoryModel {
       id: UNCATEGORIZED_ID,
       name: name || t('common.uncategorized'),
       order: UNCATEGORIZED_ORDER,
-      createdAt: uncategorized?.createdAt || getTimestamp()
+      createdAt: uncategorized?.createdAt || getTimestamp(),
     };
     await db.put(STORE_NAME, updated);
     return updated;
@@ -209,7 +211,7 @@ class CategoryModel {
    */
   static async findByName(name) {
     const categories = await this.getAll();
-    return categories.find(c => c.name.toLowerCase() === name.toLowerCase());
+    return categories.find((c) => c.name.toLowerCase() === name.toLowerCase());
   }
 
   /**

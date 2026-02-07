@@ -6,11 +6,12 @@ import { CategoryModel, UNCATEGORIZED_ID } from '../models/category.js';
 import { showToast } from '../components/toast.js';
 import { escapeHtml } from '../utils/dom.js';
 import { t } from '../i18n/i18n.js';
+import { ACTION_ICONS } from '../utils/icons.js';
 
 async function renderCategoriesView(container) {
   container.innerHTML = '';
 
-  // Categories are seeded in app.js init, just ensure uncategorized exists
+  // Only Uncategorized is seeded; ensure it exists
   await CategoryModel.getUncategorized();
 
   const view = document.createElement('section');
@@ -71,7 +72,7 @@ async function renderCategoriesView(container) {
   const cancelButton = form.querySelector('[data-testid="category-cancel"]');
   let editingId = null;
 
-  form.addEventListener('submit', async event => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     formError.textContent = '';
 
@@ -107,20 +108,27 @@ async function renderCategoriesView(container) {
     editingId = null;
     form.reset();
     formTitle.textContent = t('categories.form.addTitle');
-    form.querySelector('[data-testid="category-submit"]').textContent = t('categories.form.addButton');
+    form.querySelector('[data-testid="category-submit"]').textContent = t(
+      'categories.form.addButton'
+    );
     cancelButton.hidden = true;
     formError.textContent = '';
   }
 
   function setEditMode(category) {
-    if (category.id === UNCATEGORIZED_ID) {return;}
+    if (category.id === UNCATEGORIZED_ID) {
+      return;
+    }
     editingId = category.id;
     formTitle.textContent = t('categories.form.editTitle');
-    form.querySelector('[data-testid="category-submit"]').textContent = t('categories.form.saveButton');
+    form.querySelector('[data-testid="category-submit"]').textContent = t(
+      'categories.form.saveButton'
+    );
     cancelButton.hidden = false;
     form.elements.name.value = category.name;
     formError.textContent = '';
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const prefersInstant = window.__TEST_MODE__ || navigator.webdriver;
+    form.scrollIntoView({ behavior: prefersInstant ? 'auto' : 'smooth', block: 'start' });
   }
 
   function swapRows(rowA, rowB) {
@@ -131,8 +139,8 @@ async function renderCategoriesView(container) {
 
   async function updateOrderFromDOM() {
     const ids = Array.from(list.querySelectorAll('.category-row'))
-      .map(row => row.dataset.categoryId)
-      .filter(id => id && id !== UNCATEGORIZED_ID);
+      .map((row) => row.dataset.categoryId)
+      .filter((id) => id && id !== UNCATEGORIZED_ID);
     await CategoryModel.reorder(ids);
     await refreshList();
   }
@@ -158,27 +166,35 @@ async function renderCategoriesView(container) {
         </div>
         <div class="category-row-actions">
           <button class="btn btn-secondary icon-button" type="button" data-testid="category-move-up" aria-label="${t('categories.row.up')}" ${isUncategorized ? 'disabled' : ''}>
-            ${CATEGORY_ACTION_ICONS.up}
+            ${ACTION_ICONS.up}
             <span class="visually-hidden">${t('categories.row.up')}</span>
           </button>
           <button class="btn btn-secondary icon-button" type="button" data-testid="category-move-down" aria-label="${t('categories.row.down')}" ${isUncategorized ? 'disabled' : ''}>
-            ${CATEGORY_ACTION_ICONS.down}
+            ${ACTION_ICONS.down}
             <span class="visually-hidden">${t('categories.row.down')}</span>
           </button>
           <button class="btn btn-secondary icon-button" type="button" data-testid="category-edit" aria-label="${t('categories.row.edit')}" ${isUncategorized ? 'disabled' : ''}>
-            ${CATEGORY_ACTION_ICONS.edit}
+            ${ACTION_ICONS.edit}
             <span class="visually-hidden">${t('categories.row.edit')}</span>
           </button>
           <button class="btn btn-danger icon-button" type="button" data-testid="category-delete" aria-label="${t('categories.row.delete')}" ${isUncategorized ? 'disabled' : ''}>
-            ${CATEGORY_ACTION_ICONS.delete}
+            ${ACTION_ICONS.delete}
             <span class="visually-hidden">${t('categories.row.delete')}</span>
           </button>
         </div>
       `;
 
       if (!isUncategorized) {
-        row.querySelector('[data-testid="category-edit"]').addEventListener('click', () => setEditMode(category));
-        row.querySelector('[data-testid="category-delete"]').addEventListener('click', async () => {
+        row
+          .querySelector('[data-testid="category-edit"]')
+          .addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setEditMode(category);
+          });
+        row.querySelector('[data-testid="category-delete"]').addEventListener('click', async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
           try {
             await CategoryModel.delete(category.id);
             showToast(t('toasts.categoryDeleted'), 'warning');
@@ -189,22 +205,34 @@ async function renderCategoriesView(container) {
         });
       }
 
-      row.querySelector('[data-testid="category-move-up"]').addEventListener('click', async () => {
+      row.querySelector('[data-testid="category-move-up"]').addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         const previous = row.previousElementSibling;
-        if (!previous || previous.dataset.categoryId === UNCATEGORIZED_ID) {return;}
+        if (!previous || previous.dataset.categoryId === UNCATEGORIZED_ID) {
+          return;
+        }
         swapRows(row, previous);
         await updateOrderFromDOM();
       });
 
-      row.querySelector('[data-testid="category-move-down"]').addEventListener('click', async () => {
-        const next = row.nextElementSibling;
-        if (!next || next.dataset.categoryId === UNCATEGORIZED_ID) {return;}
-        swapRows(next, row);
-        await updateOrderFromDOM();
-      });
+      row
+        .querySelector('[data-testid="category-move-down"]')
+        .addEventListener('click', async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const next = row.nextElementSibling;
+          if (!next || next.dataset.categoryId === UNCATEGORIZED_ID) {
+            return;
+          }
+          swapRows(next, row);
+          await updateOrderFromDOM();
+        });
 
-      row.addEventListener('dragstart', event => {
-        if (isUncategorized) {return;}
+      row.addEventListener('dragstart', (event) => {
+        if (isUncategorized) {
+          return;
+        }
         event.dataTransfer.setData('text/plain', category.id);
         row.classList.add('dragging');
       });
@@ -213,18 +241,26 @@ async function renderCategoriesView(container) {
         row.classList.remove('dragging');
       });
 
-      row.addEventListener('dragover', event => {
-        if (isUncategorized) {return;}
+      row.addEventListener('dragover', (event) => {
+        if (isUncategorized) {
+          return;
+        }
         event.preventDefault();
       });
 
-      row.addEventListener('drop', async event => {
-        if (isUncategorized) {return;}
+      row.addEventListener('drop', async (event) => {
+        if (isUncategorized) {
+          return;
+        }
         event.preventDefault();
         const draggedId = event.dataTransfer.getData('text/plain');
-        if (!draggedId || draggedId === category.id) {return;}
+        if (!draggedId || draggedId === category.id) {
+          return;
+        }
         const draggedRow = list.querySelector(`[data-category-id="${draggedId}"]`);
-        if (!draggedRow) {return;}
+        if (!draggedRow) {
+          return;
+        }
         list.insertBefore(draggedRow, row);
         await updateOrderFromDOM();
       });
@@ -236,29 +272,5 @@ async function renderCategoriesView(container) {
   await refreshList();
   view.dataset.ready = 'true';
 }
-
-const CATEGORY_ACTION_ICONS = {
-  up: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M10 4l6 6h-4v6H8v-6H4l6-6z"></path>
-    </svg>
-  `,
-  down: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M10 16l-6-6h4V4h4v6h4l-6 6z"></path>
-    </svg>
-  `,
-  edit: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M14.69 3.86l1.45 1.45a2 2 0 010 2.83l-7.8 7.8-3.53.39.39-3.53 7.8-7.8a2 2 0 012.83 0z"></path>
-      <path d="M3 17h14v2H3z"></path>
-    </svg>
-  `,
-  delete: `
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M6 6h8l-1 11H7L6 6zm1-3h6l1 2H6l1-2zm2 4v6h2V7H9z"></path>
-    </svg>
-  `
-};
 
 export { renderCategoriesView };

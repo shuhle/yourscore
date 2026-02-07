@@ -38,16 +38,12 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: true,
-      message: t('decay.firstDayWelcome')
+      message: t('decay.firstDayWelcome'),
     };
   }
 
   const settings = await SettingsModel.getAll();
-  const {
-    firstUseDate,
-    lastActiveDate,
-    decayAmount
-  } = settings;
+  const { firstUseDate, lastActiveDate, decayAmount } = settings;
 
   // Check if this is the first day (no decay on first day)
   if (today === firstUseDate) {
@@ -57,7 +53,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: true,
-      message: t('decay.firstDay')
+      message: t('decay.firstDay'),
     };
   }
 
@@ -68,7 +64,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: false,
-      message: t('decay.alreadyActive')
+      message: t('decay.alreadyActive'),
     };
   }
 
@@ -82,7 +78,7 @@ async function checkAndApplyDecay() {
       decay: 0,
       daysAway: 0,
       isFirstDay: false,
-      message: t('decay.noneNeeded')
+      message: t('decay.noneNeeded'),
     };
   }
 
@@ -97,7 +93,7 @@ async function checkAndApplyDecay() {
   // Record in today's history
   await ScoreModel.updateTodayHistory({
     decay: totalDecay,
-    score: newScore
+    score: newScore,
   });
 
   return {
@@ -107,16 +103,17 @@ async function checkAndApplyDecay() {
     isFirstDay: false,
     previousScore: previousScore,
     newScore: newScore,
-    message: daysAway === 1
-      ? t('decay.appliedSingle', {
-        points: formatNumber(totalDecay),
-        pointsLabel: tPlural('units.pointsLong', totalDecay)
-      })
-      : t('decay.appliedMultiple', {
-        days: formatNumber(daysAway),
-        points: formatNumber(totalDecay),
-        pointsLabel: tPlural('units.pointsLong', totalDecay)
-      })
+    message:
+      daysAway === 1
+        ? t('decay.appliedSingle', {
+            points: formatNumber(totalDecay),
+            pointsLabel: tPlural('units.pointsLong', totalDecay),
+          })
+        : t('decay.appliedMultiple', {
+            days: formatNumber(daysAway),
+            points: formatNumber(totalDecay),
+            pointsLabel: tPlural('units.pointsLong', totalDecay),
+          }),
   };
 }
 
@@ -128,11 +125,7 @@ async function previewDecay() {
   const today = getLocalDateString();
   const settings = await SettingsModel.getAll();
 
-  const {
-    firstUseDate,
-    lastActiveDate,
-    decayAmount
-  } = settings;
+  const { firstUseDate, lastActiveDate, decayAmount } = settings;
 
   // New user or first day
   if (!firstUseDate || today === firstUseDate) {
@@ -140,7 +133,7 @@ async function previewDecay() {
       wouldApply: false,
       decay: 0,
       daysAway: 0,
-      reason: t('decay.previewFirstDay')
+      reason: t('decay.previewFirstDay'),
     };
   }
 
@@ -150,7 +143,7 @@ async function previewDecay() {
       wouldApply: false,
       decay: 0,
       daysAway: 0,
-      reason: t('decay.previewAlreadyActive')
+      reason: t('decay.previewAlreadyActive'),
     };
   }
 
@@ -161,9 +154,10 @@ async function previewDecay() {
     wouldApply: daysAway > 0,
     decay: totalDecay,
     daysAway: daysAway,
-    reason: daysAway > 0
-      ? t('decay.previewDaysAway', { days: formatNumber(daysAway) })
-      : t('decay.previewNone')
+    reason:
+      daysAway > 0
+        ? t('decay.previewDaysAway', { days: formatNumber(daysAway) })
+        : t('decay.previewNone'),
   };
 }
 
@@ -231,7 +225,7 @@ function simulateDecay(currentScore, decayAmount, days) {
     decayPerDay: decayAmount,
     days: days,
     totalDecay: totalDecay,
-    finalScore: finalScore
+    finalScore: finalScore,
   };
 }
 
@@ -284,7 +278,7 @@ export {
   hasBrokenEvenToday,
   getPointsToBreakEven,
   getSurplusPoints,
-  simulateDecay
+  simulateDecay,
 };
 
 export default DecayService;

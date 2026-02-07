@@ -35,6 +35,18 @@ function parseLocalDate(dateStr) {
   return new Date(year, month - 1, day);
 }
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+/**
+ * Convert a date string to a UTC day number for DST-safe comparisons
+ * @param {string} dateStr - Date string (YYYY-MM-DD)
+ * @returns {number} UTC day number
+ */
+function toUtcDayNumber(dateStr) {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return Math.floor(Date.UTC(year, month - 1, day) / MS_PER_DAY);
+}
+
 /**
  * Calculate the number of days between two date strings
  * @param {string} startDateStr - Start date (YYYY-MM-DD)
@@ -42,10 +54,9 @@ function parseLocalDate(dateStr) {
  * @returns {number} Number of days (positive if end > start)
  */
 function daysBetween(startDateStr, endDateStr) {
-  const startDate = parseLocalDate(startDateStr);
-  const endDate = parseLocalDate(endDateStr);
-  const diffTime = endDate.getTime() - startDate.getTime();
-  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const startDay = toUtcDayNumber(startDateStr);
+  const endDay = toUtcDayNumber(endDateStr);
+  return endDay - startDay;
 }
 
 /**
@@ -101,6 +112,18 @@ function getDateDaysAgo(daysAgo) {
 }
 
 /**
+ * Subtract N days from a date string
+ * @param {string} dateStr - Date string (YYYY-MM-DD)
+ * @param {number} days - Number of days to subtract
+ * @returns {string} Date string (YYYY-MM-DD)
+ */
+function subtractDays(dateStr, days) {
+  const date = parseLocalDate(dateStr);
+  date.setDate(date.getDate() - days);
+  return getLocalDateString(date);
+}
+
+/**
  * Get date string for N days from now
  * @param {number} daysFromNow - Number of days in the future
  * @returns {string} Date string (YYYY-MM-DD)
@@ -140,17 +163,22 @@ function formatDate(dateStr, format = 'short') {
   const date = parseLocalDate(dateStr);
 
   if (format === 'relative') {
-    if (isToday(dateStr)) {return t('date.today');}
-    if (isYesterday(dateStr)) {return t('date.yesterday');}
+    if (isToday(dateStr)) {
+      return t('date.today');
+    }
+    if (isYesterday(dateStr)) {
+      return t('date.yesterday');
+    }
     const days = daysBetween(dateStr, getLocalDateString());
     if (days > 0 && days <= 7) {
       return tPlural('date.daysAgo', days, { count: formatNumber(days) });
     }
   }
 
-  const options = format === 'long'
-    ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-    : { month: 'short', day: 'numeric' };
+  const options =
+    format === 'long'
+      ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+      : { month: 'short', day: 'numeric' };
 
   return date.toLocaleDateString(getLocale(), options);
 }
@@ -161,7 +189,9 @@ function formatDate(dateStr, format = 'short') {
  * @returns {string} Formatted time string (e.g., "Completed 2:30 PM")
  */
 function formatTimestamp(isoString) {
-  if (!isoString) {return '';}
+  if (!isoString) {
+    return '';
+  }
   const date = new Date(isoString);
   const time = date.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' });
   return t('date.completedAt', { time });
@@ -176,9 +206,10 @@ export {
   daysSinceLastActive,
   isToday,
   isYesterday,
+  subtractDays,
   getDateDaysAgo,
   getDateDaysFromNow,
   getDateRange,
   formatDate,
-  formatTimestamp
+  formatTimestamp,
 };

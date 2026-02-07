@@ -1,6 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "Edit(*)",
+      "Write(*)",
       "Bash(npm test:*)",
       "Bash(git -C /workspaces/yourscore log --oneline -15)",
       "Bash(npx lighthouse --version)",
@@ -18,7 +20,12 @@
       "Bash(pkill:*)",
       "Bash(wc:*)",
       "Bash(npx playwright test:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(tree:*)",
+      "Bash(npm run test:unit:*)",
+      "Bash(npm run format:*)",
+      "Bash(npm run test:integration:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

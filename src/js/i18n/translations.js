@@ -8,20 +8,20 @@ const LANGUAGE_LABELS = {
   it: 'Italiano',
   ru: 'Русский',
   'zh-CN': '中文',
-  ja: '日本語'
+  ja: '日本語',
 };
 
 const TRANSLATIONS = {
   en: {
     app: {
       name: 'YourScore',
-      description: 'Gamified daily habit tracking through a scoring system'
+      description: 'Gamified daily habit tracking through a scoring system',
     },
     common: {
       skipToContent: 'Skip to content',
       uncategorized: 'Uncategorized',
       unknown: 'Unknown',
-      comingSoon: 'Coming soon.'
+      comingSoon: 'Coming soon.',
     },
     nav: {
       primaryLabel: 'Primary',
@@ -29,28 +29,28 @@ const TRANSLATIONS = {
       activities: 'Activities',
       categories: 'Categories',
       stats: 'Stats',
-      settings: 'Settings'
+      settings: 'Settings',
     },
     install: {
       prompt: 'Install YourScore for quick access.',
       install: 'Install',
-      dismiss: 'Not now'
+      dismiss: 'Not now',
     },
     units: {
       pointsShort: 'pts',
-      pointsLong: { one: 'point', other: 'points' }
+      pointsLong: { one: 'point', other: 'points' },
     },
     date: {
       today: 'Today',
       yesterday: 'Yesterday',
       daysAgo: { one: '{{count}} day ago', other: '{{count}} days ago' },
       completedAt: 'Completed {{time}}',
-      unlockedOn: 'Unlocked {{date}}'
+      unlockedOn: 'Unlocked {{date}}',
     },
     score: {
       mainLabel: 'Main Score',
       todayLabel: 'Today',
-      decayLabel: 'Decay'
+      decayLabel: 'Decay',
     },
     daily: {
       emptyTitle: 'No activities yet',
@@ -59,7 +59,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: '{{points}} {{pointsLabel}} needed to break even.',
       breakEvenProgressLabel: 'Break-even progress',
       breakEvenAchievedAria: 'Break-even achieved',
-      breakEvenRemainingAria: '{{points}} {{pointsLabel}} remaining'
+      breakEvenRemainingAria: '{{points}} {{pointsLabel}} remaining',
     },
     decay: {
       firstDayWelcome: 'Welcome! No decay on your first day.',
@@ -71,18 +71,18 @@ const TRANSLATIONS = {
       previewFirstDay: 'First day - no decay',
       previewAlreadyActive: 'Already active today',
       previewDaysAway: '{{days}} days since last active',
-      previewNone: 'No decay needed'
+      previewNone: 'No decay needed',
     },
     celebrations: {
       continue: 'Continue',
       scoreMilestoneTitle: '{{score}} {{pointsLabel}}!',
       scoreMilestoneSubtitle: 'Amazing achievement! Keep up the great work!',
       streakTitle: '{{days}} Day Streak!',
-      streakSubtitle: 'You\'ve maintained your momentum for {{days}} days straight!',
+      streakSubtitle: "You've maintained your momentum for {{days}} days straight!",
       perfectWeekTitle: 'Perfect Week!',
       perfectWeekSubtitle: 'You completed every activity for 7 days straight!',
       recoveryTitle: 'Comeback Complete!',
-      recoverySubtitle: 'You bounced back from negative to positive!'
+      recoverySubtitle: 'You bounced back from negative to positive!',
     },
     toasts: {
       activityUndone: 'Undid {{name}}',
@@ -101,7 +101,7 @@ const TRANSLATIONS = {
       importSuccess: 'Data imported successfully',
       importFailed: 'Import failed',
       resetSuccess: 'All data has been reset',
-      resetFailed: 'Reset failed: {{error}}'
+      resetFailed: 'Reset failed: {{error}}',
     },
     activities: {
       title: 'Activities',
@@ -116,29 +116,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Category',
         addButton: 'Add Activity',
         saveButton: 'Save Changes',
-        cancelButton: 'Cancel'
+        cancelButton: 'Cancel',
       },
       sections: {
         activeTitle: 'Active',
         activeSubtitle: 'Tap an activity to edit or archive it.',
         archivedTitle: 'Archived',
-        archivedSubtitle: 'Hidden activities kept for history.'
+        archivedSubtitle: 'Hidden activities kept for history.',
       },
       empty: {
         noActivitiesTitle: 'No activities yet',
         noActivitiesMessage: 'Add an activity above to get started.',
         noArchivedTitle: 'No archived activities',
-        noArchivedMessage: 'Archived activities appear here.'
+        noArchivedMessage: 'Archived activities appear here.',
       },
       row: {
         edit: 'Edit',
         archive: 'Archive',
-        restore: 'Restore'
+        restore: 'Restore',
       },
       errors: {
         nameRequired: 'Activity name is required.',
-        pointsPositive: 'Points must be a positive number.'
-      }
+        pointsPositive: 'Points must be a positive number.',
+      },
     },
     categories: {
       title: 'Categories',
@@ -150,22 +150,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'e.g. Focus',
         addButton: 'Add Category',
         saveButton: 'Save Changes',
-        cancelButton: 'Cancel'
+        cancelButton: 'Cancel',
       },
       list: {
         title: 'Categories',
-        subtitle: 'Drag to reorder or use the arrows.'
+        subtitle: 'Drag to reorder or use the arrows.',
       },
       row: {
         alwaysAvailable: 'Always available',
         up: 'Up',
         down: 'Down',
         edit: 'Edit',
-        delete: 'Delete'
+        delete: 'Delete',
       },
       errors: {
-        nameRequired: 'Category name is required.'
-      }
+        nameRequired: 'Category name is required.',
+      },
     },
     settings: {
       title: 'Settings',
@@ -173,7 +173,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Score & Decay',
         appearance: 'Appearance',
-        data: 'Data Management'
+        data: 'Data Management',
       },
       fields: {
         dailyDecay: 'Daily decay amount',
@@ -183,12 +183,12 @@ const TRANSLATIONS = {
         themeDark: 'Dark',
         uiScale: 'UI scale',
         language: 'Language',
-        languageAuto: 'Auto (browser)'
+        languageAuto: 'Auto (browser)',
       },
       saveButton: 'Save Settings',
       errors: {
         decayNonNegative: 'Decay amount must be 0 or more.',
-        mainScoreNumber: 'Main score must be a number.'
+        mainScoreNumber: 'Main score must be a number.',
       },
       data: {
         exportTitle: 'Export',
@@ -201,18 +201,20 @@ const TRANSLATIONS = {
         importJson: 'Import JSON',
         resetTitle: 'Reset Data',
         resetDescription: 'Permanently delete all your data. This cannot be undone.',
-        resetButton: 'Reset All Data'
+        resetButton: 'Reset All Data',
       },
       import: {
         importing: 'Importing...',
         success: 'Import successful! {{summary}}',
         noRecords: 'No records imported',
-        countItem: '{{store}}: {{count}}'
+        countItem: '{{store}}: {{count}}',
       },
       confirm: {
-        resetPrimary: 'Are you sure you want to delete ALL your data?\n\nThis includes all activities, completions, score history, and settings.\n\nThis action CANNOT be undone!',
-        resetSecondary: 'Please confirm again.\n\nAll your YourScore data will be permanently deleted.'
-      }
+        resetPrimary:
+          'Are you sure you want to delete ALL your data?\n\nThis includes all activities, completions, score history, and settings.\n\nThis action CANNOT be undone!',
+        resetSecondary:
+          'Please confirm again.\n\nAll your YourScore data will be permanently deleted.',
+      },
     },
     dashboard: {
       title: 'Statistics',
@@ -221,7 +223,7 @@ const TRANSLATIONS = {
         current: 'Current Score',
         highest: 'Highest',
         lowest: 'Lowest',
-        daysActive: 'Days Active'
+        daysActive: 'Days Active',
       },
       todayProgress: "Today's Progress",
       progress: {
@@ -233,7 +235,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '{{count}} left',
         activitiesLabel: 'Activities',
         activitiesAria: 'Activity completion',
-        percentComplete: '{{percent}}% complete'
+        percentComplete: '{{percent}}% complete',
       },
       streaksTitle: 'Streaks',
       streaks: {
@@ -242,7 +244,7 @@ const TRANSLATIONS = {
         perfectDays: 'Perfect Days',
         perfectHint: 'All activities done',
         activeDays: 'Active Days',
-        activeHint: 'At least 1 activity'
+        activeHint: 'At least 1 activity',
       },
       activityStatsTitle: 'Activity Stats ({{days}} Days)',
       activityStatsEmpty: 'No activities yet. Add activities to see stats.',
@@ -250,74 +252,74 @@ const TRANSLATIONS = {
         mostCompleted: 'Most Completed',
         leastCompleted: 'Least Completed',
         notCompletedYet: 'Not Completed Yet',
-        more: '+{{count}} more'
+        more: '+{{count}} more',
       },
       achievementsTitle: 'Achievements',
       achievementsUnlocked: 'unlocked',
       achievementsRecent: 'Recently Unlocked',
-      achievementsNext: 'Next Goals'
+      achievementsNext: 'Next Goals',
     },
     achievements: {
       notificationTitle: 'Achievement Unlocked!',
       list: {
         score_100: {
           name: 'Century',
-          description: 'Reach 100 points'
+          description: 'Reach 100 points',
         },
         score_500: {
           name: 'High Achiever',
-          description: 'Reach 500 points'
+          description: 'Reach 500 points',
         },
         score_1000: {
           name: 'Thousand Club',
-          description: 'Reach 1,000 points'
+          description: 'Reach 1,000 points',
         },
         streak_3: {
           name: 'Getting Started',
-          description: 'Complete 3 successful days in a row'
+          description: 'Complete 3 successful days in a row',
         },
         streak_7: {
           name: 'Week Warrior',
-          description: 'Complete 7 successful days in a row'
+          description: 'Complete 7 successful days in a row',
         },
         streak_14: {
           name: 'Fortnight Fighter',
-          description: 'Complete 14 successful days in a row'
+          description: 'Complete 14 successful days in a row',
         },
         streak_30: {
           name: 'Monthly Master',
-          description: 'Complete 30 successful days in a row'
+          description: 'Complete 30 successful days in a row',
         },
         perfect_week: {
           name: 'Perfect Week',
-          description: 'Complete all activities every day for 7 consecutive days'
+          description: 'Complete all activities every day for 7 consecutive days',
         },
         recovery: {
           name: 'Comeback Kid',
-          description: 'Recover from a negative score to positive'
+          description: 'Recover from a negative score to positive',
         },
         first_completion: {
           name: 'First Step',
-          description: 'Complete your first activity'
+          description: 'Complete your first activity',
         },
         activities_50: {
           name: 'Half Century',
-          description: 'Complete 50 activities total'
+          description: 'Complete 50 activities total',
         },
         activities_100: {
           name: 'Activity Centurion',
-          description: 'Complete 100 activities total'
+          description: 'Complete 100 activities total',
         },
         activities_500: {
           name: 'Habit Hero',
-          description: 'Complete 500 activities total'
-        }
-      }
+          description: 'Complete 500 activities total',
+        },
+      },
     },
     export: {
       csvHeaders: ['Date', 'Activity', 'Category', 'Points', 'Completed At'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-completions-{{date}}.csv'
+      filenameCsv: 'yourscore-completions-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -326,8 +328,8 @@ const TRANSLATIONS = {
         activities: 'Activities',
         completions: 'Completions',
         scoreHistory: 'Score history',
-        achievements: 'Achievements'
-      }
+        achievements: 'Achievements',
+      },
     },
     errors: {
       activityNameRequired: 'Activity name is required',
@@ -346,7 +348,8 @@ const TRANSLATIONS = {
       importStoreInvalid: 'Invalid data for store "{{store}}": expected array',
       importRecordInvalid: 'Invalid record at {{store}}[{{index}}]: expected object',
       importMissingField: 'Missing required field "{{field}}" at {{store}}[{{index}}]',
-      importInvalidType: 'Invalid type for "{{field}}" at {{store}}[{{index}}]: expected {{expected}}',
+      importInvalidType:
+        'Invalid type for "{{field}}" at {{store}}[{{index}}]: expected {{expected}}',
       importTooManyRecords: 'Import exceeds maximum record limit ({{max}})',
       importFailed: 'Import failed: {{error}}',
       importFileTooLarge: 'Import file is too large',
@@ -354,19 +357,21 @@ const TRANSLATIONS = {
       importReadFailed: 'Failed to read file: {{error}}',
       importNoFile: 'No file provided',
       importInvalidFileType: 'Invalid file type: expected .json',
-      fileReadFailed: 'Failed to read file'
-    }
+      importValueOutOfRange: '"{{field}}" value out of range at {{store}}[{{index}}]',
+      importValueTooLong: '"{{field}}" value too long at {{store}}[{{index}}]',
+      fileReadFailed: 'Failed to read file',
+    },
   },
   de: {
     app: {
       name: 'YourScore',
-      description: 'Gamifiziertes tägliches Gewohnheitentracking mit einem Punktesystem'
+      description: 'Gamifiziertes tägliches Gewohnheitentracking mit einem Punktesystem',
     },
     common: {
       skipToContent: 'Zum Inhalt springen',
       uncategorized: 'Ohne Kategorie',
       unknown: 'Unbekannt',
-      comingSoon: 'Demnächst.'
+      comingSoon: 'Demnächst.',
     },
     nav: {
       primaryLabel: 'Primär',
@@ -374,28 +379,28 @@ const TRANSLATIONS = {
       activities: 'Aktivitäten',
       categories: 'Kategorien',
       stats: 'Statistiken',
-      settings: 'Einstellungen'
+      settings: 'Einstellungen',
     },
     install: {
       prompt: 'Installiere YourScore für schnellen Zugriff.',
       install: 'Installieren',
-      dismiss: 'Nicht jetzt'
+      dismiss: 'Nicht jetzt',
     },
     units: {
       pointsShort: 'Pkt.',
-      pointsLong: { one: 'Punkt', other: 'Punkte' }
+      pointsLong: { one: 'Punkt', other: 'Punkte' },
     },
     date: {
       today: 'Heute',
       yesterday: 'Gestern',
       daysAgo: { one: 'vor {{count}} Tag', other: 'vor {{count}} Tagen' },
       completedAt: 'Erledigt {{time}}',
-      unlockedOn: 'Freigeschaltet {{date}}'
+      unlockedOn: 'Freigeschaltet {{date}}',
     },
     score: {
       mainLabel: 'Hauptpunktestand',
       todayLabel: 'Heute',
-      decayLabel: 'Verfall'
+      decayLabel: 'Verfall',
     },
     daily: {
       emptyTitle: 'Noch keine Aktivitäten',
@@ -404,7 +409,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: '{{points}} {{pointsLabel}} bis zum Ausgleich benötigt.',
       breakEvenProgressLabel: 'Break-even-Fortschritt',
       breakEvenAchievedAria: 'Break-even erreicht',
-      breakEvenRemainingAria: '{{points}} {{pointsLabel}} verbleibend'
+      breakEvenRemainingAria: '{{points}} {{pointsLabel}} verbleibend',
     },
     decay: {
       firstDayWelcome: 'Willkommen! Am ersten Tag gibt es keinen Verfall.',
@@ -416,7 +421,7 @@ const TRANSLATIONS = {
       previewFirstDay: 'Erster Tag – kein Verfall',
       previewAlreadyActive: 'Heute bereits aktiv',
       previewDaysAway: '{{days}} Tage seit letzter Aktivität',
-      previewNone: 'Kein Verfall nötig'
+      previewNone: 'Kein Verfall nötig',
     },
     celebrations: {
       continue: 'Weiter',
@@ -427,7 +432,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: 'Perfekte Woche!',
       perfectWeekSubtitle: 'Du hast alle Aktivitäten 7 Tage in Folge erledigt!',
       recoveryTitle: 'Comeback geschafft!',
-      recoverySubtitle: 'Du bist von negativ zurück ins Positive!'
+      recoverySubtitle: 'Du bist von negativ zurück ins Positive!',
     },
     toasts: {
       activityUndone: '{{name}} rückgängig gemacht',
@@ -446,7 +451,7 @@ const TRANSLATIONS = {
       importSuccess: 'Daten erfolgreich importiert',
       importFailed: 'Import fehlgeschlagen',
       resetSuccess: 'Alle Daten wurden zurückgesetzt',
-      resetFailed: 'Zurücksetzen fehlgeschlagen: {{error}}'
+      resetFailed: 'Zurücksetzen fehlgeschlagen: {{error}}',
     },
     activities: {
       title: 'Aktivitäten',
@@ -461,29 +466,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Kategorie',
         addButton: 'Aktivität hinzufügen',
         saveButton: 'Änderungen speichern',
-        cancelButton: 'Abbrechen'
+        cancelButton: 'Abbrechen',
       },
       sections: {
         activeTitle: 'Aktiv',
         activeSubtitle: 'Tippe auf eine Aktivität, um sie zu bearbeiten oder zu archivieren.',
         archivedTitle: 'Archiviert',
-        archivedSubtitle: 'Verborgene Aktivitäten für die Historie.'
+        archivedSubtitle: 'Verborgene Aktivitäten für die Historie.',
       },
       empty: {
         noActivitiesTitle: 'Noch keine Aktivitäten',
         noActivitiesMessage: 'Füge oben eine Aktivität hinzu, um loszulegen.',
         noArchivedTitle: 'Keine archivierten Aktivitäten',
-        noArchivedMessage: 'Archivierte Aktivitäten erscheinen hier.'
+        noArchivedMessage: 'Archivierte Aktivitäten erscheinen hier.',
       },
       row: {
         edit: 'Bearbeiten',
         archive: 'Archivieren',
-        restore: 'Wiederherstellen'
+        restore: 'Wiederherstellen',
       },
       errors: {
         nameRequired: 'Aktivitätsname ist erforderlich.',
-        pointsPositive: 'Punkte müssen eine positive Zahl sein.'
-      }
+        pointsPositive: 'Punkte müssen eine positive Zahl sein.',
+      },
     },
     categories: {
       title: 'Kategorien',
@@ -495,22 +500,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'z. B. Fokus',
         addButton: 'Kategorie hinzufügen',
         saveButton: 'Änderungen speichern',
-        cancelButton: 'Abbrechen'
+        cancelButton: 'Abbrechen',
       },
       list: {
         title: 'Kategorien',
-        subtitle: 'Zum Sortieren ziehen oder die Pfeile verwenden.'
+        subtitle: 'Zum Sortieren ziehen oder die Pfeile verwenden.',
       },
       row: {
         alwaysAvailable: 'Immer verfügbar',
         up: 'Hoch',
         down: 'Runter',
         edit: 'Bearbeiten',
-        delete: 'Löschen'
+        delete: 'Löschen',
       },
       errors: {
-        nameRequired: 'Kategoriename ist erforderlich.'
-      }
+        nameRequired: 'Kategoriename ist erforderlich.',
+      },
     },
     settings: {
       title: 'Einstellungen',
@@ -518,7 +523,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Punktestand & Verfall',
         appearance: 'Darstellung',
-        data: 'Datenverwaltung'
+        data: 'Datenverwaltung',
       },
       fields: {
         dailyDecay: 'Täglicher Verfall',
@@ -528,12 +533,12 @@ const TRANSLATIONS = {
         themeDark: 'Dunkel',
         uiScale: 'UI-Skalierung',
         language: 'Sprache',
-        languageAuto: 'Automatisch (Browser)'
+        languageAuto: 'Automatisch (Browser)',
       },
       saveButton: 'Einstellungen speichern',
       errors: {
         decayNonNegative: 'Verfall muss 0 oder größer sein.',
-        mainScoreNumber: 'Hauptpunktestand muss eine Zahl sein.'
+        mainScoreNumber: 'Hauptpunktestand muss eine Zahl sein.',
       },
       data: {
         exportTitle: 'Export',
@@ -546,18 +551,20 @@ const TRANSLATIONS = {
         importJson: 'JSON importieren',
         resetTitle: 'Daten zurücksetzen',
         resetDescription: 'Lösche alle Daten dauerhaft. Das kann nicht rückgängig gemacht werden.',
-        resetButton: 'Alle Daten löschen'
+        resetButton: 'Alle Daten löschen',
       },
       import: {
         importing: 'Importiere...',
         success: 'Import erfolgreich! {{summary}}',
         noRecords: 'Keine Datensätze importiert',
-        countItem: '{{store}}: {{count}}'
+        countItem: '{{store}}: {{count}}',
       },
       confirm: {
-        resetPrimary: 'Möchtest du wirklich ALLE Daten löschen?\n\nDas umfasst alle Aktivitäten, Abschlüsse, Verlauf und Einstellungen.\n\nDiese Aktion kann NICHT rückgängig gemacht werden!',
-        resetSecondary: 'Bitte erneut bestätigen.\n\nAlle YourScore-Daten werden dauerhaft gelöscht.'
-      }
+        resetPrimary:
+          'Möchtest du wirklich ALLE Daten löschen?\n\nDas umfasst alle Aktivitäten, Abschlüsse, Verlauf und Einstellungen.\n\nDiese Aktion kann NICHT rückgängig gemacht werden!',
+        resetSecondary:
+          'Bitte erneut bestätigen.\n\nAlle YourScore-Daten werden dauerhaft gelöscht.',
+      },
     },
     dashboard: {
       title: 'Statistiken',
@@ -566,7 +573,7 @@ const TRANSLATIONS = {
         current: 'Aktueller Punktestand',
         highest: 'Höchster',
         lowest: 'Niedrigster',
-        daysActive: 'Aktive Tage'
+        daysActive: 'Aktive Tage',
       },
       todayProgress: 'Heutiger Fortschritt',
       progress: {
@@ -578,7 +585,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '{{count}} übrig',
         activitiesLabel: 'Aktivitäten',
         activitiesAria: 'Aktivitätsabschluss',
-        percentComplete: '{{percent}}% abgeschlossen'
+        percentComplete: '{{percent}}% abgeschlossen',
       },
       streaksTitle: 'Serien',
       streaks: {
@@ -587,82 +594,83 @@ const TRANSLATIONS = {
         perfectDays: 'Perfekte Tage',
         perfectHint: 'Alle Aktivitäten erledigt',
         activeDays: 'Aktive Tage',
-        activeHint: 'Mindestens 1 Aktivität'
+        activeHint: 'Mindestens 1 Aktivität',
       },
       activityStatsTitle: 'Aktivitätsstatistik ({{days}} Tage)',
-      activityStatsEmpty: 'Noch keine Aktivitäten. Füge Aktivitäten hinzu, um Statistiken zu sehen.',
+      activityStatsEmpty:
+        'Noch keine Aktivitäten. Füge Aktivitäten hinzu, um Statistiken zu sehen.',
       stats: {
         mostCompleted: 'Am häufigsten erledigt',
         leastCompleted: 'Am seltensten erledigt',
         notCompletedYet: 'Noch nicht erledigt',
-        more: '+{{count}} mehr'
+        more: '+{{count}} mehr',
       },
       achievementsTitle: 'Erfolge',
       achievementsUnlocked: 'freigeschaltet',
       achievementsRecent: 'Kürzlich freigeschaltet',
-      achievementsNext: 'Nächste Ziele'
+      achievementsNext: 'Nächste Ziele',
     },
     achievements: {
       notificationTitle: 'Erfolg freigeschaltet!',
       list: {
         score_100: {
           name: 'Jahrhundert',
-          description: 'Erreiche 100 Punkte'
+          description: 'Erreiche 100 Punkte',
         },
         score_500: {
           name: 'Top-Leistung',
-          description: 'Erreiche 500 Punkte'
+          description: 'Erreiche 500 Punkte',
         },
         score_1000: {
           name: 'Tausenderclub',
-          description: 'Erreiche 1.000 Punkte'
+          description: 'Erreiche 1.000 Punkte',
         },
         streak_3: {
           name: 'Los geht’s',
-          description: 'Schaffe 3 erfolgreiche Tage in Folge'
+          description: 'Schaffe 3 erfolgreiche Tage in Folge',
         },
         streak_7: {
           name: 'Wochenkämpfer',
-          description: 'Schaffe 7 erfolgreiche Tage in Folge'
+          description: 'Schaffe 7 erfolgreiche Tage in Folge',
         },
         streak_14: {
           name: 'Vierzehn Tage',
-          description: 'Schaffe 14 erfolgreiche Tage in Folge'
+          description: 'Schaffe 14 erfolgreiche Tage in Folge',
         },
         streak_30: {
           name: 'Monatsmeister',
-          description: 'Schaffe 30 erfolgreiche Tage in Folge'
+          description: 'Schaffe 30 erfolgreiche Tage in Folge',
         },
         perfect_week: {
           name: 'Perfekte Woche',
-          description: 'Erledige alle Aktivitäten 7 Tage in Folge'
+          description: 'Erledige alle Aktivitäten 7 Tage in Folge',
         },
         recovery: {
           name: 'Comeback',
-          description: 'Komme von negativ wieder ins Positive'
+          description: 'Komme von negativ wieder ins Positive',
         },
         first_completion: {
           name: 'Erster Schritt',
-          description: 'Erledige deine erste Aktivität'
+          description: 'Erledige deine erste Aktivität',
         },
         activities_50: {
           name: 'Halbes Jahrhundert',
-          description: 'Erledige insgesamt 50 Aktivitäten'
+          description: 'Erledige insgesamt 50 Aktivitäten',
         },
         activities_100: {
           name: 'Aktivitätscenturio',
-          description: 'Erledige insgesamt 100 Aktivitäten'
+          description: 'Erledige insgesamt 100 Aktivitäten',
         },
         activities_500: {
           name: 'Gewohnheitsheld',
-          description: 'Erledige insgesamt 500 Aktivitäten'
-        }
-      }
+          description: 'Erledige insgesamt 500 Aktivitäten',
+        },
+      },
     },
     export: {
       csvHeaders: ['Datum', 'Aktivität', 'Kategorie', 'Punkte', 'Erledigt um'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-abschluesse-{{date}}.csv'
+      filenameCsv: 'yourscore-abschluesse-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -671,8 +679,8 @@ const TRANSLATIONS = {
         activities: 'Aktivitäten',
         completions: 'Abschlüsse',
         scoreHistory: 'Punktverlauf',
-        achievements: 'Erfolge'
-      }
+        achievements: 'Erfolge',
+      },
     },
     errors: {
       activityNameRequired: 'Aktivitätsname ist erforderlich',
@@ -691,7 +699,8 @@ const TRANSLATIONS = {
       importStoreInvalid: 'Ungültige Daten für Store „{{store}}“: Array erwartet',
       importRecordInvalid: 'Ungültiger Datensatz bei {{store}}[{{index}}]: Objekt erwartet',
       importMissingField: 'Pflichtfeld „{{field}}“ fehlt bei {{store}}[{{index}}]',
-      importInvalidType: 'Ungültiger Typ für „{{field}}“ bei {{store}}[{{index}}]: {{expected}} erwartet',
+      importInvalidType:
+        'Ungültiger Typ für „{{field}}“ bei {{store}}[{{index}}]: {{expected}} erwartet',
       importTooManyRecords: 'Import überschreitet das Maximum ({{max}})',
       importFailed: 'Import fehlgeschlagen: {{error}}',
       importFileTooLarge: 'Importdatei ist zu groß',
@@ -699,19 +708,19 @@ const TRANSLATIONS = {
       importReadFailed: 'Datei konnte nicht gelesen werden: {{error}}',
       importNoFile: 'Keine Datei angegeben',
       importInvalidFileType: 'Ungültiger Dateityp: .json erwartet',
-      fileReadFailed: 'Datei konnte nicht gelesen werden'
-    }
+      fileReadFailed: 'Datei konnte nicht gelesen werden',
+    },
   },
   es: {
     app: {
       name: 'YourScore',
-      description: 'Seguimiento diario de hábitos gamificado mediante un sistema de puntos'
+      description: 'Seguimiento diario de hábitos gamificado mediante un sistema de puntos',
     },
     common: {
       skipToContent: 'Saltar al contenido',
       uncategorized: 'Sin categoría',
       unknown: 'Desconocido',
-      comingSoon: 'Próximamente.'
+      comingSoon: 'Próximamente.',
     },
     nav: {
       primaryLabel: 'Principal',
@@ -719,28 +728,28 @@ const TRANSLATIONS = {
       activities: 'Actividades',
       categories: 'Categorías',
       stats: 'Estadísticas',
-      settings: 'Ajustes'
+      settings: 'Ajustes',
     },
     install: {
       prompt: 'Instala YourScore para un acceso rápido.',
       install: 'Instalar',
-      dismiss: 'Ahora no'
+      dismiss: 'Ahora no',
     },
     units: {
       pointsShort: 'pts',
-      pointsLong: { one: 'punto', other: 'puntos' }
+      pointsLong: { one: 'punto', other: 'puntos' },
     },
     date: {
       today: 'Hoy',
       yesterday: 'Ayer',
       daysAgo: { one: 'hace {{count}} día', other: 'hace {{count}} días' },
       completedAt: 'Completado {{time}}',
-      unlockedOn: 'Desbloqueado {{date}}'
+      unlockedOn: 'Desbloqueado {{date}}',
     },
     score: {
       mainLabel: 'Puntuación principal',
       todayLabel: 'Hoy',
-      decayLabel: 'Decaimiento'
+      decayLabel: 'Decaimiento',
     },
     daily: {
       emptyTitle: 'Aún no hay actividades',
@@ -749,7 +758,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: 'Faltan {{points}} {{pointsLabel}} para equilibrar.',
       breakEvenProgressLabel: 'Progreso de equilibrio',
       breakEvenAchievedAria: 'Equilibrio logrado',
-      breakEvenRemainingAria: 'Quedan {{points}} {{pointsLabel}}'
+      breakEvenRemainingAria: 'Quedan {{points}} {{pointsLabel}}',
     },
     decay: {
       firstDayWelcome: '¡Bienvenido! Sin decaimiento en tu primer día.',
@@ -757,11 +766,12 @@ const TRANSLATIONS = {
       alreadyActive: 'Ya estuviste activo hoy, sin decaimiento adicional.',
       noneNeeded: 'No se necesita decaimiento.',
       appliedSingle: 'Se aplicó un decaimiento diario de {{points}} {{pointsLabel}}.',
-      appliedMultiple: '{{days}} días sin actividad: se aplicó un decaimiento de {{points}} {{pointsLabel}}.',
+      appliedMultiple:
+        '{{days}} días sin actividad: se aplicó un decaimiento de {{points}} {{pointsLabel}}.',
       previewFirstDay: 'Primer día: sin decaimiento',
       previewAlreadyActive: 'Ya estuviste activo hoy',
       previewDaysAway: '{{days}} días desde la última actividad',
-      previewNone: 'No se necesita decaimiento'
+      previewNone: 'No se necesita decaimiento',
     },
     celebrations: {
       continue: 'Continuar',
@@ -772,7 +782,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: '¡Semana perfecta!',
       perfectWeekSubtitle: 'Completaste todas las actividades durante 7 días seguidos.',
       recoveryTitle: '¡Regreso logrado!',
-      recoverySubtitle: 'Volviste de negativo a positivo.'
+      recoverySubtitle: 'Volviste de negativo a positivo.',
     },
     toasts: {
       activityUndone: 'Se deshizo {{name}}',
@@ -791,7 +801,7 @@ const TRANSLATIONS = {
       importSuccess: 'Datos importados correctamente',
       importFailed: 'Error al importar',
       resetSuccess: 'Todos los datos se han restablecido',
-      resetFailed: 'Error al restablecer: {{error}}'
+      resetFailed: 'Error al restablecer: {{error}}',
     },
     activities: {
       title: 'Actividades',
@@ -806,29 +816,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Categoría',
         addButton: 'Añadir actividad',
         saveButton: 'Guardar cambios',
-        cancelButton: 'Cancelar'
+        cancelButton: 'Cancelar',
       },
       sections: {
         activeTitle: 'Activas',
         activeSubtitle: 'Toca una actividad para editarla o archivarla.',
         archivedTitle: 'Archivadas',
-        archivedSubtitle: 'Actividades ocultas guardadas para el historial.'
+        archivedSubtitle: 'Actividades ocultas guardadas para el historial.',
       },
       empty: {
         noActivitiesTitle: 'Aún no hay actividades',
         noActivitiesMessage: 'Añade una actividad arriba para empezar.',
         noArchivedTitle: 'No hay actividades archivadas',
-        noArchivedMessage: 'Las actividades archivadas aparecen aquí.'
+        noArchivedMessage: 'Las actividades archivadas aparecen aquí.',
       },
       row: {
         edit: 'Editar',
         archive: 'Archivar',
-        restore: 'Restaurar'
+        restore: 'Restaurar',
       },
       errors: {
         nameRequired: 'El nombre de la actividad es obligatorio.',
-        pointsPositive: 'Los puntos deben ser un número positivo.'
-      }
+        pointsPositive: 'Los puntos deben ser un número positivo.',
+      },
     },
     categories: {
       title: 'Categorías',
@@ -840,22 +850,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'p. ej., Enfoque',
         addButton: 'Añadir categoría',
         saveButton: 'Guardar cambios',
-        cancelButton: 'Cancelar'
+        cancelButton: 'Cancelar',
       },
       list: {
         title: 'Categorías',
-        subtitle: 'Arrastra para reordenar o usa las flechas.'
+        subtitle: 'Arrastra para reordenar o usa las flechas.',
       },
       row: {
         alwaysAvailable: 'Siempre disponible',
         up: 'Subir',
         down: 'Bajar',
         edit: 'Editar',
-        delete: 'Eliminar'
+        delete: 'Eliminar',
       },
       errors: {
-        nameRequired: 'El nombre de la categoría es obligatorio.'
-      }
+        nameRequired: 'El nombre de la categoría es obligatorio.',
+      },
     },
     settings: {
       title: 'Ajustes',
@@ -863,7 +873,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Puntuación y decaimiento',
         appearance: 'Apariencia',
-        data: 'Gestión de datos'
+        data: 'Gestión de datos',
       },
       fields: {
         dailyDecay: 'Decaimiento diario',
@@ -873,12 +883,12 @@ const TRANSLATIONS = {
         themeDark: 'Oscuro',
         uiScale: 'Escala de UI',
         language: 'Idioma',
-        languageAuto: 'Auto (navegador)'
+        languageAuto: 'Auto (navegador)',
       },
       saveButton: 'Guardar ajustes',
       errors: {
         decayNonNegative: 'El decaimiento debe ser 0 o mayor.',
-        mainScoreNumber: 'La puntuación principal debe ser un número.'
+        mainScoreNumber: 'La puntuación principal debe ser un número.',
       },
       data: {
         exportTitle: 'Exportar',
@@ -891,18 +901,20 @@ const TRANSLATIONS = {
         importJson: 'Importar JSON',
         resetTitle: 'Restablecer datos',
         resetDescription: 'Elimina permanentemente todos tus datos. No se puede deshacer.',
-        resetButton: 'Restablecer todos los datos'
+        resetButton: 'Restablecer todos los datos',
       },
       import: {
         importing: 'Importando...',
         success: '¡Importación correcta! {{summary}}',
         noRecords: 'No se importaron registros',
-        countItem: '{{store}}: {{count}}'
+        countItem: '{{store}}: {{count}}',
       },
       confirm: {
-        resetPrimary: '¿Seguro que quieres borrar TODOS tus datos?\n\nEsto incluye actividades, completados, historial de puntuación y ajustes.\n\n¡Esta acción NO se puede deshacer!',
-        resetSecondary: 'Por favor confirma de nuevo.\n\nTodos tus datos de YourScore se eliminarán permanentemente.'
-      }
+        resetPrimary:
+          '¿Seguro que quieres borrar TODOS tus datos?\n\nEsto incluye actividades, completados, historial de puntuación y ajustes.\n\n¡Esta acción NO se puede deshacer!',
+        resetSecondary:
+          'Por favor confirma de nuevo.\n\nTodos tus datos de YourScore se eliminarán permanentemente.',
+      },
     },
     dashboard: {
       title: 'Estadísticas',
@@ -911,7 +923,7 @@ const TRANSLATIONS = {
         current: 'Puntuación actual',
         highest: 'Máxima',
         lowest: 'Mínima',
-        daysActive: 'Días activos'
+        daysActive: 'Días activos',
       },
       todayProgress: 'Progreso de hoy',
       progress: {
@@ -923,7 +935,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '{{count}} restantes',
         activitiesLabel: 'Actividades',
         activitiesAria: 'Compleción de actividades',
-        percentComplete: '{{percent}}% completado'
+        percentComplete: '{{percent}}% completado',
       },
       streaksTitle: 'Rachas',
       streaks: {
@@ -932,7 +944,7 @@ const TRANSLATIONS = {
         perfectDays: 'Días perfectos',
         perfectHint: 'Todas las actividades hechas',
         activeDays: 'Días activos',
-        activeHint: 'Al menos 1 actividad'
+        activeHint: 'Al menos 1 actividad',
       },
       activityStatsTitle: 'Estadísticas de actividades ({{days}} días)',
       activityStatsEmpty: 'Aún no hay actividades. Añade actividades para ver estadísticas.',
@@ -940,74 +952,74 @@ const TRANSLATIONS = {
         mostCompleted: 'Más completadas',
         leastCompleted: 'Menos completadas',
         notCompletedYet: 'Aún sin completar',
-        more: '+{{count}} más'
+        more: '+{{count}} más',
       },
       achievementsTitle: 'Logros',
       achievementsUnlocked: 'desbloqueados',
       achievementsRecent: 'Desbloqueados recientemente',
-      achievementsNext: 'Siguientes metas'
+      achievementsNext: 'Siguientes metas',
     },
     achievements: {
       notificationTitle: '¡Logro desbloqueado!',
       list: {
         score_100: {
           name: 'Centena',
-          description: 'Alcanza 100 puntos'
+          description: 'Alcanza 100 puntos',
         },
         score_500: {
           name: 'Gran logro',
-          description: 'Alcanza 500 puntos'
+          description: 'Alcanza 500 puntos',
         },
         score_1000: {
           name: 'Club del mil',
-          description: 'Alcanza 1.000 puntos'
+          description: 'Alcanza 1.000 puntos',
         },
         streak_3: {
           name: 'Empezando',
-          description: 'Completa 3 días exitosos seguidos'
+          description: 'Completa 3 días exitosos seguidos',
         },
         streak_7: {
           name: 'Guerrero semanal',
-          description: 'Completa 7 días exitosos seguidos'
+          description: 'Completa 7 días exitosos seguidos',
         },
         streak_14: {
           name: 'Luchador quincenal',
-          description: 'Completa 14 días exitosos seguidos'
+          description: 'Completa 14 días exitosos seguidos',
         },
         streak_30: {
           name: 'Maestro mensual',
-          description: 'Completa 30 días exitosos seguidos'
+          description: 'Completa 30 días exitosos seguidos',
         },
         perfect_week: {
           name: 'Semana perfecta',
-          description: 'Completa todas las actividades durante 7 días seguidos'
+          description: 'Completa todas las actividades durante 7 días seguidos',
         },
         recovery: {
           name: 'Vuelta al juego',
-          description: 'Recupérate de un puntaje negativo a positivo'
+          description: 'Recupérate de un puntaje negativo a positivo',
         },
         first_completion: {
           name: 'Primer paso',
-          description: 'Completa tu primera actividad'
+          description: 'Completa tu primera actividad',
         },
         activities_50: {
           name: 'Media centena',
-          description: 'Completa 50 actividades en total'
+          description: 'Completa 50 actividades en total',
         },
         activities_100: {
           name: 'Centurión de actividades',
-          description: 'Completa 100 actividades en total'
+          description: 'Completa 100 actividades en total',
         },
         activities_500: {
           name: 'Héroe de hábitos',
-          description: 'Completa 500 actividades en total'
-        }
-      }
+          description: 'Completa 500 actividades en total',
+        },
+      },
     },
     export: {
       csvHeaders: ['Fecha', 'Actividad', 'Categoría', 'Puntos', 'Completado a las'],
       filenameBackup: 'yourscore-copia-{{date}}.json',
-      filenameCsv: 'yourscore-completadas-{{date}}.csv'
+      filenameCsv: 'yourscore-completadas-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -1016,8 +1028,8 @@ const TRANSLATIONS = {
         activities: 'Actividades',
         completions: 'Completadas',
         scoreHistory: 'Historial de puntuación',
-        achievements: 'Logros'
-      }
+        achievements: 'Logros',
+      },
     },
     errors: {
       activityNameRequired: 'El nombre de la actividad es obligatorio',
@@ -1030,13 +1042,15 @@ const TRANSLATIONS = {
       completionAlready: 'La actividad ya está completada para esta fecha',
       decayNegative: 'El decaimiento no puede ser negativo',
       importInvalidFormat: 'Formato de datos inválido: se esperaba un objeto',
-      importInvalidApp: 'Identificador de app inválido: se esperaba "{{expected}}", se obtuvo "{{actual}}"',
+      importInvalidApp:
+        'Identificador de app inválido: se esperaba "{{expected}}", se obtuvo "{{actual}}"',
       importInvalidVersion: 'Versión inválida o ausente',
       importMissingData: 'Sección de datos faltante o inválida',
       importStoreInvalid: 'Datos inválidos para el almacén "{{store}}": se esperaba un array',
       importRecordInvalid: 'Registro inválido en {{store}}[{{index}}]: se esperaba un objeto',
       importMissingField: 'Falta el campo requerido "{{field}}" en {{store}}[{{index}}]',
-      importInvalidType: 'Tipo inválido para "{{field}}" en {{store}}[{{index}}]: se esperaba {{expected}}',
+      importInvalidType:
+        'Tipo inválido para "{{field}}" en {{store}}[{{index}}]: se esperaba {{expected}}',
       importTooManyRecords: 'La importación supera el límite máximo ({{max}})',
       importFailed: 'Importación fallida: {{error}}',
       importFileTooLarge: 'El archivo de importación es demasiado grande',
@@ -1044,19 +1058,19 @@ const TRANSLATIONS = {
       importReadFailed: 'No se pudo leer el archivo: {{error}}',
       importNoFile: 'No se proporcionó ningún archivo',
       importInvalidFileType: 'Tipo de archivo inválido: se esperaba .json',
-      fileReadFailed: 'No se pudo leer el archivo'
-    }
+      fileReadFailed: 'No se pudo leer el archivo',
+    },
   },
   fr: {
     app: {
       name: 'YourScore',
-      description: 'Suivi quotidien des habitudes gamifié via un système de points'
+      description: 'Suivi quotidien des habitudes gamifié via un système de points',
     },
     common: {
       skipToContent: 'Aller au contenu',
       uncategorized: 'Sans catégorie',
       unknown: 'Inconnu',
-      comingSoon: 'Bientôt.'
+      comingSoon: 'Bientôt.',
     },
     nav: {
       primaryLabel: 'Principal',
@@ -1064,28 +1078,28 @@ const TRANSLATIONS = {
       activities: 'Activités',
       categories: 'Catégories',
       stats: 'Stats',
-      settings: 'Paramètres'
+      settings: 'Paramètres',
     },
     install: {
       prompt: 'Installez YourScore pour un accès rapide.',
       install: 'Installer',
-      dismiss: 'Plus tard'
+      dismiss: 'Plus tard',
     },
     units: {
       pointsShort: 'pts',
-      pointsLong: { one: 'point', other: 'points' }
+      pointsLong: { one: 'point', other: 'points' },
     },
     date: {
       today: "Aujourd'hui",
       yesterday: 'Hier',
       daysAgo: { one: 'il y a {{count}} jour', other: 'il y a {{count}} jours' },
       completedAt: 'Terminé à {{time}}',
-      unlockedOn: 'Débloqué le {{date}}'
+      unlockedOn: 'Débloqué le {{date}}',
     },
     score: {
       mainLabel: 'Score principal',
       todayLabel: "Aujourd'hui",
-      decayLabel: 'Déclin'
+      decayLabel: 'Déclin',
     },
     daily: {
       emptyTitle: "Pas d'activités pour l'instant",
@@ -1094,7 +1108,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: 'Il manque {{points}} {{pointsLabel}} pour équilibrer.',
       breakEvenProgressLabel: "Progression de l'équilibre",
       breakEvenAchievedAria: 'Équilibre atteint',
-      breakEvenRemainingAria: '{{points}} {{pointsLabel}} restants'
+      breakEvenRemainingAria: '{{points}} {{pointsLabel}} restants',
     },
     decay: {
       firstDayWelcome: 'Bienvenue ! Pas de déclin le premier jour.',
@@ -1106,7 +1120,7 @@ const TRANSLATIONS = {
       previewFirstDay: 'Premier jour — pas de déclin',
       previewAlreadyActive: 'Déjà actif aujourd’hui',
       previewDaysAway: '{{days}} jours depuis la dernière activité',
-      previewNone: 'Aucun déclin nécessaire'
+      previewNone: 'Aucun déclin nécessaire',
     },
     celebrations: {
       continue: 'Continuer',
@@ -1117,7 +1131,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: 'Semaine parfaite !',
       perfectWeekSubtitle: 'Tu as complété toutes les activités pendant 7 jours d’affilée !',
       recoveryTitle: 'Retour réussi !',
-      recoverySubtitle: 'Tu es repassé de négatif à positif !'
+      recoverySubtitle: 'Tu es repassé de négatif à positif !',
     },
     toasts: {
       activityUndone: 'Annulé : {{name}}',
@@ -1136,7 +1150,7 @@ const TRANSLATIONS = {
       importSuccess: 'Données importées avec succès',
       importFailed: 'Échec de l’import',
       resetSuccess: 'Toutes les données ont été réinitialisées',
-      resetFailed: 'Échec de la réinitialisation : {{error}}'
+      resetFailed: 'Échec de la réinitialisation : {{error}}',
     },
     activities: {
       title: 'Activités',
@@ -1151,29 +1165,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Catégorie',
         addButton: 'Ajouter une activité',
         saveButton: 'Enregistrer',
-        cancelButton: 'Annuler'
+        cancelButton: 'Annuler',
       },
       sections: {
         activeTitle: 'Actives',
         activeSubtitle: 'Touchez une activité pour la modifier ou l’archiver.',
         archivedTitle: 'Archivées',
-        archivedSubtitle: 'Activités cachées conservées pour l’historique.'
+        archivedSubtitle: 'Activités cachées conservées pour l’historique.',
       },
       empty: {
         noActivitiesTitle: "Pas d'activités pour l'instant",
         noActivitiesMessage: 'Ajoutez une activité ci-dessus pour commencer.',
         noArchivedTitle: 'Aucune activité archivée',
-        noArchivedMessage: 'Les activités archivées apparaissent ici.'
+        noArchivedMessage: 'Les activités archivées apparaissent ici.',
       },
       row: {
         edit: 'Modifier',
         archive: 'Archiver',
-        restore: 'Restaurer'
+        restore: 'Restaurer',
       },
       errors: {
         nameRequired: 'Le nom de l’activité est obligatoire.',
-        pointsPositive: 'Les points doivent être un nombre positif.'
-      }
+        pointsPositive: 'Les points doivent être un nombre positif.',
+      },
     },
     categories: {
       title: 'Catégories',
@@ -1185,22 +1199,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'ex. Concentration',
         addButton: 'Ajouter une catégorie',
         saveButton: 'Enregistrer',
-        cancelButton: 'Annuler'
+        cancelButton: 'Annuler',
       },
       list: {
         title: 'Catégories',
-        subtitle: 'Faites glisser pour réordonner ou utilisez les flèches.'
+        subtitle: 'Faites glisser pour réordonner ou utilisez les flèches.',
       },
       row: {
         alwaysAvailable: 'Toujours disponible',
         up: 'Monter',
         down: 'Descendre',
         edit: 'Modifier',
-        delete: 'Supprimer'
+        delete: 'Supprimer',
       },
       errors: {
-        nameRequired: 'Le nom de la catégorie est obligatoire.'
-      }
+        nameRequired: 'Le nom de la catégorie est obligatoire.',
+      },
     },
     settings: {
       title: 'Paramètres',
@@ -1208,7 +1222,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Score & déclin',
         appearance: 'Apparence',
-        data: 'Gestion des données'
+        data: 'Gestion des données',
       },
       fields: {
         dailyDecay: 'Déclin quotidien',
@@ -1218,12 +1232,12 @@ const TRANSLATIONS = {
         themeDark: 'Sombre',
         uiScale: 'Échelle UI',
         language: 'Langue',
-        languageAuto: 'Auto (navigateur)'
+        languageAuto: 'Auto (navigateur)',
       },
       saveButton: 'Enregistrer',
       errors: {
         decayNonNegative: 'Le déclin doit être égal ou supérieur à 0.',
-        mainScoreNumber: 'Le score principal doit être un nombre.'
+        mainScoreNumber: 'Le score principal doit être un nombre.',
       },
       data: {
         exportTitle: 'Exporter',
@@ -1236,18 +1250,20 @@ const TRANSLATIONS = {
         importJson: 'Importer JSON',
         resetTitle: 'Réinitialiser les données',
         resetDescription: 'Supprime définitivement toutes vos données. Action irréversible.',
-        resetButton: 'Tout supprimer'
+        resetButton: 'Tout supprimer',
       },
       import: {
         importing: 'Importation...',
         success: 'Import réussi ! {{summary}}',
         noRecords: 'Aucun enregistrement importé',
-        countItem: '{{store}} : {{count}}'
+        countItem: '{{store}} : {{count}}',
       },
       confirm: {
-        resetPrimary: 'Voulez-vous vraiment supprimer TOUTES vos données ?\n\nCela inclut activités, validations, historique du score et paramètres.\n\nCette action est IRRÉVERSIBLE !',
-        resetSecondary: 'Merci de confirmer à nouveau.\n\nToutes vos données YourScore seront supprimées définitivement.'
-      }
+        resetPrimary:
+          'Voulez-vous vraiment supprimer TOUTES vos données ?\n\nCela inclut activités, validations, historique du score et paramètres.\n\nCette action est IRRÉVERSIBLE !',
+        resetSecondary:
+          'Merci de confirmer à nouveau.\n\nToutes vos données YourScore seront supprimées définitivement.',
+      },
     },
     dashboard: {
       title: 'Statistiques',
@@ -1256,7 +1272,7 @@ const TRANSLATIONS = {
         current: 'Score actuel',
         highest: 'Plus haut',
         lowest: 'Plus bas',
-        daysActive: 'Jours actifs'
+        daysActive: 'Jours actifs',
       },
       todayProgress: "Progression d'aujourd'hui",
       progress: {
@@ -1268,7 +1284,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '{{count}} restants',
         activitiesLabel: 'Activités',
         activitiesAria: 'Avancement des activités',
-        percentComplete: '{{percent}}% terminé'
+        percentComplete: '{{percent}}% terminé',
       },
       streaksTitle: 'Séries',
       streaks: {
@@ -1277,7 +1293,7 @@ const TRANSLATIONS = {
         perfectDays: 'Jours parfaits',
         perfectHint: 'Toutes les activités faites',
         activeDays: 'Jours actifs',
-        activeHint: 'Au moins 1 activité'
+        activeHint: 'Au moins 1 activité',
       },
       activityStatsTitle: 'Statistiques d’activités ({{days}} jours)',
       activityStatsEmpty: 'Aucune activité. Ajoutez-en pour voir les stats.',
@@ -1285,74 +1301,74 @@ const TRANSLATIONS = {
         mostCompleted: 'Les plus complétées',
         leastCompleted: 'Les moins complétées',
         notCompletedYet: 'Pas encore complétées',
-        more: '+{{count}} de plus'
+        more: '+{{count}} de plus',
       },
       achievementsTitle: 'Succès',
       achievementsUnlocked: 'débloqués',
       achievementsRecent: 'Récemment débloqués',
-      achievementsNext: 'Objectifs suivants'
+      achievementsNext: 'Objectifs suivants',
     },
     achievements: {
       notificationTitle: 'Succès débloqué !',
       list: {
         score_100: {
           name: 'Centenaire',
-          description: 'Atteindre 100 points'
+          description: 'Atteindre 100 points',
         },
         score_500: {
           name: 'Grand performeur',
-          description: 'Atteindre 500 points'
+          description: 'Atteindre 500 points',
         },
         score_1000: {
           name: 'Club des mille',
-          description: 'Atteindre 1 000 points'
+          description: 'Atteindre 1 000 points',
         },
         streak_3: {
           name: 'Bon départ',
-          description: 'Enchaîner 3 jours réussis'
+          description: 'Enchaîner 3 jours réussis',
         },
         streak_7: {
           name: 'Guerrier de la semaine',
-          description: 'Enchaîner 7 jours réussis'
+          description: 'Enchaîner 7 jours réussis',
         },
         streak_14: {
           name: 'Combattant bimensuel',
-          description: 'Enchaîner 14 jours réussis'
+          description: 'Enchaîner 14 jours réussis',
         },
         streak_30: {
           name: 'Maître du mois',
-          description: 'Enchaîner 30 jours réussis'
+          description: 'Enchaîner 30 jours réussis',
         },
         perfect_week: {
           name: 'Semaine parfaite',
-          description: 'Tout compléter pendant 7 jours d’affilée'
+          description: 'Tout compléter pendant 7 jours d’affilée',
         },
         recovery: {
           name: 'Retour gagnant',
-          description: 'Revenir d’un score négatif à positif'
+          description: 'Revenir d’un score négatif à positif',
         },
         first_completion: {
           name: 'Premier pas',
-          description: 'Terminer votre première activité'
+          description: 'Terminer votre première activité',
         },
         activities_50: {
           name: 'Demi-centaine',
-          description: 'Terminer 50 activités au total'
+          description: 'Terminer 50 activités au total',
         },
         activities_100: {
           name: 'Centurion des activités',
-          description: 'Terminer 100 activités au total'
+          description: 'Terminer 100 activités au total',
         },
         activities_500: {
           name: 'Héros des habitudes',
-          description: 'Terminer 500 activités au total'
-        }
-      }
+          description: 'Terminer 500 activités au total',
+        },
+      },
     },
     export: {
       csvHeaders: ['Date', 'Activité', 'Catégorie', 'Points', 'Terminé à'],
       filenameBackup: 'yourscore-sauvegarde-{{date}}.json',
-      filenameCsv: 'yourscore-completions-{{date}}.csv'
+      filenameCsv: 'yourscore-completions-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -1361,8 +1377,8 @@ const TRANSLATIONS = {
         activities: 'Activités',
         completions: 'Validations',
         scoreHistory: 'Historique du score',
-        achievements: 'Succès'
-      }
+        achievements: 'Succès',
+      },
     },
     errors: {
       activityNameRequired: 'Le nom de l’activité est obligatoire',
@@ -1381,7 +1397,8 @@ const TRANSLATIONS = {
       importStoreInvalid: 'Données invalides pour le store "{{store}}" : tableau attendu',
       importRecordInvalid: 'Enregistrement invalide à {{store}}[{{index}}] : objet attendu',
       importMissingField: 'Champ requis "{{field}}" manquant à {{store}}[{{index}}]',
-      importInvalidType: 'Type invalide pour "{{field}}" à {{store}}[{{index}}] : {{expected}} attendu',
+      importInvalidType:
+        'Type invalide pour "{{field}}" à {{store}}[{{index}}] : {{expected}} attendu',
       importTooManyRecords: 'Import dépasse la limite maximale ({{max}})',
       importFailed: 'Import échoué : {{error}}',
       importFileTooLarge: 'Le fichier d’import est trop volumineux',
@@ -1389,19 +1406,20 @@ const TRANSLATIONS = {
       importReadFailed: 'Impossible de lire le fichier : {{error}}',
       importNoFile: 'Aucun fichier fourni',
       importInvalidFileType: 'Type de fichier invalide : .json attendu',
-      fileReadFailed: 'Impossible de lire le fichier'
-    }
+      fileReadFailed: 'Impossible de lire le fichier',
+    },
   },
   it: {
     app: {
       name: 'YourScore',
-      description: 'Monitoraggio quotidiano delle abitudini gamificato tramite un sistema di punteggio'
+      description:
+        'Monitoraggio quotidiano delle abitudini gamificato tramite un sistema di punteggio',
     },
     common: {
       skipToContent: 'Vai al contenuto',
       uncategorized: 'Senza categoria',
       unknown: 'Sconosciuto',
-      comingSoon: 'In arrivo.'
+      comingSoon: 'In arrivo.',
     },
     nav: {
       primaryLabel: 'Principale',
@@ -1409,28 +1427,28 @@ const TRANSLATIONS = {
       activities: 'Attività',
       categories: 'Categorie',
       stats: 'Statistiche',
-      settings: 'Impostazioni'
+      settings: 'Impostazioni',
     },
     install: {
       prompt: 'Installa YourScore per un accesso rapido.',
       install: 'Installa',
-      dismiss: 'Non ora'
+      dismiss: 'Non ora',
     },
     units: {
       pointsShort: 'pt',
-      pointsLong: { one: 'punto', other: 'punti' }
+      pointsLong: { one: 'punto', other: 'punti' },
     },
     date: {
       today: 'Oggi',
       yesterday: 'Ieri',
       daysAgo: { one: '{{count}} giorno fa', other: '{{count}} giorni fa' },
       completedAt: 'Completato alle {{time}}',
-      unlockedOn: 'Sbloccato il {{date}}'
+      unlockedOn: 'Sbloccato il {{date}}',
     },
     score: {
       mainLabel: 'Punteggio principale',
       todayLabel: 'Oggi',
-      decayLabel: 'Decadimento'
+      decayLabel: 'Decadimento',
     },
     daily: {
       emptyTitle: 'Nessuna attività ancora',
@@ -1439,7 +1457,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: 'Mancano {{points}} {{pointsLabel}} per il pareggio.',
       breakEvenProgressLabel: 'Progresso del pareggio',
       breakEvenAchievedAria: 'Pareggio raggiunto',
-      breakEvenRemainingAria: '{{points}} {{pointsLabel}} rimanenti'
+      breakEvenRemainingAria: '{{points}} {{pointsLabel}} rimanenti',
     },
     decay: {
       firstDayWelcome: 'Benvenuto! Nessun decadimento il primo giorno.',
@@ -1447,11 +1465,12 @@ const TRANSLATIONS = {
       alreadyActive: 'Già attivo oggi, nessun decadimento aggiuntivo.',
       noneNeeded: 'Nessun decadimento necessario.',
       appliedSingle: 'Applicato un decadimento giornaliero di {{points}} {{pointsLabel}}.',
-      appliedMultiple: '{{days}} giorni di assenza: applicato un decadimento di {{points}} {{pointsLabel}}.',
+      appliedMultiple:
+        '{{days}} giorni di assenza: applicato un decadimento di {{points}} {{pointsLabel}}.',
       previewFirstDay: 'Primo giorno - nessun decadimento',
       previewAlreadyActive: 'Già attivo oggi',
-      previewDaysAway: '{{days}} giorni dall\'ultima attività',
-      previewNone: 'Nessun decadimento necessario'
+      previewDaysAway: "{{days}} giorni dall'ultima attività",
+      previewNone: 'Nessun decadimento necessario',
     },
     celebrations: {
       continue: 'Continua',
@@ -1462,7 +1481,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: 'Settimana perfetta!',
       perfectWeekSubtitle: 'Hai completato tutte le attività per 7 giorni di fila!',
       recoveryTitle: 'Ritorno completato!',
-      recoverySubtitle: 'Sei tornato da negativo a positivo!'
+      recoverySubtitle: 'Sei tornato da negativo a positivo!',
     },
     toasts: {
       activityUndone: 'Annullato {{name}}',
@@ -1481,7 +1500,7 @@ const TRANSLATIONS = {
       importSuccess: 'Dati importati con successo',
       importFailed: 'Importazione non riuscita',
       resetSuccess: 'Tutti i dati sono stati ripristinati',
-      resetFailed: 'Ripristino non riuscito: {{error}}'
+      resetFailed: 'Ripristino non riuscito: {{error}}',
     },
     activities: {
       title: 'Attività',
@@ -1496,29 +1515,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Categoria',
         addButton: 'Aggiungi attività',
         saveButton: 'Salva modifiche',
-        cancelButton: 'Annulla'
+        cancelButton: 'Annulla',
       },
       sections: {
         activeTitle: 'Attive',
         activeSubtitle: 'Tocca un’attività per modificarla o archiviarla.',
         archivedTitle: 'Archiviate',
-        archivedSubtitle: 'Attività nascoste conservate per lo storico.'
+        archivedSubtitle: 'Attività nascoste conservate per lo storico.',
       },
       empty: {
         noActivitiesTitle: 'Nessuna attività ancora',
         noActivitiesMessage: 'Aggiungi un’attività sopra per iniziare.',
         noArchivedTitle: 'Nessuna attività archiviata',
-        noArchivedMessage: 'Le attività archiviate appariranno qui.'
+        noArchivedMessage: 'Le attività archiviate appariranno qui.',
       },
       row: {
         edit: 'Modifica',
         archive: 'Archivia',
-        restore: 'Ripristina'
+        restore: 'Ripristina',
       },
       errors: {
         nameRequired: 'Il nome dell’attività è obbligatorio.',
-        pointsPositive: 'I punti devono essere un numero positivo.'
-      }
+        pointsPositive: 'I punti devono essere un numero positivo.',
+      },
     },
     categories: {
       title: 'Categorie',
@@ -1530,22 +1549,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'es. Focus',
         addButton: 'Aggiungi categoria',
         saveButton: 'Salva modifiche',
-        cancelButton: 'Annulla'
+        cancelButton: 'Annulla',
       },
       list: {
         title: 'Categorie',
-        subtitle: 'Trascina per riordinare o usa le frecce.'
+        subtitle: 'Trascina per riordinare o usa le frecce.',
       },
       row: {
         alwaysAvailable: 'Sempre disponibile',
         up: 'Su',
         down: 'Giù',
         edit: 'Modifica',
-        delete: 'Elimina'
+        delete: 'Elimina',
       },
       errors: {
-        nameRequired: 'Il nome della categoria è obbligatorio.'
-      }
+        nameRequired: 'Il nome della categoria è obbligatorio.',
+      },
     },
     settings: {
       title: 'Impostazioni',
@@ -1553,7 +1572,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Punteggio e decadimento',
         appearance: 'Aspetto',
-        data: 'Gestione dati'
+        data: 'Gestione dati',
       },
       fields: {
         dailyDecay: 'Decadimento giornaliero',
@@ -1563,12 +1582,12 @@ const TRANSLATIONS = {
         themeDark: 'Scuro',
         uiScale: 'Scala UI',
         language: 'Lingua',
-        languageAuto: 'Auto (browser)'
+        languageAuto: 'Auto (browser)',
       },
       saveButton: 'Salva impostazioni',
       errors: {
         decayNonNegative: 'Il decadimento deve essere 0 o maggiore.',
-        mainScoreNumber: 'Il punteggio principale deve essere un numero.'
+        mainScoreNumber: 'Il punteggio principale deve essere un numero.',
       },
       data: {
         exportTitle: 'Esporta',
@@ -1581,18 +1600,20 @@ const TRANSLATIONS = {
         importJson: 'Importa JSON',
         resetTitle: 'Reimposta dati',
         resetDescription: 'Elimina definitivamente tutti i dati. Non può essere annullato.',
-        resetButton: 'Reimposta tutti i dati'
+        resetButton: 'Reimposta tutti i dati',
       },
       import: {
         importing: 'Importazione...',
         success: 'Importazione riuscita! {{summary}}',
         noRecords: 'Nessun record importato',
-        countItem: '{{store}}: {{count}}'
+        countItem: '{{store}}: {{count}}',
       },
       confirm: {
-        resetPrimary: 'Sei sicuro di voler eliminare TUTTI i dati?\n\nInclude attività, completamenti, storico punteggio e impostazioni.\n\nQuesta azione NON può essere annullata!',
-        resetSecondary: 'Conferma di nuovo.\n\nTutti i dati di YourScore verranno eliminati definitivamente.'
-      }
+        resetPrimary:
+          'Sei sicuro di voler eliminare TUTTI i dati?\n\nInclude attività, completamenti, storico punteggio e impostazioni.\n\nQuesta azione NON può essere annullata!',
+        resetSecondary:
+          'Conferma di nuovo.\n\nTutti i dati di YourScore verranno eliminati definitivamente.',
+      },
     },
     dashboard: {
       title: 'Statistiche',
@@ -1601,7 +1622,7 @@ const TRANSLATIONS = {
         current: 'Punteggio attuale',
         highest: 'Massimo',
         lowest: 'Minimo',
-        daysActive: 'Giorni attivi'
+        daysActive: 'Giorni attivi',
       },
       todayProgress: 'Progressi di oggi',
       progress: {
@@ -1613,7 +1634,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '{{count}} rimasti',
         activitiesLabel: 'Attività',
         activitiesAria: 'Completamento attività',
-        percentComplete: '{{percent}}% completato'
+        percentComplete: '{{percent}}% completato',
       },
       streaksTitle: 'Serie',
       streaks: {
@@ -1622,7 +1643,7 @@ const TRANSLATIONS = {
         perfectDays: 'Giorni perfetti',
         perfectHint: 'Tutte le attività completate',
         activeDays: 'Giorni attivi',
-        activeHint: 'Almeno 1 attività'
+        activeHint: 'Almeno 1 attività',
       },
       activityStatsTitle: 'Statistiche attività ({{days}} giorni)',
       activityStatsEmpty: 'Nessuna attività ancora. Aggiungi attività per vedere le statistiche.',
@@ -1630,74 +1651,74 @@ const TRANSLATIONS = {
         mostCompleted: 'Più completate',
         leastCompleted: 'Meno completate',
         notCompletedYet: 'Non ancora completate',
-        more: '+{{count}} in più'
+        more: '+{{count}} in più',
       },
       achievementsTitle: 'Obiettivi',
       achievementsUnlocked: 'sbloccati',
       achievementsRecent: 'Sbloccati di recente',
-      achievementsNext: 'Prossimi obiettivi'
+      achievementsNext: 'Prossimi obiettivi',
     },
     achievements: {
       notificationTitle: 'Obiettivo sbloccato!',
       list: {
         score_100: {
           name: 'Cento',
-          description: 'Raggiungi 100 punti'
+          description: 'Raggiungi 100 punti',
         },
         score_500: {
           name: 'Alto rendimento',
-          description: 'Raggiungi 500 punti'
+          description: 'Raggiungi 500 punti',
         },
         score_1000: {
           name: 'Club dei mille',
-          description: 'Raggiungi 1.000 punti'
+          description: 'Raggiungi 1.000 punti',
         },
         streak_3: {
           name: 'Si parte',
-          description: 'Completa 3 giorni riusciti di fila'
+          description: 'Completa 3 giorni riusciti di fila',
         },
         streak_7: {
           name: 'Guerriero settimanale',
-          description: 'Completa 7 giorni riusciti di fila'
+          description: 'Completa 7 giorni riusciti di fila',
         },
         streak_14: {
           name: 'Combattente quindicinale',
-          description: 'Completa 14 giorni riusciti di fila'
+          description: 'Completa 14 giorni riusciti di fila',
         },
         streak_30: {
           name: 'Maestro mensile',
-          description: 'Completa 30 giorni riusciti di fila'
+          description: 'Completa 30 giorni riusciti di fila',
         },
         perfect_week: {
           name: 'Settimana perfetta',
-          description: 'Completa tutte le attività per 7 giorni consecutivi'
+          description: 'Completa tutte le attività per 7 giorni consecutivi',
         },
         recovery: {
           name: 'Ritorno',
-          description: 'Recupera da un punteggio negativo a positivo'
+          description: 'Recupera da un punteggio negativo a positivo',
         },
         first_completion: {
           name: 'Primo passo',
-          description: 'Completa la tua prima attività'
+          description: 'Completa la tua prima attività',
         },
         activities_50: {
           name: 'Mezza centinaia',
-          description: 'Completa 50 attività in totale'
+          description: 'Completa 50 attività in totale',
         },
         activities_100: {
           name: 'Centurione delle attività',
-          description: 'Completa 100 attività in totale'
+          description: 'Completa 100 attività in totale',
         },
         activities_500: {
           name: 'Eroe delle abitudini',
-          description: 'Completa 500 attività in totale'
-        }
-      }
+          description: 'Completa 500 attività in totale',
+        },
+      },
     },
     export: {
       csvHeaders: ['Data', 'Attività', 'Categoria', 'Punti', 'Completato alle'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-completamenti-{{date}}.csv'
+      filenameCsv: 'yourscore-completamenti-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -1706,8 +1727,8 @@ const TRANSLATIONS = {
         activities: 'Attività',
         completions: 'Completamenti',
         scoreHistory: 'Storico punteggio',
-        achievements: 'Obiettivi'
-      }
+        achievements: 'Obiettivi',
+      },
     },
     errors: {
       activityNameRequired: 'Il nome dell’attività è obbligatorio',
@@ -1720,13 +1741,15 @@ const TRANSLATIONS = {
       completionAlready: 'Attività già completata per questa data',
       decayNegative: 'Il decadimento non può essere negativo',
       importInvalidFormat: 'Formato dati non valido: atteso un oggetto',
-      importInvalidApp: 'Identificatore app non valido: atteso "{{expected}}", ottenuto "{{actual}}"',
+      importInvalidApp:
+        'Identificatore app non valido: atteso "{{expected}}", ottenuto "{{actual}}"',
       importInvalidVersion: 'Numero di versione non valido o mancante',
       importMissingData: 'Sezione dati mancante o non valida',
       importStoreInvalid: 'Dati non validi per lo store "{{store}}": atteso array',
       importRecordInvalid: 'Record non valido in {{store}}[{{index}}]: atteso oggetto',
       importMissingField: 'Campo obbligatorio "{{field}}" mancante in {{store}}[{{index}}]',
-      importInvalidType: 'Tipo non valido per "{{field}}" in {{store}}[{{index}}]: atteso {{expected}}',
+      importInvalidType:
+        'Tipo non valido per "{{field}}" in {{store}}[{{index}}]: atteso {{expected}}',
       importTooManyRecords: 'Importazione supera il limite massimo ({{max}})',
       importFailed: 'Importazione fallita: {{error}}',
       importFileTooLarge: 'Il file di importazione è troppo grande',
@@ -1734,19 +1757,19 @@ const TRANSLATIONS = {
       importReadFailed: 'Impossibile leggere il file: {{error}}',
       importNoFile: 'Nessun file fornito',
       importInvalidFileType: 'Tipo di file non valido: atteso .json',
-      fileReadFailed: 'Impossibile leggere il file'
-    }
+      fileReadFailed: 'Impossibile leggere il file',
+    },
   },
   ru: {
     app: {
       name: 'YourScore',
-      description: 'Геймифицированное ежедневное отслеживание привычек с системой очков'
+      description: 'Геймифицированное ежедневное отслеживание привычек с системой очков',
     },
     common: {
       skipToContent: 'Перейти к содержимому',
       uncategorized: 'Без категории',
       unknown: 'Неизвестно',
-      comingSoon: 'Скоро.'
+      comingSoon: 'Скоро.',
     },
     nav: {
       primaryLabel: 'Основная',
@@ -1754,28 +1777,33 @@ const TRANSLATIONS = {
       activities: 'Активности',
       categories: 'Категории',
       stats: 'Статистика',
-      settings: 'Настройки'
+      settings: 'Настройки',
     },
     install: {
       prompt: 'Установите YourScore для быстрого доступа.',
       install: 'Установить',
-      dismiss: 'Не сейчас'
+      dismiss: 'Не сейчас',
     },
     units: {
       pointsShort: 'очк.',
-      pointsLong: { one: 'очко', few: 'очка', many: 'очков', other: 'очков' }
+      pointsLong: { one: 'очко', few: 'очка', many: 'очков', other: 'очков' },
     },
     date: {
       today: 'Сегодня',
       yesterday: 'Вчера',
-      daysAgo: { one: '{{count}} день назад', few: '{{count}} дня назад', many: '{{count}} дней назад', other: '{{count}} дня назад' },
+      daysAgo: {
+        one: '{{count}} день назад',
+        few: '{{count}} дня назад',
+        many: '{{count}} дней назад',
+        other: '{{count}} дня назад',
+      },
       completedAt: 'Выполнено в {{time}}',
-      unlockedOn: 'Открыто {{date}}'
+      unlockedOn: 'Открыто {{date}}',
     },
     score: {
       mainLabel: 'Основной счет',
       todayLabel: 'Сегодня',
-      decayLabel: 'Убыль'
+      decayLabel: 'Убыль',
     },
     daily: {
       emptyTitle: 'Пока нет активностей',
@@ -1784,7 +1812,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: 'Нужно {{points}} {{pointsLabel}} для баланса.',
       breakEvenProgressLabel: 'Прогресс баланса',
       breakEvenAchievedAria: 'Баланс достигнут',
-      breakEvenRemainingAria: 'Осталось {{points}} {{pointsLabel}}'
+      breakEvenRemainingAria: 'Осталось {{points}} {{pointsLabel}}',
     },
     decay: {
       firstDayWelcome: 'Добро пожаловать! В первый день убыль не применяется.',
@@ -1796,7 +1824,7 @@ const TRANSLATIONS = {
       previewFirstDay: 'Первый день — убыль не применяется',
       previewAlreadyActive: 'Сегодня уже были активны',
       previewDaysAway: '{{days}} дней с последней активности',
-      previewNone: 'Убыль не требуется'
+      previewNone: 'Убыль не требуется',
     },
     celebrations: {
       continue: 'Продолжить',
@@ -1807,7 +1835,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: 'Идеальная неделя!',
       perfectWeekSubtitle: 'Вы завершили все активности 7 дней подряд!',
       recoveryTitle: 'Возвращение завершено!',
-      recoverySubtitle: 'Вы вернулись из минуса в плюс!'
+      recoverySubtitle: 'Вы вернулись из минуса в плюс!',
     },
     toasts: {
       activityUndone: 'Отменено: {{name}}',
@@ -1826,7 +1854,7 @@ const TRANSLATIONS = {
       importSuccess: 'Данные успешно импортированы',
       importFailed: 'Ошибка импорта',
       resetSuccess: 'Все данные сброшены',
-      resetFailed: 'Сброс не удался: {{error}}'
+      resetFailed: 'Сброс не удался: {{error}}',
     },
     activities: {
       title: 'Активности',
@@ -1841,29 +1869,29 @@ const TRANSLATIONS = {
         categoryLabel: 'Категория',
         addButton: 'Добавить активность',
         saveButton: 'Сохранить изменения',
-        cancelButton: 'Отмена'
+        cancelButton: 'Отмена',
       },
       sections: {
         activeTitle: 'Активные',
         activeSubtitle: 'Нажмите на активность, чтобы изменить или архивировать.',
         archivedTitle: 'Архив',
-        archivedSubtitle: 'Скрытые активности для истории.'
+        archivedSubtitle: 'Скрытые активности для истории.',
       },
       empty: {
         noActivitiesTitle: 'Пока нет активностей',
         noActivitiesMessage: 'Добавьте активность выше, чтобы начать.',
         noArchivedTitle: 'Нет архивных активностей',
-        noArchivedMessage: 'Архивные активности появятся здесь.'
+        noArchivedMessage: 'Архивные активности появятся здесь.',
       },
       row: {
         edit: 'Редактировать',
         archive: 'Архивировать',
-        restore: 'Восстановить'
+        restore: 'Восстановить',
       },
       errors: {
         nameRequired: 'Название активности обязательно.',
-        pointsPositive: 'Очки должны быть положительным числом.'
-      }
+        pointsPositive: 'Очки должны быть положительным числом.',
+      },
     },
     categories: {
       title: 'Категории',
@@ -1875,22 +1903,22 @@ const TRANSLATIONS = {
         namePlaceholder: 'например, Фокус',
         addButton: 'Добавить категорию',
         saveButton: 'Сохранить изменения',
-        cancelButton: 'Отмена'
+        cancelButton: 'Отмена',
       },
       list: {
         title: 'Категории',
-        subtitle: 'Перетаскивайте для сортировки или используйте стрелки.'
+        subtitle: 'Перетаскивайте для сортировки или используйте стрелки.',
       },
       row: {
         alwaysAvailable: 'Всегда доступна',
         up: 'Вверх',
         down: 'Вниз',
         edit: 'Редактировать',
-        delete: 'Удалить'
+        delete: 'Удалить',
       },
       errors: {
-        nameRequired: 'Название категории обязательно.'
-      }
+        nameRequired: 'Название категории обязательно.',
+      },
     },
     settings: {
       title: 'Настройки',
@@ -1898,7 +1926,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'Счет и убыль',
         appearance: 'Внешний вид',
-        data: 'Управление данными'
+        data: 'Управление данными',
       },
       fields: {
         dailyDecay: 'Ежедневная убыль',
@@ -1908,12 +1936,12 @@ const TRANSLATIONS = {
         themeDark: 'Темная',
         uiScale: 'Масштаб интерфейса',
         language: 'Язык',
-        languageAuto: 'Авто (браузер)'
+        languageAuto: 'Авто (браузер)',
       },
       saveButton: 'Сохранить настройки',
       errors: {
         decayNonNegative: 'Убыль должна быть 0 или больше.',
-        mainScoreNumber: 'Основной счет должен быть числом.'
+        mainScoreNumber: 'Основной счет должен быть числом.',
       },
       data: {
         exportTitle: 'Экспорт',
@@ -1926,18 +1954,19 @@ const TRANSLATIONS = {
         importJson: 'Импорт JSON',
         resetTitle: 'Сброс данных',
         resetDescription: 'Полностью удаляет все данные. Это нельзя отменить.',
-        resetButton: 'Сбросить все данные'
+        resetButton: 'Сбросить все данные',
       },
       import: {
         importing: 'Импорт...',
         success: 'Импорт выполнен! {{summary}}',
         noRecords: 'Нет импортированных записей',
-        countItem: '{{store}}: {{count}}'
+        countItem: '{{store}}: {{count}}',
       },
       confirm: {
-        resetPrimary: 'Вы уверены, что хотите удалить ВСЕ данные?\n\nЭто включает активности, выполнения, историю и настройки.\n\nДействие НЕОБРАТИМО!',
-        resetSecondary: 'Пожалуйста, подтвердите еще раз.\n\nВсе данные YourScore будут удалены.'
-      }
+        resetPrimary:
+          'Вы уверены, что хотите удалить ВСЕ данные?\n\nЭто включает активности, выполнения, историю и настройки.\n\nДействие НЕОБРАТИМО!',
+        resetSecondary: 'Пожалуйста, подтвердите еще раз.\n\nВсе данные YourScore будут удалены.',
+      },
     },
     dashboard: {
       title: 'Статистика',
@@ -1946,7 +1975,7 @@ const TRANSLATIONS = {
         current: 'Текущий счет',
         highest: 'Максимум',
         lowest: 'Минимум',
-        daysActive: 'Активных дней'
+        daysActive: 'Активных дней',
       },
       todayProgress: 'Прогресс за сегодня',
       progress: {
@@ -1958,7 +1987,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: 'Осталось {{count}}',
         activitiesLabel: 'Активности',
         activitiesAria: 'Выполнение активностей',
-        percentComplete: '{{percent}}% выполнено'
+        percentComplete: '{{percent}}% выполнено',
       },
       streaksTitle: 'Серии',
       streaks: {
@@ -1967,7 +1996,7 @@ const TRANSLATIONS = {
         perfectDays: 'Идеальные дни',
         perfectHint: 'Все активности выполнены',
         activeDays: 'Активные дни',
-        activeHint: 'Минимум 1 активность'
+        activeHint: 'Минимум 1 активность',
       },
       activityStatsTitle: 'Статистика активностей ({{days}} дней)',
       activityStatsEmpty: 'Пока нет активностей. Добавьте активности, чтобы увидеть статистику.',
@@ -1975,74 +2004,74 @@ const TRANSLATIONS = {
         mostCompleted: 'Чаще всего выполнены',
         leastCompleted: 'Реже всего выполнены',
         notCompletedYet: 'Пока не выполнены',
-        more: '+{{count}} еще'
+        more: '+{{count}} еще',
       },
       achievementsTitle: 'Достижения',
       achievementsUnlocked: 'открыто',
       achievementsRecent: 'Недавно открыты',
-      achievementsNext: 'Следующие цели'
+      achievementsNext: 'Следующие цели',
     },
     achievements: {
       notificationTitle: 'Достижение открыто!',
       list: {
         score_100: {
           name: 'Сотня',
-          description: 'Наберите 100 очков'
+          description: 'Наберите 100 очков',
         },
         score_500: {
           name: 'Высокий уровень',
-          description: 'Наберите 500 очков'
+          description: 'Наберите 500 очков',
         },
         score_1000: {
           name: 'Клуб тысячи',
-          description: 'Наберите 1 000 очков'
+          description: 'Наберите 1 000 очков',
         },
         streak_3: {
           name: 'Старт',
-          description: '3 успешных дня подряд'
+          description: '3 успешных дня подряд',
         },
         streak_7: {
           name: 'Воин недели',
-          description: '7 успешных дней подряд'
+          description: '7 успешных дней подряд',
         },
         streak_14: {
           name: 'Боец двух недель',
-          description: '14 успешных дней подряд'
+          description: '14 успешных дней подряд',
         },
         streak_30: {
           name: 'Мастер месяца',
-          description: '30 успешных дней подряд'
+          description: '30 успешных дней подряд',
         },
         perfect_week: {
           name: 'Идеальная неделя',
-          description: 'Все активности 7 дней подряд'
+          description: 'Все активности 7 дней подряд',
         },
         recovery: {
           name: 'Возвращение',
-          description: 'Вернуться из минуса в плюс'
+          description: 'Вернуться из минуса в плюс',
         },
         first_completion: {
           name: 'Первый шаг',
-          description: 'Выполнить первую активность'
+          description: 'Выполнить первую активность',
         },
         activities_50: {
           name: 'Полсотни',
-          description: 'Выполнить 50 активностей всего'
+          description: 'Выполнить 50 активностей всего',
         },
         activities_100: {
           name: 'Активный центурион',
-          description: 'Выполнить 100 активностей всего'
+          description: 'Выполнить 100 активностей всего',
         },
         activities_500: {
           name: 'Герой привычек',
-          description: 'Выполнить 500 активностей всего'
-        }
-      }
+          description: 'Выполнить 500 активностей всего',
+        },
+      },
     },
     export: {
       csvHeaders: ['Дата', 'Активность', 'Категория', 'Очки', 'Выполнено в'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-activity-{{date}}.csv'
+      filenameCsv: 'yourscore-activity-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -2051,8 +2080,8 @@ const TRANSLATIONS = {
         activities: 'Активности',
         completions: 'Выполнения',
         scoreHistory: 'История счета',
-        achievements: 'Достижения'
-      }
+        achievements: 'Достижения',
+      },
     },
     errors: {
       activityNameRequired: 'Название активности обязательно',
@@ -2065,13 +2094,15 @@ const TRANSLATIONS = {
       completionAlready: 'Активность уже выполнена на эту дату',
       decayNegative: 'Убыль не может быть отрицательной',
       importInvalidFormat: 'Неверный формат данных: ожидается объект',
-      importInvalidApp: 'Неверный идентификатор приложения: ожидалось "{{expected}}", получено "{{actual}}"',
+      importInvalidApp:
+        'Неверный идентификатор приложения: ожидалось "{{expected}}", получено "{{actual}}"',
       importInvalidVersion: 'Неверная или отсутствующая версия',
       importMissingData: 'Отсутствует или неверный раздел данных',
       importStoreInvalid: 'Неверные данные для хранилища "{{store}}": ожидается массив',
       importRecordInvalid: 'Неверная запись {{store}}[{{index}}]: ожидается объект',
       importMissingField: 'Отсутствует обязательное поле "{{field}}" в {{store}}[{{index}}]',
-      importInvalidType: 'Неверный тип для "{{field}}" в {{store}}[{{index}}]: ожидается {{expected}}',
+      importInvalidType:
+        'Неверный тип для "{{field}}" в {{store}}[{{index}}]: ожидается {{expected}}',
       importTooManyRecords: 'Импорт превышает лимит ({{max}})',
       importFailed: 'Импорт не удался: {{error}}',
       importFileTooLarge: 'Файл импорта слишком большой',
@@ -2079,19 +2110,19 @@ const TRANSLATIONS = {
       importReadFailed: 'Не удалось прочитать файл: {{error}}',
       importNoFile: 'Файл не выбран',
       importInvalidFileType: 'Неверный тип файла: ожидается .json',
-      fileReadFailed: 'Не удалось прочитать файл'
-    }
+      fileReadFailed: 'Не удалось прочитать файл',
+    },
   },
   'zh-CN': {
     app: {
       name: 'YourScore',
-      description: '通过积分系统进行游戏化的每日习惯追踪'
+      description: '通过积分系统进行游戏化的每日习惯追踪',
     },
     common: {
       skipToContent: '跳到内容',
       uncategorized: '未分类',
       unknown: '未知',
-      comingSoon: '即将推出。'
+      comingSoon: '即将推出。',
     },
     nav: {
       primaryLabel: '主导航',
@@ -2099,28 +2130,28 @@ const TRANSLATIONS = {
       activities: '活动',
       categories: '分类',
       stats: '统计',
-      settings: '设置'
+      settings: '设置',
     },
     install: {
       prompt: '安装 YourScore 以便快速访问。',
       install: '安装',
-      dismiss: '暂不'
+      dismiss: '暂不',
     },
     units: {
       pointsShort: '分',
-      pointsLong: { other: '分' }
+      pointsLong: { other: '分' },
     },
     date: {
       today: '今天',
       yesterday: '昨天',
       daysAgo: { other: '{{count}}天前' },
       completedAt: '完成于 {{time}}',
-      unlockedOn: '解锁于 {{date}}'
+      unlockedOn: '解锁于 {{date}}',
     },
     score: {
       mainLabel: '主积分',
       todayLabel: '今天',
-      decayLabel: '衰减'
+      decayLabel: '衰减',
     },
     daily: {
       emptyTitle: '暂无活动',
@@ -2129,7 +2160,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: '还需 {{points}}{{pointsLabel}} 才能持平。',
       breakEvenProgressLabel: '持平进度',
       breakEvenAchievedAria: '已持平',
-      breakEvenRemainingAria: '还剩 {{points}}{{pointsLabel}}'
+      breakEvenRemainingAria: '还剩 {{points}}{{pointsLabel}}',
     },
     decay: {
       firstDayWelcome: '欢迎！首次使用不扣减。',
@@ -2141,7 +2172,7 @@ const TRANSLATIONS = {
       previewFirstDay: '首日：不扣减',
       previewAlreadyActive: '今天已使用',
       previewDaysAway: '距上次使用 {{days}} 天',
-      previewNone: '无需扣减'
+      previewNone: '无需扣减',
     },
     celebrations: {
       continue: '继续',
@@ -2152,7 +2183,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: '完美一周！',
       perfectWeekSubtitle: '连续 7 天完成了所有活动！',
       recoveryTitle: '回归完成！',
-      recoverySubtitle: '你从负分恢复到了正分！'
+      recoverySubtitle: '你从负分恢复到了正分！',
     },
     toasts: {
       activityUndone: '已撤销 {{name}}',
@@ -2171,7 +2202,7 @@ const TRANSLATIONS = {
       importSuccess: '数据导入成功',
       importFailed: '导入失败',
       resetSuccess: '所有数据已重置',
-      resetFailed: '重置失败：{{error}}'
+      resetFailed: '重置失败：{{error}}',
     },
     activities: {
       title: '活动',
@@ -2186,29 +2217,29 @@ const TRANSLATIONS = {
         categoryLabel: '分类',
         addButton: '添加活动',
         saveButton: '保存更改',
-        cancelButton: '取消'
+        cancelButton: '取消',
       },
       sections: {
         activeTitle: '进行中',
         activeSubtitle: '点击活动可编辑或归档。',
         archivedTitle: '已归档',
-        archivedSubtitle: '为历史保留的隐藏活动。'
+        archivedSubtitle: '为历史保留的隐藏活动。',
       },
       empty: {
         noActivitiesTitle: '暂无活动',
         noActivitiesMessage: '在上方添加活动以开始。',
         noArchivedTitle: '暂无归档活动',
-        noArchivedMessage: '归档活动会显示在这里。'
+        noArchivedMessage: '归档活动会显示在这里。',
       },
       row: {
         edit: '编辑',
         archive: '归档',
-        restore: '恢复'
+        restore: '恢复',
       },
       errors: {
         nameRequired: '活动名称为必填项。',
-        pointsPositive: '积分必须为正数。'
-      }
+        pointsPositive: '积分必须为正数。',
+      },
     },
     categories: {
       title: '分类',
@@ -2220,22 +2251,22 @@ const TRANSLATIONS = {
         namePlaceholder: '例如：专注',
         addButton: '添加分类',
         saveButton: '保存更改',
-        cancelButton: '取消'
+        cancelButton: '取消',
       },
       list: {
         title: '分类',
-        subtitle: '拖拽排序或使用箭头。'
+        subtitle: '拖拽排序或使用箭头。',
       },
       row: {
         alwaysAvailable: '始终可用',
         up: '上移',
         down: '下移',
         edit: '编辑',
-        delete: '删除'
+        delete: '删除',
       },
       errors: {
-        nameRequired: '分类名称为必填项。'
-      }
+        nameRequired: '分类名称为必填项。',
+      },
     },
     settings: {
       title: '设置',
@@ -2243,7 +2274,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: '积分与衰减',
         appearance: '外观',
-        data: '数据管理'
+        data: '数据管理',
       },
       fields: {
         dailyDecay: '每日衰减',
@@ -2253,12 +2284,12 @@ const TRANSLATIONS = {
         themeDark: '深色',
         uiScale: '界面缩放',
         language: '语言',
-        languageAuto: '自动（浏览器）'
+        languageAuto: '自动（浏览器）',
       },
       saveButton: '保存设置',
       errors: {
         decayNonNegative: '衰减必须大于或等于 0。',
-        mainScoreNumber: '主积分必须为数字。'
+        mainScoreNumber: '主积分必须为数字。',
       },
       data: {
         exportTitle: '导出',
@@ -2271,18 +2302,19 @@ const TRANSLATIONS = {
         importJson: '导入 JSON',
         resetTitle: '重置数据',
         resetDescription: '永久删除所有数据，无法撤销。',
-        resetButton: '重置所有数据'
+        resetButton: '重置所有数据',
       },
       import: {
         importing: '正在导入...',
         success: '导入成功！{{summary}}',
         noRecords: '未导入任何记录',
-        countItem: '{{store}}：{{count}}'
+        countItem: '{{store}}：{{count}}',
       },
       confirm: {
-        resetPrimary: '确定要删除所有数据吗？\n\n包括所有活动、完成记录、积分历史和设置。\n\n此操作无法撤销！',
-        resetSecondary: '请再次确认。\n\n所有 YourScore 数据将被永久删除。'
-      }
+        resetPrimary:
+          '确定要删除所有数据吗？\n\n包括所有活动、完成记录、积分历史和设置。\n\n此操作无法撤销！',
+        resetSecondary: '请再次确认。\n\n所有 YourScore 数据将被永久删除。',
+      },
     },
     dashboard: {
       title: '统计',
@@ -2291,7 +2323,7 @@ const TRANSLATIONS = {
         current: '当前积分',
         highest: '最高',
         lowest: '最低',
-        daysActive: '活跃天数'
+        daysActive: '活跃天数',
       },
       todayProgress: '今日进度',
       progress: {
@@ -2303,7 +2335,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '剩余 {{count}}',
         activitiesLabel: '活动',
         activitiesAria: '活动完成度',
-        percentComplete: '{{percent}}% 完成'
+        percentComplete: '{{percent}}% 完成',
       },
       streaksTitle: '连胜',
       streaks: {
@@ -2312,7 +2344,7 @@ const TRANSLATIONS = {
         perfectDays: '完美天数',
         perfectHint: '完成所有活动',
         activeDays: '活跃天数',
-        activeHint: '至少 1 项活动'
+        activeHint: '至少 1 项活动',
       },
       activityStatsTitle: '活动统计（{{days}} 天）',
       activityStatsEmpty: '暂无活动。添加活动以查看统计。',
@@ -2320,74 +2352,74 @@ const TRANSLATIONS = {
         mostCompleted: '完成最多',
         leastCompleted: '完成最少',
         notCompletedYet: '尚未完成',
-        more: '+{{count}} 更多'
+        more: '+{{count}} 更多',
       },
       achievementsTitle: '成就',
       achievementsUnlocked: '已解锁',
       achievementsRecent: '最近解锁',
-      achievementsNext: '下一目标'
+      achievementsNext: '下一目标',
     },
     achievements: {
       notificationTitle: '成就已解锁！',
       list: {
         score_100: {
           name: '一百达成',
-          description: '达到 100 分'
+          description: '达到 100 分',
         },
         score_500: {
           name: '高分达人',
-          description: '达到 500 分'
+          description: '达到 500 分',
         },
         score_1000: {
           name: '千分俱乐部',
-          description: '达到 1,000 分'
+          description: '达到 1,000 分',
         },
         streak_3: {
           name: '起步',
-          description: '连续 3 天成功'
+          description: '连续 3 天成功',
         },
         streak_7: {
           name: '一周战士',
-          description: '连续 7 天成功'
+          description: '连续 7 天成功',
         },
         streak_14: {
           name: '两周斗士',
-          description: '连续 14 天成功'
+          description: '连续 14 天成功',
         },
         streak_30: {
           name: '月度大师',
-          description: '连续 30 天成功'
+          description: '连续 30 天成功',
         },
         perfect_week: {
           name: '完美一周',
-          description: '连续 7 天完成所有活动'
+          description: '连续 7 天完成所有活动',
         },
         recovery: {
           name: '强势回归',
-          description: '从负分恢复到正分'
+          description: '从负分恢复到正分',
         },
         first_completion: {
           name: '第一步',
-          description: '完成你的第一项活动'
+          description: '完成你的第一项活动',
         },
         activities_50: {
           name: '五十次',
-          description: '累计完成 50 次活动'
+          description: '累计完成 50 次活动',
         },
         activities_100: {
           name: '百次达人',
-          description: '累计完成 100 次活动'
+          description: '累计完成 100 次活动',
         },
         activities_500: {
           name: '习惯英雄',
-          description: '累计完成 500 次活动'
-        }
-      }
+          description: '累计完成 500 次活动',
+        },
+      },
     },
     export: {
       csvHeaders: ['日期', '活动', '分类', '积分', '完成时间'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-completions-{{date}}.csv'
+      filenameCsv: 'yourscore-completions-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -2396,8 +2428,8 @@ const TRANSLATIONS = {
         activities: '活动',
         completions: '完成记录',
         scoreHistory: '积分历史',
-        achievements: '成就'
-      }
+        achievements: '成就',
+      },
     },
     errors: {
       activityNameRequired: '活动名称为必填项',
@@ -2424,19 +2456,19 @@ const TRANSLATIONS = {
       importReadFailed: '无法读取文件：{{error}}',
       importNoFile: '未提供文件',
       importInvalidFileType: '文件类型无效：需要 .json',
-      fileReadFailed: '无法读取文件'
-    }
+      fileReadFailed: '无法读取文件',
+    },
   },
   ja: {
     app: {
       name: 'YourScore',
-      description: 'ポイント制で習慣をゲーム感覚で毎日記録'
+      description: 'ポイント制で習慣をゲーム感覚で毎日記録',
     },
     common: {
       skipToContent: 'コンテンツへスキップ',
       uncategorized: '未分類',
       unknown: '不明',
-      comingSoon: '近日公開。'
+      comingSoon: '近日公開。',
     },
     nav: {
       primaryLabel: 'メイン',
@@ -2444,28 +2476,28 @@ const TRANSLATIONS = {
       activities: 'アクティビティ',
       categories: 'カテゴリー',
       stats: '統計',
-      settings: '設定'
+      settings: '設定',
     },
     install: {
       prompt: 'YourScore をインストールして素早くアクセス。',
       install: 'インストール',
-      dismiss: '後で'
+      dismiss: '後で',
     },
     units: {
       pointsShort: '点',
-      pointsLong: { other: '点' }
+      pointsLong: { other: '点' },
     },
     date: {
       today: '今日',
       yesterday: '昨日',
       daysAgo: { other: '{{count}}日前' },
       completedAt: '{{time}}に完了',
-      unlockedOn: '{{date}}に解除'
+      unlockedOn: '{{date}}に解除',
     },
     score: {
       mainLabel: 'メインスコア',
       todayLabel: '今日',
-      decayLabel: '減衰'
+      decayLabel: '減衰',
     },
     daily: {
       emptyTitle: 'まだアクティビティがありません',
@@ -2474,7 +2506,7 @@ const TRANSLATIONS = {
       breakEvenRemaining: 'トントンまであと {{points}}{{pointsLabel}}。',
       breakEvenProgressLabel: 'トントン進捗',
       breakEvenAchievedAria: 'トントン達成',
-      breakEvenRemainingAria: '残り {{points}}{{pointsLabel}}'
+      breakEvenRemainingAria: '残り {{points}}{{pointsLabel}}',
     },
     decay: {
       firstDayWelcome: 'ようこそ！初日は減衰なし。',
@@ -2486,7 +2518,7 @@ const TRANSLATIONS = {
       previewFirstDay: '初日：減衰なし',
       previewAlreadyActive: '今日はすでに利用済み',
       previewDaysAway: '最終利用から {{days}} 日',
-      previewNone: '減衰は不要です'
+      previewNone: '減衰は不要です',
     },
     celebrations: {
       continue: '続ける',
@@ -2497,7 +2529,7 @@ const TRANSLATIONS = {
       perfectWeekTitle: 'パーフェクトウィーク！',
       perfectWeekSubtitle: '7日連続で全ての活動を完了しました！',
       recoveryTitle: 'カムバック完了！',
-      recoverySubtitle: 'マイナスからプラスに戻りました！'
+      recoverySubtitle: 'マイナスからプラスに戻りました！',
     },
     toasts: {
       activityUndone: '{{name}} を取り消しました',
@@ -2516,7 +2548,7 @@ const TRANSLATIONS = {
       importSuccess: 'データをインポートしました',
       importFailed: 'インポートに失敗しました',
       resetSuccess: 'すべてのデータをリセットしました',
-      resetFailed: 'リセットに失敗しました: {{error}}'
+      resetFailed: 'リセットに失敗しました: {{error}}',
     },
     activities: {
       title: 'アクティビティ',
@@ -2531,29 +2563,29 @@ const TRANSLATIONS = {
         categoryLabel: 'カテゴリー',
         addButton: 'アクティビティを追加',
         saveButton: '変更を保存',
-        cancelButton: 'キャンセル'
+        cancelButton: 'キャンセル',
       },
       sections: {
         activeTitle: 'アクティブ',
         activeSubtitle: 'タップして編集またはアーカイブ。',
         archivedTitle: 'アーカイブ',
-        archivedSubtitle: '履歴のために保持された非表示のアクティビティ。'
+        archivedSubtitle: '履歴のために保持された非表示のアクティビティ。',
       },
       empty: {
         noActivitiesTitle: 'まだアクティビティがありません',
         noActivitiesMessage: '上でアクティビティを追加してください。',
         noArchivedTitle: 'アーカイブ済みはありません',
-        noArchivedMessage: 'アーカイブ済みがここに表示されます。'
+        noArchivedMessage: 'アーカイブ済みがここに表示されます。',
       },
       row: {
         edit: '編集',
         archive: 'アーカイブ',
-        restore: '復元'
+        restore: '復元',
       },
       errors: {
         nameRequired: 'アクティビティ名は必須です。',
-        pointsPositive: 'ポイントは正の数である必要があります。'
-      }
+        pointsPositive: 'ポイントは正の数である必要があります。',
+      },
     },
     categories: {
       title: 'カテゴリー',
@@ -2565,22 +2597,22 @@ const TRANSLATIONS = {
         namePlaceholder: '例：集中',
         addButton: 'カテゴリーを追加',
         saveButton: '変更を保存',
-        cancelButton: 'キャンセル'
+        cancelButton: 'キャンセル',
       },
       list: {
         title: 'カテゴリー',
-        subtitle: 'ドラッグして並べ替えるか矢印を使用。'
+        subtitle: 'ドラッグして並べ替えるか矢印を使用。',
       },
       row: {
         alwaysAvailable: '常に利用可能',
         up: '上へ',
         down: '下へ',
         edit: '編集',
-        delete: '削除'
+        delete: '削除',
       },
       errors: {
-        nameRequired: 'カテゴリー名は必須です。'
-      }
+        nameRequired: 'カテゴリー名は必須です。',
+      },
     },
     settings: {
       title: '設定',
@@ -2588,7 +2620,7 @@ const TRANSLATIONS = {
       sections: {
         scoreDecay: 'スコアと減衰',
         appearance: '外観',
-        data: 'データ管理'
+        data: 'データ管理',
       },
       fields: {
         dailyDecay: '日次減衰',
@@ -2598,12 +2630,12 @@ const TRANSLATIONS = {
         themeDark: 'ダーク',
         uiScale: 'UIスケール',
         language: '言語',
-        languageAuto: '自動（ブラウザ）'
+        languageAuto: '自動（ブラウザ）',
       },
       saveButton: '設定を保存',
       errors: {
         decayNonNegative: '減衰は 0 以上である必要があります。',
-        mainScoreNumber: 'メインスコアは数値である必要があります。'
+        mainScoreNumber: 'メインスコアは数値である必要があります。',
       },
       data: {
         exportTitle: 'エクスポート',
@@ -2616,18 +2648,19 @@ const TRANSLATIONS = {
         importJson: 'JSON をインポート',
         resetTitle: 'データをリセット',
         resetDescription: 'すべてのデータを完全に削除します。元に戻せません。',
-        resetButton: 'すべてのデータをリセット'
+        resetButton: 'すべてのデータをリセット',
       },
       import: {
         importing: 'インポート中...',
         success: 'インポート成功！{{summary}}',
         noRecords: 'インポートされたレコードはありません',
-        countItem: '{{store}}：{{count}}'
+        countItem: '{{store}}：{{count}}',
       },
       confirm: {
-        resetPrimary: 'すべてのデータを削除しますか？\n\nアクティビティ、完了、履歴、設定を含みます。\n\nこの操作は取り消せません！',
-        resetSecondary: 'もう一度確認してください。\n\nYourScore のデータは完全に削除されます。'
-      }
+        resetPrimary:
+          'すべてのデータを削除しますか？\n\nアクティビティ、完了、履歴、設定を含みます。\n\nこの操作は取り消せません！',
+        resetSecondary: 'もう一度確認してください。\n\nYourScore のデータは完全に削除されます。',
+      },
     },
     dashboard: {
       title: '統計',
@@ -2636,7 +2669,7 @@ const TRANSLATIONS = {
         current: '現在のスコア',
         highest: '最高',
         lowest: '最低',
-        daysActive: 'アクティブ日数'
+        daysActive: 'アクティブ日数',
       },
       todayProgress: '今日の進捗',
       progress: {
@@ -2648,7 +2681,7 @@ const TRANSLATIONS = {
         breakEvenStatusLeft: '残り {{count}}',
         activitiesLabel: 'アクティビティ',
         activitiesAria: 'アクティビティの完了率',
-        percentComplete: '{{percent}}% 完了'
+        percentComplete: '{{percent}}% 完了',
       },
       streaksTitle: 'ストリーク',
       streaks: {
@@ -2657,7 +2690,7 @@ const TRANSLATIONS = {
         perfectDays: 'パーフェクト日数',
         perfectHint: 'すべての活動を完了',
         activeDays: 'アクティブ日数',
-        activeHint: '1 件以上の活動'
+        activeHint: '1 件以上の活動',
       },
       activityStatsTitle: 'アクティビティ統計（{{days}}日）',
       activityStatsEmpty: 'まだアクティビティがありません。追加して統計を見ましょう。',
@@ -2665,74 +2698,74 @@ const TRANSLATIONS = {
         mostCompleted: '最も完了',
         leastCompleted: '最も少ない',
         notCompletedYet: '未完了',
-        more: '+{{count}} 件'
+        more: '+{{count}} 件',
       },
       achievementsTitle: '実績',
       achievementsUnlocked: '解除済み',
       achievementsRecent: '最近解除',
-      achievementsNext: '次の目標'
+      achievementsNext: '次の目標',
     },
     achievements: {
       notificationTitle: '実績解除！',
       list: {
         score_100: {
           name: '100点達成',
-          description: '100点に到達する'
+          description: '100点に到達する',
         },
         score_500: {
           name: '高得点者',
-          description: '500点に到達する'
+          description: '500点に到達する',
         },
         score_1000: {
           name: '1000点クラブ',
-          description: '1,000点に到達する'
+          description: '1,000点に到達する',
         },
         streak_3: {
           name: 'スタート',
-          description: '成功日を3日連続で達成'
+          description: '成功日を3日連続で達成',
         },
         streak_7: {
           name: '週間ファイター',
-          description: '成功日を7日連続で達成'
+          description: '成功日を7日連続で達成',
         },
         streak_14: {
           name: '2週間ファイター',
-          description: '成功日を14日連続で達成'
+          description: '成功日を14日連続で達成',
         },
         streak_30: {
           name: '月間マスター',
-          description: '成功日を30日連続で達成'
+          description: '成功日を30日連続で達成',
         },
         perfect_week: {
           name: 'パーフェクトウィーク',
-          description: '7日連続で全ての活動を完了'
+          description: '7日連続で全ての活動を完了',
         },
         recovery: {
           name: 'カムバック',
-          description: 'マイナスからプラスへ回復'
+          description: 'マイナスからプラスへ回復',
         },
         first_completion: {
           name: '第一歩',
-          description: '初めての活動を完了'
+          description: '初めての活動を完了',
         },
         activities_50: {
           name: '50回達成',
-          description: '合計50回の活動を完了'
+          description: '合計50回の活動を完了',
         },
         activities_100: {
           name: '100回達成',
-          description: '合計100回の活動を完了'
+          description: '合計100回の活動を完了',
         },
         activities_500: {
           name: '習慣ヒーロー',
-          description: '合計500回の活動を完了'
-        }
-      }
+          description: '合計500回の活動を完了',
+        },
+      },
     },
     export: {
       csvHeaders: ['日付', 'アクティビティ', 'カテゴリー', 'ポイント', '完了時刻'],
       filenameBackup: 'yourscore-backup-{{date}}.json',
-      filenameCsv: 'yourscore-completions-{{date}}.csv'
+      filenameCsv: 'yourscore-completions-{{date}}.csv',
     },
     import: {
       storeLabels: {
@@ -2741,8 +2774,8 @@ const TRANSLATIONS = {
         activities: 'アクティビティ',
         completions: '完了',
         scoreHistory: 'スコア履歴',
-        achievements: '実績'
-      }
+        achievements: '実績',
+      },
     },
     errors: {
       activityNameRequired: 'アクティビティ名は必須です',
@@ -2761,7 +2794,8 @@ const TRANSLATIONS = {
       importStoreInvalid: 'ストア「{{store}}」のデータが無効です: 配列が必要です',
       importRecordInvalid: '{{store}}[{{index}}] のレコードが無効です: オブジェクトが必要です',
       importMissingField: '必須フィールド「{{field}}」が {{store}}[{{index}}] にありません',
-      importInvalidType: 'フィールド「{{field}}」の型が無効です: {{store}}[{{index}}] は {{expected}} が必要です',
+      importInvalidType:
+        'フィールド「{{field}}」の型が無効です: {{store}}[{{index}}] は {{expected}} が必要です',
       importTooManyRecords: 'インポートが上限を超えています ({{max}})',
       importFailed: 'インポート失敗: {{error}}',
       importFileTooLarge: 'インポートファイルが大きすぎます',
@@ -2769,9 +2803,9 @@ const TRANSLATIONS = {
       importReadFailed: 'ファイルを読み取れません: {{error}}',
       importNoFile: 'ファイルが指定されていません',
       importInvalidFileType: 'ファイル形式が無効です: .json が必要です',
-      fileReadFailed: 'ファイルを読み取れません'
-    }
-  }
+      fileReadFailed: 'ファイルを読み取れません',
+    },
+  },
 };
 
 export { TRANSLATIONS, SUPPORTED_LOCALES, LANGUAGE_LABELS };

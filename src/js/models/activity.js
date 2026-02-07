@@ -44,7 +44,7 @@ class ActivityModel {
       categoryId,
       order: data.order !== undefined ? data.order : maxOrder + 1,
       archived: false,
-      createdAt: getTimestamp()
+      createdAt: getTimestamp(),
     };
 
     await db.put(STORE_NAME, activity);
@@ -66,7 +66,7 @@ class ActivityModel {
    */
   static async getAll() {
     const activities = await db.getAll(STORE_NAME);
-    return this.sortActivities(activities.filter(a => !a.archived));
+    return this.sortActivities(activities.filter((a) => !a.archived));
   }
 
   /**
@@ -84,7 +84,7 @@ class ActivityModel {
    */
   static async getByCategory(categoryId) {
     const activities = await db.getByIndex(STORE_NAME, 'categoryId', categoryId);
-    return this.sortActivities(activities.filter(a => !a.archived));
+    return this.sortActivities(activities.filter((a) => !a.archived));
   }
 
   /**
@@ -142,7 +142,7 @@ class ActivityModel {
       id, // Ensure ID cannot be changed
       name: data.name?.trim() || activity.name,
       points: data.points !== undefined ? Math.floor(data.points) : activity.points,
-      order: data.order !== undefined ? data.order : nextOrder
+      order: data.order !== undefined ? data.order : nextOrder,
     };
 
     await db.put(STORE_NAME, updated);
@@ -174,7 +174,7 @@ class ActivityModel {
   static async getArchived() {
     // Note: Boolean indexes don't work reliably across browsers, so we filter manually
     const activities = await db.getAll(STORE_NAME);
-    return this.sortActivities(activities.filter(a => a.archived === true));
+    return this.sortActivities(activities.filter((a) => a.archived === true));
   }
 
   /**
@@ -205,12 +205,12 @@ class ActivityModel {
       return Number.isFinite(activityItem.order) ? Math.max(max, activityItem.order) : max;
     }, -1);
 
-    const updates = activities.map(a => {
+    const updates = activities.map((a) => {
       maxOrder += 1;
       return {
         ...a,
         categoryId: toCategoryId,
-        order: maxOrder
+        order: maxOrder,
       };
     });
 
@@ -255,7 +255,7 @@ class ActivityModel {
     const updates = [];
 
     for (let i = 0; i < orderedIds.length; i++) {
-      const activity = activities.find(item => item.id === orderedIds[i]);
+      const activity = activities.find((item) => item.id === orderedIds[i]);
       if (activity && activity.order !== i) {
         updates.push({ ...activity, order: i });
       }

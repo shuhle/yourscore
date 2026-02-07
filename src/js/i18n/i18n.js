@@ -25,14 +25,15 @@ function normalizeLocale(locale) {
   }
 
   const base = lower.split('-')[0];
-  const match = SUPPORTED_LOCALES.find(entry => entry.toLowerCase() === base);
+  const match = SUPPORTED_LOCALES.find((entry) => entry.toLowerCase() === base);
   return match || 'en';
 }
 
 function detectLocale() {
-  const languages = navigator.languages && navigator.languages.length
-    ? navigator.languages
-    : [navigator.language || 'en'];
+  const languages =
+    navigator.languages && navigator.languages.length
+      ? navigator.languages
+      : [navigator.language || 'en'];
 
   for (const language of languages) {
     const normalized = normalizeLocale(language);
@@ -50,7 +51,7 @@ function setLocale(locale) {
     return currentLocale;
   }
   currentLocale = normalized;
-  listeners.forEach(listener => listener(currentLocale));
+  listeners.forEach((listener) => listener(currentLocale));
   return currentLocale;
 }
 
@@ -134,5 +135,5 @@ export {
   t,
   tPlural,
   formatNumber,
-  onLocaleChange
+  onLocaleChange,
 };

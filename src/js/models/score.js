@@ -75,7 +75,7 @@ class ScoreModel {
       date: data.date || getLocalDateString(),
       score: data.score,
       earned: data.earned || 0,
-      decay: data.decay || 0
+      decay: data.decay || 0,
     };
 
     await db.put(HISTORY_STORE, record);
@@ -100,7 +100,7 @@ class ScoreModel {
   static async getHistoryRange(startDate, endDate) {
     const allHistory = await db.getAll(HISTORY_STORE);
     return allHistory
-      .filter(h => h.date >= startDate && h.date <= endDate)
+      .filter((h) => h.date >= startDate && h.date <= endDate)
       .sort((a, b) => a.date.localeCompare(b.date));
   }
 
@@ -132,9 +132,9 @@ class ScoreModel {
 
     const record = {
       date: today,
-      score: updates.score ?? existing?.score ?? await this.getScore(),
+      score: updates.score ?? existing?.score ?? (await this.getScore()),
       earned: updates.earned ?? existing?.earned ?? 0,
-      decay: updates.decay ?? existing?.decay ?? 0
+      decay: updates.decay ?? existing?.decay ?? 0,
     };
 
     await db.put(HISTORY_STORE, record);
@@ -152,7 +152,7 @@ class ScoreModel {
 
     return this.updateTodayHistory({
       earned: currentEarned + points,
-      score: await this.getScore()
+      score: await this.getScore(),
     });
   }
 
@@ -199,7 +199,7 @@ class ScoreModel {
     if (history.length === 0) {
       return await this.getScore();
     }
-    const highestInHistory = Math.max(...history.map(h => h.score));
+    const highestInHistory = Math.max(...history.map((h) => h.score));
     const currentScore = await this.getScore();
     return Math.max(highestInHistory, currentScore);
   }
@@ -213,7 +213,7 @@ class ScoreModel {
     if (history.length === 0) {
       return await this.getScore();
     }
-    const lowestInHistory = Math.min(...history.map(h => h.score));
+    const lowestInHistory = Math.min(...history.map((h) => h.score));
     const currentScore = await this.getScore();
     return Math.min(lowestInHistory, currentScore);
   }
@@ -234,7 +234,9 @@ class ScoreModel {
  * @returns {number} Percentage (0-100)
  */
 function getBreakEvenPercent(earned, decay) {
-  if (decay === 0) {return 100;}
+  if (decay === 0) {
+    return 100;
+  }
   return Math.min(100, Math.round((earned / decay) * 100));
 }
 

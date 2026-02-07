@@ -56,15 +56,17 @@ async function renderDailyView(container, { decayInfo } = {}) {
 
   const activities = await ActivityModel.getAll();
   if (activities.length === 0) {
-    activitiesSection.appendChild(createEmptyState({
-      title: t('daily.emptyTitle'),
-      message: t('daily.emptyMessage')
-    }));
+    activitiesSection.appendChild(
+      createEmptyState({
+        title: t('daily.emptyTitle'),
+        message: t('daily.emptyMessage'),
+      })
+    );
   } else {
     const grouped = await ActivityModel.getGroupedByCategory();
     const categories = await CategoryModel.getAll();
     const uncategorized = await CategoryModel.getUncategorized();
-    const categoryMap = new Map(categories.map(cat => [cat.id, cat]));
+    const categoryMap = new Map(categories.map((cat) => [cat.id, cat]));
     categoryMap.set(uncategorized.id, uncategorized);
 
     for (const categoryId of Object.keys(grouped)) {
@@ -77,11 +79,13 @@ async function renderDailyView(container, { decayInfo } = {}) {
 
     const today = getLocalDateString();
     const completions = await CompletionModel.getByDate(today);
-    const completionMap = new Map(completions.map(c => [c.activityId, c]));
+    const completionMap = new Map(completions.map((c) => [c.activityId, c]));
 
     for (const category of categoryOrder) {
       const categoryActivities = grouped[category.id] || [];
-      if (categoryActivities.length === 0) {continue;}
+      if (categoryActivities.length === 0) {
+        continue;
+      }
 
       const group = document.createElement('div');
       group.className = 'category-group';
@@ -102,7 +106,7 @@ async function renderDailyView(container, { decayInfo } = {}) {
             completionMap,
             cardParts,
             breakEvenIndicator,
-            scoreDisplay
+            scoreDisplay,
           });
         });
 
@@ -120,19 +124,22 @@ async function renderDailyView(container, { decayInfo } = {}) {
 function createBreakEvenIndicator(status) {
   const wrapper = document.createElement('div');
   wrapper.className = `break-even-indicator ${status.breakEven ? 'achieved' : 'needs-more'}`;
-  const pointsLabel = tPlural('units.pointsLong', status.breakEven ? status.surplus : status.remaining);
+  const pointsLabel = tPlural(
+    'units.pointsLong',
+    status.breakEven ? status.surplus : status.remaining
+  );
 
   const message = document.createElement('div');
   message.className = 'break-even-message';
   message.textContent = status.breakEven
     ? t('daily.breakEvenAchieved', {
-      points: formatNumber(status.surplus),
-      pointsLabel
-    })
+        points: formatNumber(status.surplus),
+        pointsLabel,
+      })
     : t('daily.breakEvenRemaining', {
-      points: formatNumber(status.remaining),
-      pointsLabel
-    });
+        points: formatNumber(status.remaining),
+        pointsLabel,
+      });
 
   const progress = document.createElement('div');
   progress.className = 'break-even-progress';
@@ -141,12 +148,15 @@ function createBreakEvenIndicator(status) {
   progress.setAttribute('aria-valuemax', '100');
   progress.setAttribute('aria-valuenow', String(status.percent));
   progress.setAttribute('aria-label', t('daily.breakEvenProgressLabel'));
-  progress.setAttribute('aria-valuetext', status.breakEven
-    ? t('daily.breakEvenAchievedAria')
-    : t('daily.breakEvenRemainingAria', {
-      points: formatNumber(status.remaining),
-      pointsLabel
-    }));
+  progress.setAttribute(
+    'aria-valuetext',
+    status.breakEven
+      ? t('daily.breakEvenAchievedAria')
+      : t('daily.breakEvenRemainingAria', {
+          points: formatNumber(status.remaining),
+          pointsLabel,
+        })
+  );
 
   const fill = document.createElement('div');
   fill.className = 'break-even-progress-fill';
@@ -159,92 +169,112 @@ function createBreakEvenIndicator(status) {
   return { wrapper, message, fill, progress };
 }
 
-async function toggleCompletion({ activity, completionMap, cardParts, breakEvenIndicator, scoreDisplay }) {
-  const today = getLocalDateString();
-  const existing = completionMap.get(activity.id);
-  const previousScore = await ScoreModel.getScore();
+let _toggling = false;
 
-  // Animate the activity card
-  animateActivityCompletion(cardParts.card);
-
-  if (existing) {
-    await CompletionModel.deleteByActivityAndDate(activity.id, today);
-    completionMap.delete(activity.id);
-
-    await ScoreModel.subtractPoints(activity.points);
-    await ScoreModel.addEarnedToday(-activity.points);
-
-    cardParts.card.classList.remove('completed');
-    cardParts.checkbox.textContent = '';
-    cardParts.timestamp.textContent = '';
-
-    showToast(t('toasts.activityUndone', { name: activity.name }), 'warning');
-  } else {
-    const completion = await CompletionModel.create({ activityId: activity.id, date: today });
-    completionMap.set(activity.id, completion);
-
-    await ScoreModel.addPoints(activity.points);
-    await ScoreModel.addEarnedToday(activity.points);
-
-    cardParts.card.classList.add('completed');
-    cardParts.checkbox.textContent = '✓';
-    cardParts.timestamp.textContent = formatTimestamp(completion.completedAt);
-
-    showToast(t('toasts.activityCompleted', { name: activity.name }), 'success');
+async function toggleCompletion({
+  activity,
+  completionMap,
+  cardParts,
+  breakEvenIndicator,
+  scoreDisplay,
+}) {
+  if (_toggling) {
+    return;
   }
+  _toggling = true;
+  try {
+    const today = getLocalDateString();
+    const existing = completionMap.get(activity.id);
+    const previousScore = await ScoreModel.getScore();
 
-  const updatedScore = await ScoreModel.getScore();
-  const updatedBreakEven = await ScoreModel.getBreakEvenStatus();
-  const decayAmount = await SettingsModel.getDecayAmount();
+    // Animate the activity card
+    animateActivityCompletion(cardParts.card);
 
-  // Animate score change
-  const scoreValueEl = scoreDisplay.wrapper.querySelector('.score-value');
-  const pointChange = existing ? -activity.points : activity.points;
-  animateScoreChange(scoreValueEl, pointChange);
+    if (existing) {
+      await CompletionModel.deleteByActivityAndDate(activity.id, today);
+      completionMap.delete(activity.id);
 
-  scoreValueEl.textContent = formatNumber(updatedScore);
-  scoreValueEl.className = `score-value ${updatedScore > 0 ? 'score-positive' : updatedScore < 0 ? 'score-negative' : 'score-neutral'}`;
-  scoreDisplay.wrapper.querySelector('.score-meta').innerHTML = `
-    <span>${t('score.todayLabel')}: <strong>${formatNumber(updatedBreakEven.earned)}</strong></span>
-    <span>${t('score.decayLabel')}: <strong>${formatNumber(decayAmount)}</strong></span>
-  `;
+      await ScoreModel.subtractPoints(activity.points);
+      await ScoreModel.addEarnedToday(-activity.points);
 
-  const pointsLabel = tPlural('units.pointsLong', updatedBreakEven.breakEven
-    ? updatedBreakEven.surplus
-    : updatedBreakEven.remaining);
-  breakEvenIndicator.message.textContent = updatedBreakEven.breakEven
-    ? t('daily.breakEvenAchieved', {
-      points: formatNumber(updatedBreakEven.surplus),
-      pointsLabel
-    })
-    : t('daily.breakEvenRemaining', {
-      points: formatNumber(updatedBreakEven.remaining),
-      pointsLabel
-    });
-  breakEvenIndicator.fill.style.width = updatedBreakEven.percent + '%';
-  breakEvenIndicator.progress.setAttribute('aria-valuenow', String(updatedBreakEven.percent));
-  breakEvenIndicator.progress.setAttribute('aria-valuetext', updatedBreakEven.breakEven
-    ? t('daily.breakEvenAchievedAria')
-    : t('daily.breakEvenRemainingAria', {
-      points: formatNumber(updatedBreakEven.remaining),
-      pointsLabel
-    }));
-  breakEvenIndicator.wrapper.className = `break-even-indicator ${updatedBreakEven.breakEven ? 'achieved' : 'needs-more'}`;
+      cardParts.card.classList.remove('completed');
+      cardParts.checkbox.textContent = '';
+      cardParts.timestamp.textContent = '';
 
-  // Check for new achievements (only on completion, not undo)
-  if (!existing) {
-    const newAchievements = await checkForNewAchievements({ previousScore });
+      showToast(t('toasts.activityUndone', { name: activity.name }), 'warning');
+    } else {
+      const completion = await CompletionModel.create({ activityId: activity.id, date: today });
+      completionMap.set(activity.id, completion);
 
-    // Show notifications for newly unlocked achievements
-    for (const achievementId of newAchievements) {
-      const achievement = getAchievementById(achievementId);
-      if (achievement) {
-        // Delay to let completion animation finish
-        setTimeout(() => {
-          showAchievementNotification(achievementId);
-        }, 500);
+      await ScoreModel.addPoints(activity.points);
+      await ScoreModel.addEarnedToday(activity.points);
+
+      cardParts.card.classList.add('completed');
+      cardParts.checkbox.textContent = '✓';
+      cardParts.timestamp.textContent = formatTimestamp(completion.completedAt);
+
+      showToast(t('toasts.activityCompleted', { name: activity.name }), 'success');
+    }
+
+    const updatedScore = await ScoreModel.getScore();
+    const updatedBreakEven = await ScoreModel.getBreakEvenStatus();
+    const decayAmount = await SettingsModel.getDecayAmount();
+
+    // Animate score change
+    const scoreValueEl = scoreDisplay.wrapper.querySelector('.score-value');
+    const pointChange = existing ? -activity.points : activity.points;
+    animateScoreChange(scoreValueEl, pointChange);
+
+    scoreValueEl.textContent = formatNumber(updatedScore);
+    scoreValueEl.className = `score-value ${updatedScore > 0 ? 'score-positive' : updatedScore < 0 ? 'score-negative' : 'score-neutral'}`;
+    scoreDisplay.wrapper.querySelector('.score-meta').innerHTML = `
+      <span>${t('score.todayLabel')}: <strong>${formatNumber(updatedBreakEven.earned)}</strong></span>
+      <span>${t('score.decayLabel')}: <strong>${formatNumber(decayAmount)}</strong></span>
+    `;
+
+    const pointsLabel = tPlural(
+      'units.pointsLong',
+      updatedBreakEven.breakEven ? updatedBreakEven.surplus : updatedBreakEven.remaining
+    );
+    breakEvenIndicator.message.textContent = updatedBreakEven.breakEven
+      ? t('daily.breakEvenAchieved', {
+          points: formatNumber(updatedBreakEven.surplus),
+          pointsLabel,
+        })
+      : t('daily.breakEvenRemaining', {
+          points: formatNumber(updatedBreakEven.remaining),
+          pointsLabel,
+        });
+    breakEvenIndicator.fill.style.width = updatedBreakEven.percent + '%';
+    breakEvenIndicator.progress.setAttribute('aria-valuenow', String(updatedBreakEven.percent));
+    breakEvenIndicator.progress.setAttribute(
+      'aria-valuetext',
+      updatedBreakEven.breakEven
+        ? t('daily.breakEvenAchievedAria')
+        : t('daily.breakEvenRemainingAria', {
+            points: formatNumber(updatedBreakEven.remaining),
+            pointsLabel,
+          })
+    );
+    breakEvenIndicator.wrapper.className = `break-even-indicator ${updatedBreakEven.breakEven ? 'achieved' : 'needs-more'}`;
+
+    // Check for new achievements (only on completion, not undo)
+    if (!existing) {
+      const newAchievements = await checkForNewAchievements({ previousScore });
+
+      // Show notifications for newly unlocked achievements
+      for (const achievementId of newAchievements) {
+        const achievement = getAchievementById(achievementId);
+        if (achievement) {
+          // Delay to let completion animation finish
+          setTimeout(() => {
+            showAchievementNotification(achievementId);
+          }, 500);
+        }
       }
     }
+  } finally {
+    _toggling = false;
   }
 }
 

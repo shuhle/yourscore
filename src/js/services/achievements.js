@@ -7,8 +7,18 @@ import { db } from '../storage/db.js';
 import { ScoreModel } from '../models/score.js';
 import { CompletionModel } from '../models/completion.js';
 import { ActivityModel } from '../models/activity.js';
-import { getLocalDateString } from '../utils/date.js';
+import { getLocalDateString, subtractDays } from '../utils/date.js';
 import { t } from '../i18n/i18n.js';
+import {
+  iconStar,
+  iconDoubleStar,
+  iconTrophy,
+  iconFlame,
+  iconSparkle,
+  iconArrowUp,
+  iconFootsteps,
+  iconChart,
+} from '../utils/icons.js';
 
 const STORE_NAME = 'achievements';
 
@@ -27,25 +37,25 @@ const ACHIEVEMENTS = {
     id: 'score_100',
     nameKey: 'achievements.list.score_100.name',
     descriptionKey: 'achievements.list.score_100.description',
-    icon: '💯',
+    icon: iconStar(20),
     type: 'score_milestone',
-    threshold: 100
+    threshold: 100,
   },
   score_500: {
     id: 'score_500',
     nameKey: 'achievements.list.score_500.name',
     descriptionKey: 'achievements.list.score_500.description',
-    icon: '⭐',
+    icon: iconDoubleStar(20),
     type: 'score_milestone',
-    threshold: 500
+    threshold: 500,
   },
   score_1000: {
     id: 'score_1000',
     nameKey: 'achievements.list.score_1000.name',
     descriptionKey: 'achievements.list.score_1000.description',
-    icon: '🏆',
+    icon: iconTrophy(20),
     type: 'score_milestone',
-    threshold: 1000
+    threshold: 1000,
   },
 
   // Streak achievements (consecutive successful days where earned >= decay)
@@ -53,33 +63,33 @@ const ACHIEVEMENTS = {
     id: 'streak_3',
     nameKey: 'achievements.list.streak_3.name',
     descriptionKey: 'achievements.list.streak_3.description',
-    icon: '🔥',
+    icon: iconFlame(20),
     type: 'streak',
-    threshold: 3
+    threshold: 3,
   },
   streak_7: {
     id: 'streak_7',
     nameKey: 'achievements.list.streak_7.name',
     descriptionKey: 'achievements.list.streak_7.description',
-    icon: '🔥',
+    icon: iconFlame(20),
     type: 'streak',
-    threshold: 7
+    threshold: 7,
   },
   streak_14: {
     id: 'streak_14',
     nameKey: 'achievements.list.streak_14.name',
     descriptionKey: 'achievements.list.streak_14.description',
-    icon: '🔥',
+    icon: iconFlame(20),
     type: 'streak',
-    threshold: 14
+    threshold: 14,
   },
   streak_30: {
     id: 'streak_30',
     nameKey: 'achievements.list.streak_30.name',
     descriptionKey: 'achievements.list.streak_30.description',
-    icon: '🔥',
+    icon: iconFlame(20),
     type: 'streak',
-    threshold: 30
+    threshold: 30,
   },
 
   // Perfect week (all activities completed every day for 7 consecutive days)
@@ -87,9 +97,9 @@ const ACHIEVEMENTS = {
     id: 'perfect_week',
     nameKey: 'achievements.list.perfect_week.name',
     descriptionKey: 'achievements.list.perfect_week.description',
-    icon: '🌟',
+    icon: iconSparkle(20),
     type: 'perfect_week',
-    threshold: 7
+    threshold: 7,
   },
 
   // Recovery achievement (bounce back from negative to positive)
@@ -97,9 +107,9 @@ const ACHIEVEMENTS = {
     id: 'recovery',
     nameKey: 'achievements.list.recovery.name',
     descriptionKey: 'achievements.list.recovery.description',
-    icon: '🚀',
+    icon: iconArrowUp(20),
     type: 'recovery',
-    threshold: 0
+    threshold: 0,
   },
 
   // First completion
@@ -107,9 +117,9 @@ const ACHIEVEMENTS = {
     id: 'first_completion',
     nameKey: 'achievements.list.first_completion.name',
     descriptionKey: 'achievements.list.first_completion.description',
-    icon: '👣',
+    icon: iconFootsteps(20),
     type: 'first_completion',
-    threshold: 1
+    threshold: 1,
   },
 
   // Activity count milestones
@@ -117,26 +127,26 @@ const ACHIEVEMENTS = {
     id: 'activities_50',
     nameKey: 'achievements.list.activities_50.name',
     descriptionKey: 'achievements.list.activities_50.description',
-    icon: '📊',
+    icon: iconChart(20),
     type: 'activity_count',
-    threshold: 50
+    threshold: 50,
   },
   activities_100: {
     id: 'activities_100',
     nameKey: 'achievements.list.activities_100.name',
     descriptionKey: 'achievements.list.activities_100.description',
-    icon: '📊',
+    icon: iconChart(20),
     type: 'activity_count',
-    threshold: 100
+    threshold: 100,
   },
   activities_500: {
     id: 'activities_500',
     nameKey: 'achievements.list.activities_500.name',
     descriptionKey: 'achievements.list.activities_500.description',
-    icon: '🦸',
+    icon: iconChart(20),
     type: 'activity_count',
-    threshold: 500
-  }
+    threshold: 500,
+  },
 };
 
 /**
@@ -163,7 +173,7 @@ function localizeAchievement(achievement) {
   return {
     ...achievement,
     name: t(achievement.nameKey),
-    description: t(achievement.descriptionKey)
+    description: t(achievement.descriptionKey),
   };
 }
 
@@ -198,7 +208,7 @@ async function unlock(id) {
 
   const record = {
     id,
-    unlockedAt: new Date().toISOString()
+    unlockedAt: new Date().toISOString(),
   };
 
   await db.put(STORE_NAME, record);
@@ -247,9 +257,7 @@ async function getSuccessfulDayStreak() {
     }
 
     // Move to previous day
-    const date = new Date(checkDate + 'T00:00:00');
-    date.setDate(date.getDate() - 1);
-    checkDate = getLocalDateString(date);
+    checkDate = subtractDays(checkDate, 1);
     historyIndex++;
   }
 
@@ -268,7 +276,7 @@ async function getPerfectDayStreak() {
     return 0;
   }
 
-  const activityIds = activities.map(a => a.id);
+  const activityIds = activities.map((a) => a.id);
   const today = getLocalDateString();
 
   let streak = 0;
@@ -285,9 +293,7 @@ async function getPerfectDayStreak() {
     }
 
     // Move to previous day
-    const date = new Date(checkDate + 'T00:00:00');
-    date.setDate(date.getDate() - 1);
-    checkDate = getLocalDateString(date);
+    checkDate = subtractDays(checkDate, 1);
   }
 
   return streak;
@@ -353,7 +359,10 @@ async function checkForNewAchievements(context = {}) {
 
   // Check recovery achievement
   if (context.previousScore !== undefined) {
-    if (checkRecoveryCondition(context.previousScore, currentScore) && !(await isUnlocked('recovery'))) {
+    if (
+      checkRecoveryCondition(context.previousScore, currentScore) &&
+      !(await isUnlocked('recovery'))
+    ) {
       await unlock('recovery');
       newlyUnlocked.push('recovery');
     }
@@ -389,45 +398,45 @@ async function getAchievementProgress() {
   const perfectStreak = await getPerfectDayStreak();
   const completionCount = await getTotalCompletionCount();
   const unlockedList = await getUnlockedAchievements();
-  const unlockedIds = new Set(unlockedList.map(a => a.id));
+  const unlockedIds = new Set(unlockedList.map((a) => a.id));
 
   // Find next milestone for each type
   const nextScoreMilestone = Object.values(ACHIEVEMENTS)
-    .filter(a => a.type === 'score_milestone' && a.threshold > currentScore)
+    .filter((a) => a.type === 'score_milestone' && a.threshold > currentScore)
     .sort((a, b) => a.threshold - b.threshold)[0];
 
   const nextStreakMilestone = Object.values(ACHIEVEMENTS)
-    .filter(a => a.type === 'streak' && a.threshold > streak)
+    .filter((a) => a.type === 'streak' && a.threshold > streak)
     .sort((a, b) => a.threshold - b.threshold)[0];
 
   const nextActivityMilestone = Object.values(ACHIEVEMENTS)
-    .filter(a => a.type === 'activity_count' && a.threshold > completionCount)
+    .filter((a) => a.type === 'activity_count' && a.threshold > completionCount)
     .sort((a, b) => a.threshold - b.threshold)[0];
 
   return {
     score: {
       current: currentScore,
       next: nextScoreMilestone?.threshold,
-      nextAchievement: nextScoreMilestone ? localizeAchievement(nextScoreMilestone) : null
+      nextAchievement: nextScoreMilestone ? localizeAchievement(nextScoreMilestone) : null,
     },
     streak: {
       current: streak,
       next: nextStreakMilestone?.threshold,
-      nextAchievement: nextStreakMilestone ? localizeAchievement(nextStreakMilestone) : null
+      nextAchievement: nextStreakMilestone ? localizeAchievement(nextStreakMilestone) : null,
     },
     perfectStreak: {
       current: perfectStreak,
       target: 7,
-      unlocked: unlockedIds.has('perfect_week')
+      unlocked: unlockedIds.has('perfect_week'),
     },
     completions: {
       current: completionCount,
       next: nextActivityMilestone?.threshold,
-      nextAchievement: nextActivityMilestone ? localizeAchievement(nextActivityMilestone) : null
+      nextAchievement: nextActivityMilestone ? localizeAchievement(nextActivityMilestone) : null,
     },
     unlockedCount: unlockedList.length,
     totalCount: Object.keys(ACHIEVEMENTS).length,
-    unlockedIds: Array.from(unlockedIds)
+    unlockedIds: Array.from(unlockedIds),
   };
 }
 
@@ -437,12 +446,12 @@ async function getAchievementProgress() {
  */
 async function getAllAchievementsWithStatus() {
   const unlockedList = await getUnlockedAchievements();
-  const unlockedMap = new Map(unlockedList.map(a => [a.id, a]));
+  const unlockedMap = new Map(unlockedList.map((a) => [a.id, a]));
 
-  return Object.values(ACHIEVEMENTS).map(achievement => ({
+  return Object.values(ACHIEVEMENTS).map((achievement) => ({
     ...localizeAchievement(achievement),
     unlocked: unlockedMap.has(achievement.id),
-    unlockedAt: unlockedMap.get(achievement.id)?.unlockedAt
+    unlockedAt: unlockedMap.get(achievement.id)?.unlockedAt,
   }));
 }
 
@@ -468,5 +477,5 @@ export {
   checkForNewAchievements,
   getAchievementProgress,
   getAllAchievementsWithStatus,
-  clearAchievements
+  clearAchievements,
 };

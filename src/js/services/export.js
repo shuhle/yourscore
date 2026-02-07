@@ -15,7 +15,14 @@ const MAX_IMPORT_RECORDS = 50000;
 /**
  * Store names that contain user data
  */
-const DATA_STORES = ['settings', 'categories', 'activities', 'completions', 'scoreHistory', 'achievements'];
+const DATA_STORES = [
+  'settings',
+  'categories',
+  'activities',
+  'completions',
+  'scoreHistory',
+  'achievements',
+];
 
 /**
  * Required fields for each store's records
@@ -23,11 +30,11 @@ const DATA_STORES = ['settings', 'categories', 'activities', 'completions', 'sco
 const SCHEMA = {
   settings: {
     required: ['key', 'value'],
-    types: { key: 'string' }
+    types: { key: 'string' },
   },
   categories: {
     required: ['id', 'name', 'order', 'createdAt'],
-    types: { id: 'string', name: 'string', order: 'number', createdAt: 'string' }
+    types: { id: 'string', name: 'string', order: 'number', createdAt: 'string' },
   },
   activities: {
     required: ['id', 'name', 'points', 'categoryId', 'archived', 'createdAt'],
@@ -38,21 +45,21 @@ const SCHEMA = {
       categoryId: 'string',
       archived: 'boolean',
       createdAt: 'string',
-      order: 'number'
-    }
+      order: 'number',
+    },
   },
   completions: {
     required: ['id', 'activityId', 'date', 'completedAt'],
-    types: { id: 'string', activityId: 'string', date: 'string', completedAt: 'string' }
+    types: { id: 'string', activityId: 'string', date: 'string', completedAt: 'string' },
   },
   scoreHistory: {
     required: ['date', 'score', 'earned', 'decay'],
-    types: { date: 'string', score: 'number', earned: 'number', decay: 'number' }
+    types: { date: 'string', score: 'number', earned: 'number', decay: 'number' },
   },
   achievements: {
     required: ['id', 'unlockedAt'],
-    types: { id: 'string', unlockedAt: 'string' }
-  }
+    types: { id: 'string', unlockedAt: 'string' },
+  },
 };
 
 /**
@@ -66,7 +73,7 @@ async function exportToJSON() {
     app: APP_NAME,
     version: EXPORT_VERSION,
     exportedAt: getTimestamp(),
-    data: {}
+    data: {},
   };
 
   for (const storeName of DATA_STORES) {
@@ -97,8 +104,8 @@ async function exportToCSV() {
   const categories = await db.getAll('categories');
 
   // Create lookup maps
-  const activityMap = new Map(activities.map(a => [a.id, a]));
-  const categoryMap = new Map(categories.map(c => [c.id, c]));
+  const activityMap = new Map(activities.map((a) => [a.id, a]));
+  const categoryMap = new Map(categories.map((c) => [c.id, c]));
 
   // CSV header
   const headers = t('export.csvHeaders');
@@ -123,7 +130,9 @@ async function exportToCSV() {
     const escapedActivityName = escapeCSVField(activityName);
     const escapedCategoryName = escapeCSVField(categoryName);
 
-    lines.push(`${completion.date},${escapedActivityName},${escapedCategoryName},${points},${completion.completedAt}`);
+    lines.push(
+      `${completion.date},${escapedActivityName},${escapedCategoryName},${points},${completion.completedAt}`
+    );
   }
 
   return lines.join('\n');
@@ -139,8 +148,7 @@ function escapeCSVField(field) {
     return '';
   }
   let str = String(field);
-  const trimmed = str.replace(/^\s+/, '');
-  if (trimmed && /^[=+\-@]/.test(trimmed)) {
+  if (/^\s*[=+\-@\t\r]/.test(str)) {
     str = `'${str}`;
   }
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
@@ -214,13 +222,39 @@ function validateImportData(data) {
       if (schema.types) {
         for (const [field, expectedType] of Object.entries(schema.types)) {
           if (record[field] !== undefined && typeof record[field] !== expectedType) {
-            errors.push(t('errors.importInvalidType', {
-              field,
-              store: storeName,
-              index: i,
-              expected: expectedType
-            }));
+            errors.push(
+              t('errors.importInvalidType', {
+                field,
+                store: storeName,
+                index: i,
+                expected: expectedType,
+              })
+            );
           }
+        }
+      }
+
+      // Bounds validation
+      if (storeName === 'activities') {
+        if (
+          typeof record.points === 'number' &&
+          (record.points < -10000 || record.points > 10000)
+        ) {
+          errors.push(
+            t('errors.importValueOutOfRange', { field: 'points', store: storeName, index: i })
+          );
+        }
+        if (typeof record.name === 'string' && record.name.length > 200) {
+          errors.push(
+            t('errors.importValueTooLong', { field: 'name', store: storeName, index: i })
+          );
+        }
+      }
+      if (storeName === 'categories') {
+        if (typeof record.name === 'string' && record.name.length > 200) {
+          errors.push(
+            t('errors.importValueTooLong', { field: 'name', store: storeName, index: i })
+          );
         }
       }
     }
@@ -298,7 +332,11 @@ async function importFromJSONString(jsonString, options = { merge: false }) {
   try {
     data = JSON.parse(jsonString);
   } catch (error) {
-    return { success: false, imported: {}, errors: [t('errors.importInvalidJson', { error: error.message })] };
+    return {
+      success: false,
+      imported: {},
+      errors: [t('errors.importInvalidJson', { error: error.message })],
+    };
   }
 
   return importFromJSON(data, options);
@@ -377,7 +415,10 @@ async function importFromFile(file, options = { merge: false }) {
     return { success: false, imported: {}, errors: [t('errors.importNoFile')] };
   }
 
-  if (!file.name.endsWith('.json')) {
+  const isJSON =
+    file.name.endsWith('.json') || file.type === 'application/json' || file.type === 'text/json';
+
+  if (!isJSON) {
     return { success: false, imported: {}, errors: [t('errors.importInvalidFileType')] };
   }
 
@@ -389,7 +430,11 @@ async function importFromFile(file, options = { merge: false }) {
     const content = await readFileAsText(file);
     return importFromJSONString(content, options);
   } catch (error) {
-    return { success: false, imported: {}, errors: [t('errors.importReadFailed', { error: error.message })] };
+    return {
+      success: false,
+      imported: {},
+      errors: [t('errors.importReadFailed', { error: error.message })],
+    };
   }
 }
 
@@ -409,5 +454,5 @@ export {
   EXPORT_VERSION,
   APP_NAME,
   MAX_IMPORT_BYTES,
-  MAX_IMPORT_RECORDS
+  MAX_IMPORT_RECORDS,
 };
